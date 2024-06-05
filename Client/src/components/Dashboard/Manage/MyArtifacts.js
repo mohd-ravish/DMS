@@ -3,21 +3,17 @@ import Axios from 'axios';
 
 const Artifacts = () => {
     const [artifacts, setArtifacts] = useState([]);
-    // const [docType, setDocType] = useState([]);
-    // const [dateUploaded, setDateUploaded] = useState([]);
 
     useEffect(() => {
         const fetchMyArtifacts = async () => {
             try {
-                const response = await Axios.get("http://localhost:4500/myArtifacts", {
+                const response = await Axios.get("http://localhost:4500/artifacts/myArtifacts", {
                     headers: {
                         Authorization: localStorage.getItem("token"),
                     },
                 });
                 if (response.data.status === "success") {
                     setArtifacts(response.data.data);
-                    // setDocType(response.data.data.docType);
-                    // setDateUploaded(response.data.data.dateUploaded);
                 } else {
                     console.log(response);
 
@@ -28,10 +24,6 @@ const Artifacts = () => {
         };
         fetchMyArtifacts();
     }, []);
-    // const data = [
-    //     { name: 'Link', type: 'Instructions', date: '31-05-2024', isLink: true },
-    //     { name: 'Seminar_Front_Page.png', type: 'White paper', date: '30-05-2024', isLink: false }
-    // ];
 
     return (
         <div className="artifacts-container">
@@ -80,7 +72,7 @@ const Artifacts = () => {
                                     {item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}
                                 </td>
                                 <td>{item.doctype_nm}</td>
-                                <td className="date">{item.date_uploaded}</td>
+                                <td className="date">{item.date_uploaded.split('T')[0]}</td>
                                 <td><a href="#" className="edit-link">✏️ Edit</a></td>
                             </tr>
                         ))}

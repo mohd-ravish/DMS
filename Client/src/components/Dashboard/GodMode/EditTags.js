@@ -1,27 +1,86 @@
+import { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Axios from 'axios';
+
 const EditTags = () => {
-    const data = [
-        { tagId: '1', tagName: 'ajax php', createdBy: 'ravish@gmail.com', createdOn: '31-05-2024 15:40:41', usedWith: '6 Documents' },
-        { tagId: '2', tagName: 'shopify setup guide', createdBy: 'ravish@gmail.com', createdOn: '21-03-2024 14:20:45', usedWith: '3 Documents' },
-        { tagId: '3', tagName: 'seo guide', createdBy: 'jack@gmail.com', createdOn: '12-07-2024 04:30:24', usedWith: '4 Documents' },
-        { tagId: '4', tagName: 'seo best practices', createdBy: 'ravish@gmail.com', createdOn: '31-05-2024 15:40:41', usedWith: '2 Documents' },
-        { tagId: '5', tagName: 'php lowercase', createdBy: 'ravish@gmail.com', createdOn: '13-05-2023 01:23:51', usedWith: '9 Documents' },
-        { tagId: '12', tagName: 'ajax php', createdBy: 'ravish@gmail.com', createdOn: '31-05-2024 15:40:41', usedWith: '6 Documents' },
-        { tagId: '14', tagName: 'seo best practices', createdBy: 'ravish@gmail.com', createdOn: '31-05-2024 15:40:41', usedWith: '2 Documents' },
-    ];
+    const [availableTags, setAvailableTags] = useState([]);
+    const [editedTagValue, setEditedTagValue] = useState('');
+    const [editingTagId, setEditingTagId] = useState('');
+
+    const handleEdit = (tagId, initialTagName) => {
+        setEditingTagId(tagId);
+        setEditedTagValue(initialTagName);
+    };
+
+    // If the user is authenticate then the dashboard will be visible
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const response = await Axios.get("http://localhost:4500/tags/allTags", {
+                    headers: {
+                        Authorization: localStorage.getItem("token"),
+                    },
+                });
+                if (response.data.status === "success") {
+                    setAvailableTags(response.data.data);
+                } else {
+                    console.log("Failed to fetch tags");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchTags();
+    }, []);
+
+    const handleUpdateTag = async () => {
+        try {
+            const response = await Axios.put(`http://localhost:4500/tags/updateTags/${editingTagId}`, {
+                tagName: editedTagValue
+            }, {
+                headers: {
+                    Authorization: localStorage.getItem("token"),
+                },
+            });
+            if (response.data.status === "success") {
+                toast.success("Tag updated successfully", {
+                    position: "top-center"
+                });
+                // Update the local state with the updated tag value
+                setAvailableTags(availableTags.map(tag => {
+                    if (tag.id === editingTagId) {
+                        return { ...tag, tag_nm: editedTagValue };
+                    }
+                    return tag;
+                }));
+                setEditingTagId("");
+            } else {
+                toast.error("Failed to update Tag", {
+                    position: "top-center"
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
-        <div className="artifacts-container">
+        <div className="artifacts-container system-settings">
+            <ToastContainer />
             <header className="artifacts-header">
                 <h1>Edit Tags</h1>
             </header>
             <div className="artifacts-table-container">
                 <div className='header-select-entries'>
-                    <th className='select-entries'>Show <select>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>entries</th>
+                    <th className='select-entries'>Show
+                        <select>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>entries
+                    </th>
                     <th className='user-search'>
                         <label>Search</label>
                         <input
@@ -43,24 +102,37 @@ const EditTags = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item, index) => (
+                        {availableTags.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.tagId}</td>
-                                <td><input
-                                    type="text"
-                                    value={item.tagName}
-                                    className="user-search-bar"
-                                /></td>
-                                <td>{item.createdBy}</td>
-                                <td>{item.createdOn}</td>
-                                <td>{item.usedWith}</td>
-                                <td><a href="#" className="edit-link">✏️ Edit</a></td>
+                                <td>{item.id}</td>
+                                <td>
+                                    {item.id === editingTagId ?
+                                        <input
+                                            type="text"
+                                            value={editedTagValue}
+                                            onChange={(e) => setEditedTagValue(e.target.value)}
+                                            className="user-search-bar"
+                                        />
+                                        :
+                                        item.tag_nm
+                                    }
+                                </td>
+                                <td>{item.created_by}</td>
+                                <td>{item.created_at.split('T')[0]}</td>
+                                <td>9 Documents</td> {/* Adjust this if usedWith is available */}
+                                <td>
+                                    {item.id === editingTagId ?
+                                        <button onClick={handleUpdateTag}>Update</button>
+                                        :
+                                        <a href="#" className="edit-link" onClick={() => handleEdit(item.id, item.tag_nm)}>✏️ Edit</a>
+                                    }
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
                 <div className="pagination">
-                    <p>Showing 1 to 8 of 8 entries</p>
+                    <p>Showing 1 to {availableTags.length} of {availableTags.length} entries</p>
                     <div className="pagination-buttons">
                         <button>Previous</button>
                         <button className="active">1</button>
@@ -71,8 +143,8 @@ const EditTags = () => {
             <div className="usage-instructions">
                 <h2>📢 Usage Instructions</h2>
                 <ul>
-                    <li><i class='bx bx-paper-plane'></i> You may Edit the available tags.</li>
-                    <li><i class='bx bx-paper-plane'></i> To sort the column values, click on the column name.</li>
+                    <li><i className='bx bx-paper-plane'></i> You may Edit the available tags.</li>
+                    <li><i className='bx bx-paper-plane'></i> To sort the column values, click on the column name.</li>
                 </ul>
             </div>
         </div>

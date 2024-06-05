@@ -25,7 +25,7 @@ const Login = () => {
     const handleLoginSubmit = async (event) => {
         event.preventDefault();
         if (Object.values(userLoginData).every(value => value.length > 0)) {
-            await Axios.post("http://localhost:4500/login", userLoginData)
+            await Axios.post("http://localhost:4500/auth/login", userLoginData)
                 .then(res => {
                     if (res.data === "User not found") {
                         toast.error("User not found!", {

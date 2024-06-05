@@ -1,10 +1,29 @@
+import { useEffect, useState } from "react";
+import Axios from 'axios';
+
 const ManageAllArtifacts = () => {
-    const data = [
-        { name: 'Link', type: 'Instructions', author: 'ravish@gmail', date: '31-05-2024', isLink: true },
-        { name: 'Array_convert', type: 'Technical Guide', author: 'james@gmail', date: '02-05-2024', isLink: false },
-        { name: 'Php', type: 'White Paper', author: 'john@gmail', date: '24-01-2024', isLink: true },
-        { name: 'Seminar_Front_Page.png', type: 'White paper', author: 'jack@gmail.com', date: '30-05-2024', isLink: false }
-    ];
+    const [allArtifacts, setAllArtifacts] = useState([]);
+
+    useEffect(() => {
+        const fetchAllArtifacts = async () => {
+            try {
+                const response = await Axios.get("http://localhost:4500/artifacts/allArtifacts", {
+                    headers: {
+                        Authorization: localStorage.getItem("token"),
+                    },
+                });
+                if (response.data.status === "success") {
+                    setAllArtifacts(response.data.data);
+                } else {
+                    console.log(response);
+
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchAllArtifacts();
+    }, []);
 
     return (
         <div className="artifacts-container">
@@ -48,14 +67,14 @@ const ManageAllArtifacts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item, index) => (
+                        {allArtifacts.map((item, index) => (
                             <tr key={index}>
-                                <td className={item.isLink ? 'link' : 'document'}>
-                                    {item.name} {item.isLink ? '🔗' : '📄'}
+                                <td>
+                                    {item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}
                                 </td>
-                                <td>{item.type}</td>
-                                <td>{item.author}</td>
-                                <td className="date">{item.date}</td>
+                                <td>{item.doctype_nm}</td>
+                                <td>{item.owner_author_id}</td>
+                                <td className="date">{item.date_uploaded.split('T')[0]}</td>
                                 <td><a href="#" className="edit-link">✏️ Edit</a></td>
                             </tr>
                         ))}

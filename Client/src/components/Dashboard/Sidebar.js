@@ -28,7 +28,7 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role }) =
     const logout = async () => {
         const token = localStorage.getItem("token");
         if (token) {
-            await Axios.post("http://localhost:4500/logout", {}, {
+            await Axios.post("http://localhost:4500/auth/logout", {}, {
                 headers: {
                     Authorization: token
                 }

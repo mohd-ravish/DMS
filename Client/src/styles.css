@@ -695,9 +695,9 @@ body {
     padding: 20px;
 }
 .artifacts-header {
-    display: flex;
+    /* display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; */
     margin-bottom: 20px;
 }
 .artifacts-header h1 {
@@ -735,6 +735,9 @@ body {
 .artifacts-container .select-entries{
 	font-size: 14px;
 	font-weight: 300;
+}
+.artifacts-container .select-entries select{
+	width: 60px;
 }
 .table-buttons button {
 	font-family: "Montserrat", sans-serif;

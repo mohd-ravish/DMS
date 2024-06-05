@@ -25,7 +25,7 @@ const UploadDocument = ({ limit, docTypes, availableTags, handleTagChange, tags,
         formData.append("publish", publish);
 
         try {
-            const response = await Axios.post("http://localhost:4500/uploadDocument", formData, {
+            const response = await Axios.post("http://localhost:4500/upload/uploadDocument", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: localStorage.getItem("token"),

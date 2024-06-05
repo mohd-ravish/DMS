@@ -5,7 +5,6 @@ import Axios from "axios";
 
 const SystemSettings = ({ limit, updatedBy, lastUpdated }) => {
     const [newLimit, setNewLimit] = useState("");
-
     useEffect(() => {
         setNewLimit(limit);
     }, [limit]);
@@ -13,7 +12,7 @@ const SystemSettings = ({ limit, updatedBy, lastUpdated }) => {
     // Function to update the system settings
     const handleSystemSettings = async () => {
         try {
-            const response = await Axios.post("http://localhost:4500/updateSystemSettings", { newLimit }, {
+            const response = await Axios.post("http://localhost:4500/settings/updateSystemSettings", { newLimit }, {
                 headers: {
                     Authorization: localStorage.getItem("token"),
                 },
@@ -63,7 +62,7 @@ const SystemSettings = ({ limit, updatedBy, lastUpdated }) => {
                                 />
                             </td>
                             <td><p>The limit is in Kb, calculate the equivalent value in Mb. 1 Mb = 1024 Kb</p></td>
-                            <td className="date">{lastUpdated}</td>
+                            <td className="date">{lastUpdated.split('T')[0]}</td>
                             <td><p>{updatedBy}</p></td>
                             <td><button onClick={handleSystemSettings}>Update</button></td>
                         </tr>

@@ -63,7 +63,7 @@ function Dashboard() {
         const newTags = newValue.filter(option => option.__isNew__);
         if (newTags.length > 0) {
             try {
-                const response = await Axios.post("http://localhost:4500/createTag", { tag_nm: newTags[0].label }, {
+                const response = await Axios.post("http://localhost:4500/tags/createTag", { tag_nm: newTags[0].label }, {
                     headers: {
                         Authorization: localStorage.getItem("token"),
                     },
@@ -89,7 +89,7 @@ function Dashboard() {
             try {
                 const option = {
                     method: 'get',
-                    url: "http://localhost:4500/verifyUser",
+                    url: "http://localhost:4500/auth/verifyUser",
                     headers: {
                         Authorization: localStorage.getItem("token") // Get token from local storage
                     }
@@ -115,7 +115,7 @@ function Dashboard() {
 
         const fetchSettings = async () => {
             try {
-                const response = await Axios.get("http://localhost:4500/systemSettings", {
+                const response = await Axios.get("http://localhost:4500/settings/systemSettings", {
                     headers: {
                         Authorization: localStorage.getItem("token"),
                     },
@@ -135,7 +135,7 @@ function Dashboard() {
 
         const fetchDocTypes = async () => {
             try {
-                const response = await Axios.get("http://localhost:4500/documentTypes", {
+                const response = await Axios.get("http://localhost:4500/artifacts/documentTypes", {
                     headers: {
                         Authorization: localStorage.getItem("token"),
                     },
@@ -152,13 +152,16 @@ function Dashboard() {
 
         const fetchTags = async () => {
             try {
-                const response = await Axios.get("http://localhost:4500/tags", {
+                const response = await Axios.get("http://localhost:4500/tags/allTags", {
                     headers: {
                         Authorization: localStorage.getItem("token"),
                     },
                 });
                 if (response.data.status === "success") {
-                    setAvailableTags(response.data.data.map(tag => ({ value: tag.id, label: tag.tag_nm })));
+                    setAvailableTags(response.data.data.map(tag => ({
+                        value: tag.id,
+                        label: tag.tag_nm,
+                    })));
                 } else {
                     console.log("Failed to fetch tags");
                 }
@@ -191,7 +194,7 @@ function Dashboard() {
                         {isClicked.search && <Search />}
                         {isClicked.myArtifacts && <MyArtifacts />}
                         {isClicked.upload && <Upload limit={limit} docTypes={docTypes} availableTags={availableTags} handleTagChange={handleTagChange} tags={tags} setTags={setTags} />}
-                        {isClicked.addUrl && <AddUrl docTypes={docTypes} availableTags={availableTags} handleTagChange={handleTagChange} tags={tags} setTags={setTags}/>}
+                        {isClicked.addUrl && <AddUrl docTypes={docTypes} availableTags={availableTags} handleTagChange={handleTagChange} tags={tags} setTags={setTags} />}
                         {isClicked.systemSettings && <SystemSettings limit={limit} updatedBy={updatedBy} lastUpdated={lastUpdated} />}
                         {isClicked.userActivity && <UserActivity />}
                         {isClicked.userAccess && <UserAccess />}

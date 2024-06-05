@@ -23,7 +23,7 @@ const AddUrl = ({ docTypes, availableTags, handleTagChange, tags, setTags }) => 
           };
 
         try {
-            const response = await Axios.post("http://localhost:4500/addUrl", urlDetails, {
+            const response = await Axios.post("http://localhost:4500/upload/addUrl", urlDetails, {
                 headers: {
                     Authorization: localStorage.getItem("token"),
                 },
