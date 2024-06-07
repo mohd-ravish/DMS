@@ -4,7 +4,7 @@ const db = require('../config/db');
 
 const router = express.Router();
 
-// Get document types 
+// Route to get document types 
 router.get('/documentTypes', verifyUser, (req, res) => {
     const query = "SELECT id, doctype_nm FROM document_type";
     db.query(query, (err, results) => {
@@ -15,7 +15,7 @@ router.get('/documentTypes', verifyUser, (req, res) => {
     });
 });
 
-// Get user artifacts
+// Route get user artifacts
 router.get('/myArtifacts', verifyUser, (req, res) => {
     const query = "SELECT * FROM vw_documents WHERE owner_author_id = ?";
     db.query(query, [req.email], (err, results) => {
@@ -26,7 +26,7 @@ router.get('/myArtifacts', verifyUser, (req, res) => {
     });
 });
 
-// Get all artifacts
+// Route to get all artifacts
 router.get('/allArtifacts', verifyUser, (req, res) => {
     const query = "SELECT * FROM vw_documents";
     db.query(query, (err, results) => {

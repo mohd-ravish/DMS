@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Axios from 'axios';
+import usePagination from '../usePagination';
 
 const ManageAllArtifacts = () => {
     const [allArtifacts, setAllArtifacts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const fetchAllArtifacts = async () => {
@@ -25,6 +27,36 @@ const ManageAllArtifacts = () => {
         fetchAllArtifacts();
     }, []);
 
+    const filteredArtifacts = allArtifacts.filter(artifact =>
+        artifact.doc_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        artifact.doctype_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        artifact.owner_author_id.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const {
+        currentPage,
+        entriesPerPage,
+        currentEntries,
+        handlePageChange,
+        handleEntriesChange,
+        totalEntries,
+        startEntry,
+        endEntry,
+        totalPages
+    } = usePagination(filteredArtifacts, 10);
+
+    const getDocNameClass = (doc_status, is_published) => {
+        if (doc_status === 'active' && is_published) {
+            return 'active';
+        } else if (doc_status === 'active' && !is_published) {
+            return 'inactive';
+        } else if (doc_status === 'archived') {
+            return 'archived';
+        } else {
+            return '';
+        }
+    };
+
     return (
         <div className="artifacts-container">
             <header className="artifacts-header">
@@ -32,12 +64,13 @@ const ManageAllArtifacts = () => {
             </header>
             <div className="artifacts-table-container">
                 <div className='header-select-entries'>
-                    <th className='select-entries'>Show <select>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>entries</th>
+                    <th className='select-entries'>Show
+                        <select onChange={handleEntriesChange} value={entriesPerPage}>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>entries</th>
                     <th colSpan="4">
                         <div className="table-buttons">
                             <button>Copy</button>
@@ -53,6 +86,8 @@ const ManageAllArtifacts = () => {
                             type="text"
                             placeholder="Type Name or Email..."
                             className="user-search-bar"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </th>
                 </div>
@@ -67,9 +102,9 @@ const ManageAllArtifacts = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {allArtifacts.map((item, index) => (
+                        {currentEntries.map((item, index) => (
                             <tr key={index}>
-                                <td>
+                                <td className={getDocNameClass(item.doc_status, item.is_published)}>
                                     {item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}
                                 </td>
                                 <td>{item.doctype_nm}</td>
@@ -81,11 +116,19 @@ const ManageAllArtifacts = () => {
                     </tbody>
                 </table>
                 <div className="pagination">
-                    <p>Showing 1 to 4 of 4 entries</p>
+                    <p>Showing {startEntry} to {endEntry} of {totalEntries} entries</p>
                     <div className="pagination-buttons">
-                        <button>Previous</button>
-                        <button className="active">1</button>
-                        <button>Next</button>
+                        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
+                        {Array.from({ length: totalPages }, (_, i) => (
+                            <button
+                                key={i + 1}
+                                className={currentPage === i + 1 ? "active" : ""}
+                                onClick={() => handlePageChange(i + 1)}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+                        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
                     </div>
                 </div>
             </div>

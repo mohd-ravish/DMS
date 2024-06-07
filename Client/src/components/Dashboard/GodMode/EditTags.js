@@ -2,18 +2,19 @@ import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Axios from 'axios';
+import usePagination from '../usePagination';
 
 const EditTags = () => {
     const [availableTags, setAvailableTags] = useState([]);
     const [editedTagValue, setEditedTagValue] = useState('');
     const [editingTagId, setEditingTagId] = useState('');
+    const [searchQuery, setSearchQuery] = useState("");
 
     const handleEdit = (tagId, initialTagName) => {
         setEditingTagId(tagId);
         setEditedTagValue(initialTagName);
     };
 
-    // If the user is authenticate then the dashboard will be visible
     useEffect(() => {
         const fetchTags = async () => {
             try {
@@ -65,6 +66,23 @@ const EditTags = () => {
         }
     };
 
+    const filteredTags = availableTags.filter(tag =>
+        tag.tag_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tag.created_by.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const {
+        currentPage,
+        entriesPerPage,
+        currentEntries,
+        handlePageChange,
+        handleEntriesChange,
+        totalEntries,
+        startEntry,
+        endEntry,
+        totalPages
+    } = usePagination(filteredTags, 10);
+
     return (
         <div className="artifacts-container system-settings">
             <ToastContainer />
@@ -74,7 +92,7 @@ const EditTags = () => {
             <div className="artifacts-table-container">
                 <div className='header-select-entries'>
                     <th className='select-entries'>Show
-                        <select>
+                        <select onChange={handleEntriesChange} value={entriesPerPage}>
                             <option value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
@@ -87,6 +105,8 @@ const EditTags = () => {
                             type="text"
                             placeholder="Type Tag Name or Email..."
                             className="user-search-bar"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </th>
                 </div>
@@ -102,7 +122,7 @@ const EditTags = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {availableTags.map((item, index) => (
+                        {currentEntries.map((item, index) => (
                             <tr key={index}>
                                 <td>{item.id}</td>
                                 <td>
@@ -119,7 +139,7 @@ const EditTags = () => {
                                 </td>
                                 <td>{item.created_by}</td>
                                 <td>{item.created_at.split('T')[0]}</td>
-                                <td>9 Documents</td> {/* Adjust this if usedWith is available */}
+                                <td>8 Documents</td> {/* Adjust this if usedWith is available */}
                                 <td>
                                     {item.id === editingTagId ?
                                         <button onClick={handleUpdateTag}>Update</button>
@@ -132,11 +152,19 @@ const EditTags = () => {
                     </tbody>
                 </table>
                 <div className="pagination">
-                    <p>Showing 1 to {availableTags.length} of {availableTags.length} entries</p>
+                    <p>Showing {startEntry} to {endEntry} of {totalEntries} entries</p>
                     <div className="pagination-buttons">
-                        <button>Previous</button>
-                        <button className="active">1</button>
-                        <button>Next</button>
+                        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
+                        {Array.from({ length: totalPages }, (_, i) => (
+                            <button
+                                key={i + 1}
+                                className={currentPage === i + 1 ? "active" : ""}
+                                onClick={() => handlePageChange(i + 1)}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+                        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
                     </div>
                 </div>
             </div>

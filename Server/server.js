@@ -16,6 +16,7 @@ const tagsRoutes = require('./routes/tags');
 const upoadRoutes = require('./routes/upload');
 const settingsRoute = require('./routes/settings');
 const artifactsRoutes = require('./routes/artifacts');
+const usersRoutes = require('./routes/users');
 
 //Use Routes
 app.use('/auth', authRoutes);
@@ -23,6 +24,7 @@ app.use('/tags', tagsRoutes);
 app.use('/upload', upoadRoutes);
 app.use('/settings', settingsRoute);
 app.use('/artifacts', artifactsRoutes);
+app.use('/users', usersRoutes);
 
 // Port
 const PORT = process.env.PORT;

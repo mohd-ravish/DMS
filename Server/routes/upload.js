@@ -21,7 +21,7 @@ const upload = multer({
     // limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit
 }).single('file');
 
-// Upload document 
+// Route to upload document 
 router.post('/uploadDocument', verifyUser, (req, res) => {
     upload(req, res, (err) => {
         if (err) {
@@ -43,7 +43,7 @@ router.post('/uploadDocument', verifyUser, (req, res) => {
                     console.log(err);
                     return res.json({ status: 'fail', message: err.message });
                 }
-                db.query("INSERT INTO logs (activity, log_date) VALUES (?, ?)", [`User: ${req.email} uploaded ${docName}`, current_date], (err, result) => {
+                db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} uploaded new document [${docName}]`, current_date], (err, result) => {
                     if (err) throw err;
                 });
                 return res.json({ status: 'success' });
@@ -55,7 +55,7 @@ router.post('/uploadDocument', verifyUser, (req, res) => {
     });
 });
 
-// Add url 
+// Route to add url 
 router.post('/addUrl', verifyUser, (req, res) => {
     const { infoHead, url, tags, docType, description, publish } = req.body;
     const ownerAuthorId = req.email;
@@ -69,7 +69,7 @@ router.post('/addUrl', verifyUser, (req, res) => {
                 console.log(err);
                 return res.json({ status: 'fail', message: err.message });
             }
-            db.query("INSERT INTO logs (activity, log_date) VALUES (?, ?)", [`User: ${req.email} added URL: ${url}`, current_date], (err, result) => {
+            db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} uploaded new online document [${infoHead}]`, current_date], (err, result) => {
                 if (err) throw err;
             });
             return res.json({ status: 'success' });

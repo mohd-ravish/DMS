@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Axios from 'axios';
 import docLogo from '../assets/doc-logo.png';
 
-const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role }) => {
+const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, isSidebarOpen }) => {
     const navigate = useNavigate();
     const [isManageOpen, setIsManageOpen] = useState(false); // To open Manage section
     const [isGodModeOpen, setIsGodModeOpen] = useState(false); // To open God Mode section
     const [active, setActive] = useState('home');
 
-    //Function to manage sidebar css
+    // Function to manage sidebar css
     const handleSlideBarClick = (item) => {
         setActive(item);
     };
@@ -47,7 +47,7 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role }) =
     };
 
     return (
-        <section id="sidebar">
+        <section id="sidebar" className={isSidebarOpen ? '' : 'hide'}>
             <a href="#" className="brand">
                 <img src={docLogo} alt="logo" />
                 <span className="text">DMS</span>
@@ -72,28 +72,26 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role }) =
                         <i className={`bx ${isManageOpen ? 'bx-chevron-up' : 'bx-chevron-down'}`} style={{ marginLeft: 'auto' }}></i>
                     </a>
                 </li>
-                {isManageOpen && (
-                    <ul className="submenu">
-                        <li className={active === 'myArtifacts' ? 'active' : ''}>
-                            <a href="#" onClick={() => { handleSlideBarClick('myArtifacts'); handleClick('myArtifacts'); handleDashboard() }}>
-                                <i className='bx bx-folder-open'></i>
-                                <span className="text">My Artifacts</span>
-                            </a>
-                        </li>
-                        <li className={active === 'uploadDocuments' ? 'active' : ''}>
-                            <a href="#" onClick={() => { handleSlideBarClick('uploadDocuments'); handleClick('upload'); handleDashboard() }}>
-                                <i className='bx bx-upload'></i>
-                                <span className="text">Upload Document</span>
-                            </a>
-                        </li>
-                        <li className={active === 'addUrl' ? 'active' : ''}>
-                            <a href="#" onClick={() => { handleSlideBarClick('addUrl'); handleClick('addUrl'); handleDashboard() }}>
-                                <i className='bx bx-link'></i>
-                                <span className="text">Add URL</span>
-                            </a>
-                        </li>
-                    </ul>
-                )}
+                <ul className={`submenu ${isManageOpen ? 'open' : ''}`}>
+                    <li className={active === 'myArtifacts' ? 'active' : ''}>
+                        <a href="#" onClick={() => { handleSlideBarClick('myArtifacts'); handleClick('myArtifacts'); handleDashboard() }}>
+                            <i className='bx bx-folder-open'></i>
+                            <span className="text">My Artifacts</span>
+                        </a>
+                    </li>
+                    <li className={active === 'uploadDocuments' ? 'active' : ''}>
+                        <a href="#" onClick={() => { handleSlideBarClick('uploadDocuments'); handleClick('upload'); handleDashboard() }}>
+                            <i className='bx bx-upload'></i>
+                            <span className="text">Upload Document</span>
+                        </a>
+                    </li>
+                    <li className={active === 'addUrl' ? 'active' : ''}>
+                        <a href="#" onClick={() => { handleSlideBarClick('addUrl'); handleClick('addUrl'); handleDashboard() }}>
+                            <i className='bx bx-link'></i>
+                            <span className="text">Add URL</span>
+                        </a>
+                    </li>
+                </ul>
                 {role === 1 && ( // Only render God Mode if role is admin
                     <>
                         <li className={active === 'godMode' ? 'active' : ''}>
@@ -103,52 +101,50 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role }) =
                                 <i className={`bx ${isGodModeOpen ? 'bx-chevron-up' : 'bx-chevron-down'}`} style={{ marginLeft: 'auto' }}></i>
                             </a>
                         </li>
-                        {isGodModeOpen && (
-                            <ul className="submenu">
-                                <li className={active === 'systemSettings' ? 'active' : ''}>
-                                    <a href="#" onClick={() => { handleSlideBarClick('systemSettings'); handleClick('systemSettings'); handleDashboard() }}>
-                                        <i className='bx bx-cog'></i>
-                                        <span className="text">System Settings</span>
-                                    </a>
-                                </li>
-                                <li className={active === 'checkUserActivity' ? 'active' : ''}>
-                                    <a href="#" onClick={() => { handleSlideBarClick('checkUserActivity'); handleClick('userActivity'); handleDashboard() }}>
-                                        <i className='bx bxs-user-detail'></i>
-                                        <span className="text">Check User Activity</span>
-                                    </a>
-                                </li>
-                                <li className={active === 'changeUserAccess' ? 'active' : ''}>
-                                    <a href="#" onClick={() => { handleSlideBarClick('changeUserAccess'); handleClick('userAccess'); handleDashboard() }}>
-                                        <i className='bx bx-accessibility'></i>
-                                        <span className="text">Change User Access</span>
-                                    </a>
-                                </li>
-                                <li className={active === 'defineDocumentType' ? 'active' : ''}>
-                                    <a href="#" onClick={() => { handleSlideBarClick('defineDocumentType'); handleClick('defineDocType'); handleDashboard() }}>
-                                        <i className='bx bx-file'></i>
-                                        <span className="text">Define Document Type</span>
-                                    </a>
-                                </li>
-                                <li className={active === 'manageAllArtifacts' ? 'active' : ''}>
-                                    <a href="#" onClick={() => { handleSlideBarClick('manageAllArtifacts'); handleClick('manageAllArtifacts'); handleDashboard() }}>
-                                        <i className='bx bxl-firebase'></i>
-                                        <span className="text">Manage All Artifacts</span>
-                                    </a>
-                                </li>
-                                <li className={active === 'editTags' ? 'active' : ''}>
-                                    <a href="#" onClick={() => { handleSlideBarClick('editTags'); handleClick('editTags'); handleDashboard() }}>
-                                        <i className='bx bx-purchase-tag'></i>
-                                        <span className="text">Edit Tags</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        )}
+                        <ul className={`submenu ${isGodModeOpen ? 'open' : ''}`}>
+                            <li className={active === 'systemSettings' ? 'active' : ''}>
+                                <a href="#" onClick={() => { handleSlideBarClick('systemSettings'); handleClick('systemSettings'); handleDashboard() }}>
+                                    <i className='bx bx-cog'></i>
+                                    <span className="text">System Settings</span>
+                                </a>
+                            </li>
+                            <li className={active === 'checkUserActivity' ? 'active' : ''}>
+                                <a href="#" onClick={() => { handleSlideBarClick('checkUserActivity'); handleClick('userActivity'); handleDashboard() }}>
+                                    <i className='bx bxs-user-detail'></i>
+                                    <span className="text">Check User Activity</span>
+                                </a>
+                            </li>
+                            <li className={active === 'changeUserAccess' ? 'active' : ''}>
+                                <a href="#" onClick={() => { handleSlideBarClick('changeUserAccess'); handleClick('userAccess'); handleDashboard() }}>
+                                    <i className='bx bx-accessibility'></i>
+                                    <span className="text">Change User Access</span>
+                                </a>
+                            </li>
+                            <li className={active === 'defineDocumentType' ? 'active' : ''}>
+                                <a href="#" onClick={() => { handleSlideBarClick('defineDocumentType'); handleClick('defineDocType'); handleDashboard() }}>
+                                    <i className='bx bx-file'></i>
+                                    <span className="text">Define Document Type</span>
+                                </a>
+                            </li>
+                            <li className={active === 'manageAllArtifacts' ? 'active' : ''}>
+                                <a href="#" onClick={() => { handleSlideBarClick('manageAllArtifacts'); handleClick('manageAllArtifacts'); handleDashboard() }}>
+                                    <i className='bx bxl-firebase'></i>
+                                    <span className="text">Manage All Artifacts</span>
+                                </a>
+                            </li>
+                            <li className={active === 'editTags' ? 'active' : ''}>
+                                <a href="#" onClick={() => { handleSlideBarClick('editTags'); handleClick('editTags'); handleDashboard() }}>
+                                    <i className='bx bx-purchase-tag'></i>
+                                    <span className="text">Edit Tags</span>
+                                </a>
+                            </li>
+                        </ul>
                     </>
                 )}
                 <li>
-                    <a href="#" className="logout">
+                    <a href="#" className="logout" onClick={() => { logout() }}>
                         <i className='bx bx-log-out-circle'></i>
-                        <span onClick={() => { logout() }} className="text">Logout</span>
+                        <span className="text">Logout</span>
                     </a>
                 </li>
             </ul>

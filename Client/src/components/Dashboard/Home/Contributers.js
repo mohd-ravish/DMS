@@ -5,8 +5,6 @@ const Todos = () => {
                 <h3>Top 10 Contributers</h3>
             </div>
             <table>
-                <thead>
-                </thead>
                 <tbody>
                     {['ravish@gmail.com', 'jack@gmai.com', 'john@gmail.com'].map(user => (
                         <tr key={user}>

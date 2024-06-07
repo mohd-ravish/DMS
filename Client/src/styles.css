@@ -273,6 +273,9 @@ body {
 	width: calc(48px - (4px * 2));
 	transition: width .3s ease;
 }
+#sidebar.hide .submenu {
+	margin-left: 0px;
+}
 #sidebar .side-menu li a.logout {
 	color: var(--red);
 }
@@ -289,7 +292,15 @@ body {
 }
 #sidebar .submenu {
 	margin-left: 41px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
 }
+#sidebar .submenu.open {
+    max-height: 500px; /* Adjust this value based on the expected maximum height of your submenu */
+    transition: max-height 0.3s ease-in-out;
+}
+
 /* SIDEBAR */
 
 
@@ -517,30 +528,8 @@ body {
 	grid-gap: 12px;
 	padding-left: 6px;
 }
-#content main .table-data .order table td img {
-	width: 36px;
-	height: 36px;
-	border-radius: 50%;
-	object-fit: cover;
-}
 #content main .table-data .order table tbody tr:hover {
 	background: var(--grey);
-}
-#content main .table-data .order table tr td .status {
-	font-size: 10px;
-	padding: 6px 16px;
-	color: var(--light);
-	border-radius: 20px;
-	font-weight: 700;
-}
-#content main .table-data .order table tr td .status.completed {
-	background: var(--blue);
-}
-#content main .table-data .order table tr td .status.process {
-	background: var(--yellow);
-}
-#content main .table-data .order table tr td .status.pending {
-	background: var(--orange);
 }
 #content main .table-data .todo {
 	flex-grow: 1;
@@ -711,6 +700,10 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.log-search{
+	padding-bottom: 20px;
+}
 .artifacts-table {
 	font-family: "Montserrat", sans-serif;
     border: 1px solid #ddd;
@@ -817,7 +810,7 @@ body {
     color: red;
 }
 .archived {
-    color: #aaa;
+    color: grey;
     text-decoration: line-through;
 }
 /* MY ARTIFACTS  */

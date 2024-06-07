@@ -43,6 +43,11 @@ function Dashboard() {
     const [docTypes, setDocTypes] = useState([]);
     const [tags, setTags] = useState([]);
     const [availableTags, setAvailableTags] = useState([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
 
     // To hide dashboard home 
     const handleDashboard = () => {
@@ -187,9 +192,10 @@ function Dashboard() {
                         handleDashboard={handleDashboard}
                         handleClick={handleClick}
                         role={role}
+                        isSidebarOpen={isSidebarOpen}
                     />
                     <section id="content">
-                        <Header username={username} role={role} />
+                        <Header username={username} role={role} toggleSidebar={toggleSidebar} />
                         {isClicked.home && isDashboard && <Home />}
                         {isClicked.search && <Search />}
                         {isClicked.myArtifacts && <MyArtifacts />}

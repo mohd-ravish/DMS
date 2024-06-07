@@ -35,10 +35,10 @@ router.post("/login", async (req, res) => {
                         }
                         // Insert login activity log
                         const log_date = new Date();
-                        db.query("INSERT INTO logs (activity, log_date) VALUES (?, ?)", [`User: ${user.email} logged in`, log_date], (err, result) => {
+                        db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [user.id, `User: ${user.email} successfully logged in`, log_date], (err, result) => {
                             if (err) throw err;
                         });
-                        console.log(`User ${user.email} successfully logged in`);
+                        console.log(`User: ${user.email} successfully logged in`);
                         return res.status(200).json({ token });
                     });
                 } else {
@@ -61,7 +61,7 @@ router.get("/verifyUser", verifyUser, (req, res) => {
 // Route to logout
 router.post("/logout", verifyUser, (req, res) => {
     const log_date = new Date();
-    db.query("INSERT INTO logs (activity, log_date) VALUES (?, ?)", [`User ${req.email} logged out`, log_date], (err, result) => {
+    db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} successfully logged out`, log_date], (err, result) => {
         if (err) throw err;
         console.log(`User ${req.email} logged out`);
         return res.json({ status: "success" });

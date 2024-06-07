@@ -4,7 +4,7 @@ const db = require('../config/db');
 
 const router = express.Router();
 
-// Fetch current system settings
+// Route to fetch current system settings
 router.get('/systemSettings', verifyUser, (req, res) => {
     const query = 'SELECT * FROM system_settings WHERE variable_name = "file_upload_limit"';
     db.query(query, (err, results) => {
@@ -26,7 +26,7 @@ router.get('/systemSettings', verifyUser, (req, res) => {
     });
 });
 
-// Update system settings
+// Route to update system settings
 router.post('/updateSystemSettings', verifyUser, (req, res) => {
     const { newLimit } = req.body;
     const current_date = new Date();
@@ -40,7 +40,7 @@ router.post('/updateSystemSettings', verifyUser, (req, res) => {
             console.log(err);
             return res.status(500).json({ status: "error", message: "Database update error" });
         }
-        db.query("INSERT INTO logs (activity, log_date) VALUES (?, ?)", [`User: ${req.email} updated system settings`, current_date], (err, result) => {
+        db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} updated system settings`, current_date], (err, result) => {
             if (err) throw err;
         });
         res.json({ status: "success", message: "System settings updated successfully" });
