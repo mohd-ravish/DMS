@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import Axios from 'axios';
 import docLogo from '../assets/doc-logo.png';
+import { logout } from './ApiHandler/authFunctions';
 
 const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, isSidebarOpen }) => {
-    const navigate = useNavigate();
     const [isManageOpen, setIsManageOpen] = useState(false); // To open Manage section
     const [isGodModeOpen, setIsGodModeOpen] = useState(false); // To open God Mode section
     const [active, setActive] = useState('home');
@@ -24,27 +23,7 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, isS
         setIsManageOpen(false); // Close Manage when God Mode is opened
     };
 
-    // Function to logout
-    const logout = async () => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            await Axios.post("http://localhost:4500/auth/logout", {}, {
-                headers: {
-                    Authorization: token
-                }
-            })
-                .then(res => {
-                    if (res.data.status === "success") {
-                        localStorage.removeItem("token"); // clear token from local storage
-                        navigate("/");
-                    }
-                })
-                .catch(err => console.log(err));
-        } else {
-            localStorage.removeItem("token");
-            navigate("/");
-        }
-    };
+    const navigate = useNavigate();
 
     return (
         <section id="sidebar" className={isSidebarOpen ? '' : 'hide'}>
@@ -142,7 +121,7 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, isS
                     </>
                 )}
                 <li>
-                    <a href="#" className="logout" onClick={() => { logout() }}>
+                    <a href="#" className="logout" onClick={() => { logout(navigate) }}>
                         <i className='bx bx-log-out-circle'></i>
                         <span className="text">Logout</span>
                     </a>

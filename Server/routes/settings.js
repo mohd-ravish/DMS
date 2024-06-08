@@ -5,7 +5,7 @@ const db = require('../config/db');
 const router = express.Router();
 
 // Route to fetch current system settings
-router.get('/systemSettings', verifyUser, (req, res) => {
+router.get('/fetchSystemSettings', verifyUser, (req, res) => {
     const query = 'SELECT * FROM system_settings WHERE variable_name = "file_upload_limit"';
     db.query(query, (err, results) => {
         if (err) {

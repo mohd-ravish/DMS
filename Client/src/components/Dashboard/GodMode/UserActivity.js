@@ -1,51 +1,15 @@
 import { useState, useEffect } from "react";
-import Axios from "axios";
+import { fetchUsers, handleUserActivitySubmit } from '../ApiHandler/usersFunctions';  
 
 const SystemSettings = () => {
     const [users, setUsers] = useState([]);
     const [userId, setUserId] = useState("");
     const [period, setPeriod] = useState("7");
     const [userActivity, setUserActivity] = useState([]);
-    // const [showTable, setShowTable] = useState(false);   
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await Axios.get("http://localhost:4500/users/getUsers", {
-                    headers: {
-                        Authorization: localStorage.getItem("token"),
-                    },
-                });
-                if (response.data.status === "success") {
-                    setUsers(response.data.data);  // Set User Data
-                } else {
-                    console.log(response);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchUsers();
+        fetchUsers(setUsers);
     }, []);
-
-    const handleActivitySubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await Axios.post("http://localhost:4500/users/userActivity", { userId, period }, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            if (response.data.status === "success") {
-                setUserActivity(response.data.data);
-                // setShowTable(true);  
-            } else {
-                console.log(response.data.message);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     return (
         <div className="artifacts-container user-activity">
@@ -63,7 +27,7 @@ const SystemSettings = () => {
                             </option>
                         ))}
                     </select>
-                    <label>Period</label> 
+                    <label>Period</label>
                     <select value={period} onChange={(e) => setPeriod(e.target.value)}>
                         <option value="7">Last 7 days</option>
                         <option value="14">Last 14 days</option>
@@ -72,28 +36,26 @@ const SystemSettings = () => {
                         <option value="180">Last 6 Months</option>
                         <option value="365">Last 1 Year</option>
                     </select>
-                    <button onClick={handleActivitySubmit}>Track</button>
+                    <button onClick={() => handleUserActivitySubmit(userId, period, setUserActivity)}>Track</button>
                 </div>
-                {/* {showTable && (    */}
-                    <table className="artifacts-table">
-                        <thead>
-                            <tr>
-                                <th>Log ID</th>
-                                <th>Activity</th>
-                                <th>Log Date</th>
+                <table className="artifacts-table">
+                    <thead>
+                        <tr>
+                            <th>Log ID</th>
+                            <th>Activity</th>
+                            <th>Log Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {userActivity.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.log_id}</td>
+                                <td>{item.activity}</td>
+                                <td>{item.log_date}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {userActivity.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.log_id}</td>
-                                    <td>{item.activity}</td>
-                                    <td>{item.log_date}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                {/* )} */}
+                        ))}
+                    </tbody>
+                </table>
             </div>
             <div className="usage-instructions">
                 <h2>📢 Usage Instructions</h2>

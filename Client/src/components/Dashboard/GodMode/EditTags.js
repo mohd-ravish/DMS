@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Axios from 'axios';
+import { fetchTags, handleTagUpdate } from '../ApiHandler/tagsFunctions';
 import usePagination from '../usePagination';
 
 const EditTags = () => {
     const [availableTags, setAvailableTags] = useState([]);
-    const [editedTagValue, setEditedTagValue] = useState('');
     const [editingTagId, setEditingTagId] = useState('');
+    const [editedTagValue, setEditedTagValue] = useState('');
     const [searchQuery, setSearchQuery] = useState("");
 
     const handleEdit = (tagId, initialTagName) => {
@@ -16,55 +16,8 @@ const EditTags = () => {
     };
 
     useEffect(() => {
-        const fetchTags = async () => {
-            try {
-                const response = await Axios.get("http://localhost:4500/tags/allTags", {
-                    headers: {
-                        Authorization: localStorage.getItem("token"),
-                    },
-                });
-                if (response.data.status === "success") {
-                    setAvailableTags(response.data.data);
-                } else {
-                    console.log("Failed to fetch tags");
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchTags();
+        fetchTags(setAvailableTags);
     }, []);
-
-    const handleUpdateTag = async () => {
-        try {
-            const response = await Axios.put(`http://localhost:4500/tags/updateTags/${editingTagId}`, {
-                tagName: editedTagValue
-            }, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            if (response.data.status === "success") {
-                toast.success("Tag updated successfully", {
-                    position: "top-center"
-                });
-                // Update the local state with the updated tag value
-                setAvailableTags(availableTags.map(tag => {
-                    if (tag.id === editingTagId) {
-                        return { ...tag, tag_nm: editedTagValue };
-                    }
-                    return tag;
-                }));
-                setEditingTagId("");
-            } else {
-                toast.error("Failed to update Tag", {
-                    position: "top-center"
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const filteredTags = availableTags.filter(tag =>
         tag.tag_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -142,7 +95,7 @@ const EditTags = () => {
                                 <td>8 Documents</td> {/* Adjust this if usedWith is available */}
                                 <td>
                                     {item.id === editingTagId ?
-                                        <button onClick={handleUpdateTag}>Update</button>
+                                        <button onClick={() => handleTagUpdate(editingTagId, editedTagValue, setAvailableTags, availableTags, setEditingTagId)}>Update</button>
                                         :
                                         <a href="#" className="edit-link" onClick={() => handleEdit(item.id, item.tag_nm)}>✏️ Edit</a>
                                     }

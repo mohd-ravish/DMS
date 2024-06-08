@@ -57,7 +57,7 @@ router.delete('/deleteUser/:id', verifyUser, (req, res) => {
     }
 });
 
-// Route to get user activity
+// Route to get user activity logs
 router.post('/userActivity', verifyUser, (req, res) => {
     const { userId, period } = req.body;
     const current_date = new Date();

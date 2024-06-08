@@ -1,53 +1,28 @@
-import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Axios from 'axios';
 import CreatableSelect from 'react-select/creatable';
+import { fetchUploadTags, handleTagChange as handleTagChangeFn } from '../ApiHandler/tagsFunctions';
+import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
+import { handleUrlSubmit } from '../ApiHandler/uploadFunctions';
 
-const AddUrl = ({ docTypes, availableTags, handleTagChange, tags, setTags }) => {
-    const [infoHead, setinfoHead] = useState("");
+const AddUrl = () => {
+    const [infoHead, setInfoHead] = useState("");
     const [url, setUrl] = useState("");
+    const [tags, setTags] = useState([]);
+    const [availableTags, setAvailableTags] = useState([]);
     const [docType, setDocType] = useState("");
+    const [docTypes, setDocTypes] = useState([]);
     const [description, setDescription] = useState("");
     const [publish, setPublish] = useState("no");
 
-    const handleUrlSubmit = async (e) => {
-        e.preventDefault();
-        const urlDetails = {
-            infoHead: infoHead,
-            url: url,
-            tags: JSON.stringify(tags.map(tag => tag.value)),
-            docType: docType,
-            description: description,
-            publish: publish
-          };
+    useEffect(() => {
+        fetchUploadTags(setAvailableTags);
+        fetchDocTypes(setDocTypes);
+    }, []);
 
-        try {
-            const response = await Axios.post("http://localhost:4500/upload/addUrl", urlDetails, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            if (response.data.status === "success") {
-                toast.success("URL added successfully", {
-                    position: "top-center"
-                });
-                setinfoHead("");
-                setUrl("");
-                setTags([]);
-                setDocType("");
-                setDescription("");
-                setPublish("no");
-            } else {
-                toast.error("URL add failed", {
-                    position: "top-center"
-                });
-            }
-        } catch (error) {
-            toast.error("An error occurred while adding the URL", {
-                position: "top-center"
-            });
-        }
+    const handleTagChange = (newValue) => {
+        handleTagChangeFn(newValue, availableTags, setAvailableTags, tags, setTags);
     };
 
     return (
@@ -56,13 +31,13 @@ const AddUrl = ({ docTypes, availableTags, handleTagChange, tags, setTags }) => 
             <header className="upload-document-header">
                 <h1>Add URL</h1>
             </header>
-            <form className="upload-document-form" onSubmit={handleUrlSubmit}>
+            <form className="upload-document-form">
                 <div className="form-group">
                     <label>Information Head</label>
                     <input
                         type="text"
                         value={infoHead}
-                        onChange={(e) => setinfoHead(e.target.value)}
+                        onChange={(e) => setInfoHead(e.target.value)}
                         placeholder="Title to the Documentation / Information"
                         maxLength="100"
                     />
@@ -132,7 +107,7 @@ const AddUrl = ({ docTypes, availableTags, handleTagChange, tags, setTags }) => 
                     </div>
                 </div>
                 <div className="form-group">
-                    <button type="submit">Submit</button>
+                    <button type="button" onClick={() => handleUrlSubmit(infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish)}>Submit</button>
                 </div>
             </form>
             <div className="usage-instructions">

@@ -1,37 +1,18 @@
 import { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Axios from "axios";
+import {fetchSettings, submitNewSystemSettings} from '../ApiHandler/settingsFunctions'
 
-const SystemSettings = ({ limit, updatedBy, lastUpdated }) => {
+const SystemSettings = () => {
+    const [limit, setLimit] = useState("");  // File upload size limit
     const [newLimit, setNewLimit] = useState("");
+    const [updatedBy, setUpdatedBy] = useState("");  // Who updated the system settings
+    const [lastUpdated, setLastUpdated] = useState("");  // Time at which system settings updated
+
     useEffect(() => {
+        fetchSettings(setLimit, setUpdatedBy, setLastUpdated)
         setNewLimit(limit);
     }, [limit]);
-
-    // Function to update the system settings
-    const handleSystemSettings = async () => {
-        try {
-            const response = await Axios.post("http://localhost:4500/settings/updateSystemSettings", { newLimit }, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            if (response.data.status === "success") {
-                toast.success("System settings updated successfully", {
-                    position: "top-center"
-                });
-            } else {
-                toast.error("Failed to update system settings", {
-                    position: "top-center"
-                });
-            }
-        } catch (error) {
-            toast.error("An error occurred while updating system settings", {
-                position: "top-center"
-            });
-        }
-    };
 
     return (
         <div className="artifacts-container system-settings">
@@ -64,7 +45,7 @@ const SystemSettings = ({ limit, updatedBy, lastUpdated }) => {
                             <td><p>The limit is in Kb, calculate the equivalent value in Mb. 1 Mb = 1024 Kb</p></td>
                             <td className="date">{lastUpdated.split('T')[0]}</td>
                             <td><p>{updatedBy}</p></td>
-                            <td><button onClick={handleSystemSettings}>Update</button></td>
+                            <td><button onClick={()=>submitNewSystemSettings(newLimit)}>Update</button></td>
                         </tr>
                     </tbody>
                 </table>

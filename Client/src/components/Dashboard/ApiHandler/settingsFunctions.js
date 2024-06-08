@@ -1,0 +1,46 @@
+import Axios from 'axios';
+import { toast } from 'react-toastify';
+
+// Function to fetch system settings
+export const fetchSettings = async (setLimit, setUpdatedBy = null, setLastUpdated = null) => {
+    try {
+        const response = await Axios.get("http://localhost:4500/settings/fetchSystemSettings", {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        });
+        if (response.data.status === "success") {
+            if (setLimit) setLimit(response.data.data.limit);
+            if (setUpdatedBy) setUpdatedBy(response.data.data.updatedBy);
+            if (setLastUpdated) setLastUpdated(response.data.data.lastUpdated);
+        } else {
+            console.log(response);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// Function to update system settings
+export const submitNewSystemSettings = async (newLimit) => {
+    try {
+        const response = await Axios.post("http://localhost:4500/settings/updateSystemSettings", { newLimit }, {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        });
+        if (response.data.status === "success") {
+            toast.success("System settings updated successfully", {
+                position: "top-center"
+            });
+        } else {
+            toast.error("Failed to update system settings", {
+                position: "top-center"
+            });
+        }
+    } catch (error) {
+        toast.error("An error occurred while updating system settings", {
+            position: "top-center"
+        });
+    }
+};

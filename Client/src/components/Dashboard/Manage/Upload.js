@@ -1,55 +1,35 @@
-import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Axios from 'axios';
 import CreatableSelect from 'react-select/creatable';
+import { fetchUploadTags, handleTagChange as handleTagChangeFn } from '../ApiHandler/tagsFunctions';
+import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
+import { handleDocumentSubmit } from '../ApiHandler/uploadFunctions';
+import { fetchSettings } from '../ApiHandler/settingsFunctions'
 
-const UploadDocument = ({ limit, docTypes, availableTags, handleTagChange, tags, setTags }) => {
+const UploadDocument = () => {
+    const [limit, setLimit] = useState("");
     const [file, setFile] = useState(null);
+    const [tags, setTags] = useState([]);
+    const [availableTags, setAvailableTags] = useState([]);
     const [docType, setDocType] = useState("");
+    const [docTypes, setDocTypes] = useState([]);
     const [description, setDescription] = useState("");
     const [publish, setPublish] = useState("no");
+
+    useEffect(() => {
+        fetchSettings(setLimit)
+        fetchUploadTags(setAvailableTags);
+        fetchDocTypes(setDocTypes);
+    }, []);
+
+    const handleTagChange = (newValue) => {
+        handleTagChangeFn(newValue, availableTags, setAvailableTags, tags, setTags);
+    };
 
     // Function to convert the limit from KB to MB
     const kbToMb = (kb) => {
         return Math.ceil(kb / 1024);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("tags", JSON.stringify(tags.map(tag => tag.value)));
-        formData.append("docType", docType);
-        formData.append("description", description);
-        formData.append("publish", publish);
-
-        try {
-            const response = await Axios.post("http://localhost:4500/upload/uploadDocument", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            if (response.data.status === "success") {
-                toast.success("Document uploaded successfully", {
-                    position: "top-center"
-                });
-                setFile(null);
-                setTags([]);
-                setDocType("");
-                setDescription("");
-                setPublish("no");
-            } else {
-                toast.error("Document upload failed", {
-                    position: "top-center"
-                });
-            }
-        } catch (error) {
-            toast.error("An error occurred while uploading the document", {
-                position: "top-center"
-            });
-        }
     };
 
     return (
@@ -58,7 +38,7 @@ const UploadDocument = ({ limit, docTypes, availableTags, handleTagChange, tags,
             <header className="upload-document-header">
                 <h1>Upload Document</h1>
             </header>
-            <form className="upload-document-form" onSubmit={handleSubmit}>
+            <form className="upload-document-form">
                 <div className="form-group">
                     <label>Upload File</label>
                     <input type="file" onChange={(e) => { setFile(e.target.files[0]) }} />
@@ -119,7 +99,7 @@ const UploadDocument = ({ limit, docTypes, availableTags, handleTagChange, tags,
                     </div>
                 </div>
                 <div className="form-group">
-                    <button type="submit">Upload</button>
+                    <button type="button" onClick={() => handleDocumentSubmit(file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish)}>Upload</button>
                 </div>
             </form>
             <div className="usage-instructions">
