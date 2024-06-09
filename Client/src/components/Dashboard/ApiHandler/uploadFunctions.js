@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 export const handleDocumentSubmit = async (file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("tags", tags.map(tag => tag.label));
+    formData.append("tags", tags.map(tag => tag.value));
     formData.append("docType", docType);
     formData.append("description", description);
     formData.append("publish", publish);
@@ -43,7 +43,7 @@ export const handleUrlSubmit = async (infoHead, url, tags, docType, description,
     const urlDetails = {
         infoHead: infoHead,
         url: url,
-        tags: tags.map(tag => tag.label),
+        tags: tags.map(tag => tag.value),
         docType: docType,
         description: description,
         publish: publish
@@ -72,6 +72,37 @@ export const handleUrlSubmit = async (infoHead, url, tags, docType, description,
         }
     } catch (error) {
         toast.error("An error occurred while adding the URL", {
+            position: "top-center"
+        });
+    }
+};
+
+// Function to update document/url metadata
+export const handleEditArtifact = async (docId, tags, docType, description, publish, status) => {
+    const editData = {
+        tags: tags.map(tag => tag.value),
+        docType: docType,
+        description: description,
+        publish: publish,
+        status: status
+    };
+    try {
+        const response = await Axios.put(`http://localhost:4500/upload/updateDocument/${docId}`, editData, {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        });
+        if (response.data.status === "success") {
+            toast.success("Your document metadata successfully updated", {
+                position: "top-center"
+            });
+        } else {
+            toast.error("Failed to update metadata", {
+                position: "top-center"
+            });
+        }
+    } catch (error) {
+        toast.error("An error occurred while updating metadata", {
             position: "top-center"
         });
     }

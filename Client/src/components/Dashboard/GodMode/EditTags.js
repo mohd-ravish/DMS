@@ -124,7 +124,7 @@ const EditTags = () => {
             <div className="usage-instructions">
                 <h2>📢 Usage Instructions</h2>
                 <ul>
-                    <li><i className='bx bx-paper-plane'></i> You may Edit the available tags.</li>
+                    <li><i className='bx bx-paper-plane'></i> You may edit the available tags.</li>
                     <li><i className='bx bx-paper-plane'></i> To sort the column values, click on the column name.</li>
                 </ul>
             </div>

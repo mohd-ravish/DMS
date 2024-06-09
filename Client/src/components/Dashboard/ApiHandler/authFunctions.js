@@ -49,7 +49,7 @@ export const verifyUser = async (setAuth, setUsername, setRole, setMessage) => {
             setRole(res.data.role_id);
         } else {
             setAuth(false);
-            setMessage(res.data.error);
+            setMessage(res.data.message);
         }
     } catch (err) {
         console.log(err);

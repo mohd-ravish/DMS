@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Route to fetch current system settings
 router.get('/fetchSystemSettings', verifyUser, (req, res) => {
-    const query = 'SELECT * FROM system_settings WHERE variable_name = "file_upload_limit"';
+    const query = 'SELECT * FROM vw_system_settings WHERE variable_name = "file_upload_limit"';
     db.query(query, (err, results) => {
         if (err) {
             return res.status(500).json({ status: "error", message: "Database query error" });

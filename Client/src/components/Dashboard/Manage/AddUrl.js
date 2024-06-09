@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
 import { fetchUploadTags, handleTagChange as handleTagChangeFn } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
-import { handleUrlSubmit } from '../ApiHandler/uploadFunctions';
+import { handleUrlSubmit as handleUrlSubmitFn } from '../ApiHandler/uploadFunctions';
 
 const AddUrl = () => {
     const [infoHead, setInfoHead] = useState("");
@@ -25,13 +25,18 @@ const AddUrl = () => {
         handleTagChangeFn(newValue, availableTags, setAvailableTags, tags, setTags);
     };
 
+    const handleUrlSubmit = (e) => {
+        e.preventDefault();
+        handleUrlSubmitFn(infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish);
+    }
+
     return (
         <div className="upload-document-container">
             <ToastContainer />
             <header className="upload-document-header">
                 <h1>Add URL</h1>
             </header>
-            <form className="upload-document-form">
+            <form className="upload-document-form" onSubmit={handleUrlSubmit}>
                 <div className="form-group">
                     <label>Information Head</label>
                     <input
@@ -40,6 +45,7 @@ const AddUrl = () => {
                         onChange={(e) => setInfoHead(e.target.value)}
                         placeholder="Title to the Documentation / Information"
                         maxLength="100"
+                        required
                     />
                     <small>Max length 100 char</small>
                 </div>
@@ -50,6 +56,7 @@ const AddUrl = () => {
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
                         placeholder="URL to the Documentation / Information"
+                        required
                     />
                 </div>
                 <div className="form-group">
@@ -60,11 +67,12 @@ const AddUrl = () => {
                         onChange={handleTagChange}
                         options={availableTags}
                         placeholder="Select or create tags"
+                        required
                     />
                 </div>
                 <div className="form-group">
                     <label>Document Type</label>
-                    <select value={docType} onChange={(e) => setDocType(e.target.value)}>
+                    <select value={docType} onChange={(e) => setDocType(e.target.value)} required>
                         <option value="">Select</option>
                         {docTypes.map((type) => (
                             <option key={type.id} value={type.id}>
@@ -80,6 +88,7 @@ const AddUrl = () => {
                         maxLength="500"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        required
                     />
                     <small>Max length 500 Char</small>
                 </div>
@@ -107,7 +116,7 @@ const AddUrl = () => {
                     </div>
                 </div>
                 <div className="form-group">
-                    <button type="button" onClick={() => handleUrlSubmit(infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish)}>Submit</button>
+                    <button type="submit">Submit</button>
                 </div>
             </form>
             <div className="usage-instructions">

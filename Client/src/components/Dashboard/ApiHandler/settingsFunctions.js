@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 
-// Function to fetch system settings
+// Function to fetch current system settings
 export const fetchSettings = async (setLimit, setUpdatedBy = null, setLastUpdated = null) => {
     try {
         const response = await Axios.get("http://localhost:4500/settings/fetchSystemSettings", {
@@ -23,6 +23,12 @@ export const fetchSettings = async (setLimit, setUpdatedBy = null, setLastUpdate
 
 // Function to update system settings
 export const submitNewSystemSettings = async (newLimit) => {
+    if (!newLimit || newLimit.trim() === "") {
+        toast.error("The file upload limit is required", {
+            position: "top-center"
+        });
+        return; 
+    }
     try {
         const response = await Axios.post("http://localhost:4500/settings/updateSystemSettings", { newLimit }, {
             headers: {

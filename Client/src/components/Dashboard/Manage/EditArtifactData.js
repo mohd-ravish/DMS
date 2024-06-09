@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
 import { fetchUploadTags, handleTagChange as handleTagChangeFn } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
+import { handleEditArtifact as handleEditArtifactFn } from '../ApiHandler/uploadFunctions';
+import { handleDeleteArtifact } from '../ApiHandler/artifactsFunctions';
 
 const EditMetaData = ({ editFormData, handleClose }) => {
     const [availableTags, setAvailableTags] = useState([]);
-    const [tags, setTags] = useState(editFormData.assoc_tags.split(',').map(tag => ({ value: tag.trim(), label: tag.trim() })));
+    const [tags, setTags] = useState([]);
     const [docTypes, setDocTypes] = useState([]);
     const [docType, setDocType] = useState(editFormData.doc_type);
     const [description, setDescription] = useState(editFormData.doc_description);
@@ -15,40 +19,61 @@ const EditMetaData = ({ editFormData, handleClose }) => {
     useEffect(() => {
         fetchUploadTags(setAvailableTags);
         fetchDocTypes(setDocTypes);
-    }, []);
+        // Initializing already used/current tags in the selectbar
+        if (availableTags.length > 0) {
+            const initialTags = editFormData.assoc_tags.split(',').map(tagId => {
+                const tag = availableTags.find(tag => tag.value === parseInt(tagId));
+                return tag ? { value: tag.value, label: tag.label } : null;
+            }).filter(tag => tag !== null);
+            setTags(initialTags);
+        }
+    }, [availableTags]);
 
     const handleTagChange = (newValue) => {
         handleTagChangeFn(newValue, availableTags, setAvailableTags, tags, setTags);
     };
 
+    const handleEditArtifact = (e) => {
+        e.preventDefault();
+        handleEditArtifactFn(editFormData.id, tags, docType, description, publish, status);
+    };
+
     const getStatusClass = () => {
-        if (status === 'archived') {
+        if (editFormData.doc_status === 'archived') {
             return 'status-archived';
-        } else if (status === 'active' && publish === 1) {
+        } else if (editFormData.doc_status === 'active' && editFormData.is_published === 1) {
             return 'status-active-published';
-        } else if (status === 'active' && publish === 0) {
+        } else if (editFormData.doc_status === 'active' && editFormData.is_published === 0) {
             return 'status-active-not-published';
         }
         return '';
     };
 
     const getStatusText = () => {
-        if (status === 'archived') {
+        if (editFormData.doc_status === 'archived') {
             return 'Archived not search ready';
-        } else if (status === 'active' && publish === 1) {
+        } else if (editFormData.doc_status === 'active' && editFormData.is_published === 1) {
             return 'Active and published';
-        } else if (status === 'active' && publish === 0) {
+        } else if (editFormData.doc_status === 'active' && editFormData.is_published === 0) {
             return 'Active but not published';
         }
         return '';
     };
 
+    const getTagNames = (tagIds) => {
+        return tagIds.split(',').map(tagId => {
+            const tag = availableTags.find(tag => tag.value === parseInt(tagId));
+            return tag ? tag.label : null;
+        });
+    };
+
     return (
         <div className="edit-document-container">
+            <ToastContainer />
             <header className="upload-document-header">
                 <h1>Edit Metadata</h1>
             </header>
-            <form className="edit-document-form">
+            <form className="edit-document-form" onSubmit={handleEditArtifact}>
                 <div className="form-group">
                     <label>Document ID</label>
                     <span className="document-id">{editFormData.id}</span>
@@ -61,8 +86,8 @@ const EditMetaData = ({ editFormData, handleClose }) => {
                 <div className="form-group">
                     <label>Current Tags</label>
                     <div className="tags">
-                        {editFormData.assoc_tags.split(',').map((tag, index) => (
-                            <span key={index} className="tag">{tag.trim()}</span>
+                        {getTagNames(editFormData.assoc_tags).map((tag, index) => (
+                            <span key={index} className="tag">{tag}</span>
                         ))}
                     </div>
                 </div>
@@ -74,11 +99,13 @@ const EditMetaData = ({ editFormData, handleClose }) => {
                         onChange={handleTagChange}
                         options={availableTags}
                         placeholder="Select or create tags"
+                        className="document-tags-select"
+                        required
                     />
                 </div>
                 <div className="form-group">
                     <label>Document Type</label>
-                    <select value={docType} onChange={(e) => setDocType(e.target.value)}>
+                    <select value={docType} onChange={(e) => setDocType(e.target.value)} required>
                         <option value="">Select</option>
                         {docTypes.map((type) => (
                             <option key={type.id} value={type.id}>
@@ -93,6 +120,7 @@ const EditMetaData = ({ editFormData, handleClose }) => {
                         maxLength={500}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        required
                     />
                     {/* <small className="char-limit">Max length 500 Char</small> */}
                 </div>
@@ -141,9 +169,16 @@ const EditMetaData = ({ editFormData, handleClose }) => {
                 <div className="form-actions">
                     <div>
                         <button type="button" className="cancel-btn" onClick={handleClose}>Cancel</button>
-                        <button type="button" className="update-btn">Update</button>
+                        <button type="submit" className="update-btn">Update</button>
                     </div>
-                    <button type="button" className="delete-btn">Delete Artifact</button>
+                    <button
+                        type="button"
+                        className="delete-btn"
+                        onClick={() => {
+                            if (window.confirm(`Are you sure you want to delete the document`)) {
+                                handleDeleteArtifact(editFormData.id);
+                            }
+                        }}>Delete Artifact</button>
                 </div>
             </form>
             <div className="usage-instructions">

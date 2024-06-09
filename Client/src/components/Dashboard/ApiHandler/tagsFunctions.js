@@ -67,6 +67,9 @@ export const handleTagChange = async (newValue, availableTags, setAvailableTags,
 
 // Function to update tags
 export const handleTagUpdate = async (editingTagId, editedTagValue, setAvailableTags, availableTags, setEditingTagId) => {
+    if (!editedTagValue || editedTagValue.trim() === "") {
+        return;
+    }
     try {
         const response = await Axios.put(`http://localhost:4500/tags/updateTags/${editingTagId}`, {
             tagName: editedTagValue

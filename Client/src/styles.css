@@ -862,13 +862,13 @@ body {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-/* .form-group small {
+.form-group small {
 	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: block;
 	font-size: small;
     margin-top: 5px;
     color: rgb(220, 48, 48);
-} */
+}
 .radio-group {
     display: flex;
     gap: 10px;
@@ -907,6 +907,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .edit-document-form .form-group {
+	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     display: flex;
     align-items: center;
     margin-bottom: 25px;
@@ -922,12 +923,12 @@ body {
     /* flex: 1; */
     padding: 5px 10px;
 	font-size: 15px;
-    background-color: #eee;
+	color: white;
+    background-color: #969696;
     margin-right: 10px;
 	border-radius: 3px;
 }
 .edit-document-form .document-status{
-	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 	font-size: 15px;
     padding: 5px 10px;
     margin-right: 10px;
@@ -943,7 +944,7 @@ body {
 }
 .edit-document-form .tag {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 3px 5px;
     background-color: #00bfa6;
     color: #fff;
     border-radius: 3px;
@@ -958,7 +959,11 @@ body {
     box-sizing: border-box;
 }
 .edit-document-form textarea {
+	font-size: 15px;
     height: 100px;
+}
+.document-tags-select {
+    width: 100%;
 }
 .edit-document-form .form-group small {
 	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -1027,7 +1032,7 @@ body {
 }
 .status-active-not-published {
 	color: white;
-    background-color: rgb(226, 226, 37);
+    background-color: rgb(238, 229, 43);
 }
 .status-archived {
 	color: white;

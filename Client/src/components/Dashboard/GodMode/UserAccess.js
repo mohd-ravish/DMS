@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetchToken, fetchUsers, handleChangeRole, handleDeleteUser } from '../ApiHandler/usersFunctions';  
+import { fetchToken, fetchUsers, handleChangeRole, handleDeleteUser } from '../ApiHandler/usersFunctions';
 import usePagination from '../usePagination';
 
 const UserAccess = () => {
@@ -11,7 +11,7 @@ const UserAccess = () => {
 
     useEffect(() => {
         fetchToken(setCurrentUserId);
-        fetchUsers(setUsers);  
+        fetchUsers(setUsers);
     }, []);
 
     const filteredUsers = users.filter(user =>
@@ -91,7 +91,17 @@ const UserAccess = () => {
                                     )}
                                 </td>
                                 <td>
-                                    <button className="delete-btn" onClick={() => handleDeleteUser(user.id, currentUserId, setUsers, users)}>
+                                    {/* <button className="delete-btn" onClick={() => handleDeleteUser(user.id, currentUserId, setUsers, users)}>
+                                        <i className='bx bx-trash'></i> Delete
+                                    </button> */}
+                                    <button
+                                        className="delete-btn"
+                                        onClick={() => {
+                                            if (window.confirm(`Are you sure you want to delete user ${user.username}?`)) {
+                                                handleDeleteUser(user.id, currentUserId, setUsers, users);
+                                            }
+                                        }}
+                                    >
                                         <i className='bx bx-trash'></i> Delete
                                     </button>
                                     <button className="change-role-btn" onClick={() => handleChangeRole(user.id, user.role_id, currentUserId, setUsers, users)}>

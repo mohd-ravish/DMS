@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { toast } from 'react-toastify';
 
 // Function to fetch document types
 export const fetchDocTypes = async (setDocTypes) => {
@@ -12,6 +13,40 @@ export const fetchDocTypes = async (setDocTypes) => {
             setDocTypes(response.data.data);
         } else {
             console.log("Failed to fetch document types");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// Function to update doc types
+export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, setAvailableDocTypes, availableDocTypes, setEditingDocTypeId) => {
+    if (!editedDocTypeValue || editedDocTypeValue.trim() === "") {
+        return;
+    }
+    try {
+        const response = await Axios.put(`http://localhost:4500/artifacts/updateDocTypes/${editingDocTypeId}`, {
+            docTypeName: editedDocTypeValue
+        }, {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        });
+        if (response.data.status === "success") {
+            toast.success("Doc type updated successfully", {
+                position: "top-center"
+            });
+            setAvailableDocTypes(availableDocTypes.map(docType => {
+                if (docType.id === editingDocTypeId) {
+                    return { ...docType, doctype_nm: editedDocTypeValue };
+                }
+                return docType;
+            }));
+            setEditingDocTypeId("");
+        } else {
+            toast.error("Failed to update Tag", {
+                position: "top-center"
+            });
         }
     } catch (error) {
         console.log(error);
@@ -52,5 +87,29 @@ export const fetchAllArtifacts = async (setAllArtifacts) => {
         }
     } catch (error) {
         console.log(error);
+    }
+};
+
+// Function to delete artifacts
+export const handleDeleteArtifact = async (docId) => {
+    try {
+        const response = await Axios.delete(`http://localhost:4500/artifacts/deleteArtifact/${docId}`, {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        });
+        if (response.data.status === "success") {
+            toast.success("Document Deleted successfully", {
+                position: "top-center"
+            });
+        } else {
+            toast.error("Document delete failed", {
+                position: "top-center"
+            });
+        }
+    } catch (error) {
+        toast.error("An error occurred while deleting the document", {
+            position: "top-center"
+        });
     }
 };

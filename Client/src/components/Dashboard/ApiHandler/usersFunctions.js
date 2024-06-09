@@ -1,17 +1,17 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 // Function to fetch token from local storage
 export const fetchToken = async (setCurrentUserId) => {
-    const token = localStorage.getItem("token");   
+    const token = localStorage.getItem("token");
     if (token) {
-        const decodedToken = jwtDecode(token);   
-        setCurrentUserId(decodedToken.id);       
+        const decodedToken = jwtDecode(token);
+        setCurrentUserId(decodedToken.id);
     }
 };
 
-// Function to fetch user's info 
+// Function to fetch user info 
 export const fetchUsers = async (setUsers) => {
     try {
         const response = await Axios.get("http://localhost:4500/users/getUsers", {
@@ -29,7 +29,7 @@ export const fetchUsers = async (setUsers) => {
     }
 };
 
-// Function to change user's role
+// Function to change user role
 export const handleChangeRole = async (userId, currentRoleId, currentUserId, setUsers, users) => {
     if (userId === currentUserId) { // If logged in user tries to change its role exit the function
         toast.error("Ask another admin to change your role", {
@@ -103,6 +103,9 @@ export const handleDeleteUser = async (userId, currentUserId, setUsers, users) =
 
 // Function to get user activity logs
 export const handleUserActivitySubmit = async (userId, period, setUserActivity) => {
+    if (!userId || userId.trim() === "") {
+        return;
+    }
     try {
         const response = await Axios.post("http://localhost:4500/users/userActivity", { userId, period }, {
             headers: {
