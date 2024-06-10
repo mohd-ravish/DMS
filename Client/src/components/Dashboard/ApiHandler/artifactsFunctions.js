@@ -53,6 +53,27 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
     }
 };
 
+// Function to add new doc type
+export const handleAddNewDocType = async (newDocTypeName, setNewDocTypeName) => {
+    try {
+        const response = await Axios.post("http://localhost:4500/artifacts/addNewDocType", { newDocTypeName }, {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        });
+        if (response.data.status === "success") {
+            setNewDocTypeName("");
+            toast.success("New Doc type added successfully", {
+                position: "top-center"
+            });
+        } else {
+            console.log("Failed to add doc type");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 // Function to fetch user's artifacts
 export const fetchMyArtifacts = async (setArtifacts) => {
     try {

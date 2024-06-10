@@ -1,147 +1,54 @@
-import { useEffect, useState } from 'react';
-import { fetchMyArtifacts } from '../ApiHandler/artifactsFunctions';
-import usePagination from '../usePagination';
-import EditArtifactData from './EditArtifactData';
-import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
+// Route to search documents by tags
+// router.post('/searchArtifacts', async (req, res) => {
+//     const { selectedTags } = req.body;
+//     try {
+//         const tagConditions = selectedTags.map(tag => `assoc_tags LIKE ?`).join(' OR ');
+//         const query = `
+//             SELECT * FROM documents
+//             WHERE doc_status = 'active' AND (${tagConditions})
+//         `;
 
-const Artifacts = () => {
-    const [artifacts, setArtifacts] = useState([]);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [editSection, setEditSection] = useState(false);
-    const [editFormData, setEditFormData] = useState([]);
-    const [docTypes, setDocTypes] = useState([]);
-    const [docType, setDocType] = useState("");
+//         const values = selectedTags.map(tag => `%,${tag.value},%`);
+//         const [results] = await db.query(query, values);
 
-    useEffect(() => {
-        fetchMyArtifacts(setArtifacts);
-        fetchDocTypes(setDocTypes);
-    }, []);
+//         res.json({ status: 'success', data: results });
+//     } catch (error) {
+//         console.error('Error fetching documents:', error);
+//         res.status(500).json({ status: 'error', message: 'Server error' });
+//     }
+// });
 
-    const filteredArtifacts = artifacts.filter(artifact =>
-        artifact.doc_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        artifact.doctype_nm.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+// Funciton to search artifacts
+// export const handleSearchSubmit = async (tags, setDocuments) => {
+//     try {
+//         const response = await Axios.post('http://localhost:4500/artifacts/searchArtifacts', {
+//             selectedTags: tags,
+//         }, {
+//             headers: {
+//                 Authorization: localStorage.getItem("token"),
+//             },
+//         });
+//         if (response.data.status === 'success') {
+//             setDocuments(response.data.data);
+//         } else {
+//             console.log("Failed to fetch documents");
+//         }
+//     } catch (error) {
+//         console.log("Error searching documents:", error);
+//     }
+// };
 
-    const {
-        currentPage,
-        entriesPerPage,
-        currentEntries,
-        handlePageChange,
-        handleEntriesChange,
-        totalEntries,
-        startEntry,
-        endEntry,
-        totalPages
-    } = usePagination(filteredArtifacts, 10);
 
-    const getDocNameClass = (doc_status, is_published) => {
-        if (doc_status === 'active' && is_published) {
-            return 'active';
-        } else if (doc_status === 'active' && !is_published) {
-            return 'inactive';
-        } else if (doc_status === 'archived') {
-            return 'archived';
-        } else {
-            return '';
-        }
-    };
+// {doc.doc_format === 'url' ? <a href={doc.doc_path} target='_blank'><h3><i className='bx bx-link'></i>{doc.doc_nm}</h3></a> : <p><h3><i className='bx bx-download'></i> {doc.doc_nm}</h3></p>}
 
-    const editArtifact = (editData) => {
-        setEditFormData(editData);
-        setEditSection(true);
-    }
-
-    return (
-        <div>
-            {setEditSection && (
-                <EditArtifactData editFormData={editFormData} setEditSection={setEditSection} docTypes={docTypes} setDocType={setDocType} />
-            )}
-            <div className="artifacts-container">
-                <header className="artifacts-header">
-                    <h1>My Artifacts</h1>
-                </header>
-                <div className="artifacts-table-container">
-                    <div className='header-select-entries'>
-                        <th className='select-entries'>Show
-                            <select onChange={handleEntriesChange} value={entriesPerPage}>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>entries
-                        </th>
-                        <th colSpan="4">
-                            <div className="table-buttons">
-                                <button>Copy</button>
-                                <button>CSV</button>
-                                <button>Excel</button>
-                                <button>PDF</button>
-                                <button>Print</button>
-                            </div>
-                        </th>
-                        <th className='user-search'>
-                            <label>Search</label>
-                            <input
-                                type="text"
-                                placeholder="Type name or type..."
-                                className="user-search-bar"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                        </th>
-                    </div>
-                    <table className="artifacts-table">
-                        <thead>
-                            <tr>
-                                <th>Document Name</th>
-                                <th>Document Type</th>
-                                <th>Uploaded date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentEntries.map((item, index) => (
-                                <tr key={index}>
-                                    <td className={getDocNameClass(item.doc_status, item.is_published)}>
-                                        {item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}
-                                    </td>
-                                    <td>{item.doctype_nm}</td>
-                                    <td className="date">{item.date_uploaded.split('T')[0]}</td>
-                                    <td><a href="#" className="edit-link" onClick={()=>editArtifact(item)}>✏️ Edit</a></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <div className="pagination">
-                        <p>Showing {startEntry} to {endEntry} of {totalEntries} entries</p>
-                        <div className="pagination-buttons">
-                            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
-                            {Array.from({ length: totalPages }, (_, i) => (
-                                <button
-                                    key={i + 1}
-                                    className={currentPage === i + 1 ? "active" : ""}
-                                    onClick={() => handlePageChange(i + 1)}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
-                            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
-                        </div>
-                    </div>
-                </div>
-                <div className="usage-instructions">
-                    <h2>📢 Usage Instructions</h2>
-                    <ul>
-                        <li><i className='bx bx-paper-plane'></i> All documents/urls uploaded by you will be listed here in descending order, i.e., latest first.</li>
-                        <li><i className='bx bx-paper-plane'></i> All Active and published documents will be eligible for end-user searches.</li>
-                        <li><i className='bx bx-paper-plane'></i> Color Legend: <span className="active">Active and Search Ready</span>, <span className="inactive">Active but Not published</span>, and <span className="archived">Archived i.e. Neither Active Nor Search Ready</span></li>
-                        <li><i className='bx bx-paper-plane'></i> To read the description, hover your cursor on the document name.</li>
-                        <li><i className='bx bx-paper-plane'></i> Symbol 🔗 after the document name shows that it's a URL and 📄 shows that it's an uploaded document.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export default Artifacts;
+// Set up Multer for file uploads
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, "./public/uploads");
+//     },
+//     filename: function (req, file, cb) {
+//         const ext = path.extname(file.originalname);
+//         const baseName = path.basename(file.originalname, ext);
+//         cb(null, `${baseName}-${Date.now()}${ext}`);
+//     }
+// });

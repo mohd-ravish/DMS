@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
-import { handleDocTypeUpdate } from '../ApiHandler/artifactsFunctions';
+import { fetchDocTypes, handleDocTypeUpdate, handleAddNewDocType as handleAddNewDocTypeFn } from '../ApiHandler/artifactsFunctions';
 
 const DefineDocType = () => {
     const [availableDocTypes, setAvailableDocTypes] = useState([]);
-    const [editingDocTypeId, setEditingDocTypeId] = useState('');
-    const [editedDocTypeValue, setEditedDocTypeValue] = useState('');
+    const [editingDocTypeId, setEditingDocTypeId] = useState("");
+    const [editedDocTypeValue, setEditedDocTypeValue] = useState("");
+    const [newDocTypeName, setNewDocTypeName] = useState("");
 
     const handleEdit = (docTypeId, initialDocName) => {
         setEditingDocTypeId(docTypeId);
@@ -18,11 +18,27 @@ const DefineDocType = () => {
         fetchDocTypes(setAvailableDocTypes);
     }, []);
 
+    const handleAddNewDocType = (e) => {
+        e.preventDefault();
+        handleAddNewDocTypeFn(newDocTypeName, setNewDocTypeName);
+    }
+
     return (
         <div className="artifacts-container system-settings">
             <ToastContainer />
-            <header className="artifacts-header">
-            <h1>Define Document Type</h1>
+            <header className="artifacts-header define-doctype-header">
+                <h1>Define Document Type</h1>
+                <form className="add-doctype" onSubmit={handleAddNewDocType}>
+                    <input
+                        type="text"
+                        value={newDocTypeName}
+                        onChange={(e) => setNewDocTypeName(e.target.value)}
+                        placeholder="New Document Type Name"
+                        className="add-doctype-bar"
+                        required
+                    />
+                    <button type="submit" className="add-btn">Add</button>
+                </form>
             </header>
             <div className="artifacts-table-container">
                 <table className="artifacts-table">

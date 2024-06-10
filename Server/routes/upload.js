@@ -12,13 +12,12 @@ const storage = multer.diskStorage({
         return cb(null, "./public/uploads")
     },
     filename: function (req, file, cb) {
-        return cb(null, `${Date.now()}_${file.originalname}`)
+        return cb(null, `${file.originalname}`)
     }
 })
 
 const upload = multer({
     storage: storage,
-    // limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit
 }).single('file');
 
 // Route to upload document 
@@ -27,7 +26,6 @@ router.post('/uploadDocument', verifyUser, (req, res) => {
         if (err) {
             return res.json({ status: 'fail', message: err.message });
         }
-
         const { tags, docType, description, publish } = req.body;
         const filePath = req.file.path;
         const docFormat = path.extname(req.file.originalname).slice(1);
@@ -61,8 +59,7 @@ router.post('/addUrl', verifyUser, (req, res) => {
     const ownerAuthorId = req.email;
     const isPublished = publish === 'yes' ? 1 : 0;
     const current_date = new Date();
-    // Convert tags array to a comma-separated string
-    const assocTags = tags.join(',');
+    const assocTags = tags.join(',');  // Convert tags array to a comma-separated string
 
     const query = `INSERT INTO documents 
         (doc_nm, owner_author_id, doc_path, doc_type, doc_format, assoc_tags, doc_description, doc_status, is_published, date_uploaded, uploaded_by) 
@@ -90,8 +87,7 @@ router.post('/addUrl', verifyUser, (req, res) => {
 router.put('/updateDocument/:id', verifyUser, async (req, res) => {
     const { id } = req.params;
     const { tags, docType, description, publish, status } = req.body;
-    // Convert tags array to a comma-separated string
-    const assocTags = tags.join(',');
+    const assocTags = tags.join(',');  // Convert tags array to a comma-separated string
     const current_date = new Date();
     try {
         const query = 'UPDATE documents SET assoc_tags = ?, doc_type = ?, doc_description = ?, doc_status = ?, is_published = ? WHERE id = ?';
