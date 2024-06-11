@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetchDocTypes, handleDocTypeUpdate, handleAddNewDocType as handleAddNewDocTypeFn } from '../ApiHandler/artifactsFunctions';
+import { fetchDocTypes, handleDocTypeUpdate, handleAddNewDocType } from '../ApiHandler/artifactsFunctions';
 
 const DefineDocType = () => {
     const [availableDocTypes, setAvailableDocTypes] = useState([]);
@@ -18,17 +18,12 @@ const DefineDocType = () => {
         fetchDocTypes(setAvailableDocTypes);
     }, []);
 
-    const handleAddNewDocType = (e) => {
-        e.preventDefault();
-        handleAddNewDocTypeFn(newDocTypeName, setNewDocTypeName);
-    }
-
     return (
         <div className="artifacts-container system-settings">
             <ToastContainer />
             <header className="artifacts-header define-doctype-header">
                 <h1>Define Document Type</h1>
-                <form className="add-doctype" onSubmit={handleAddNewDocType}>
+                <form className="add-doctype" onSubmit={(e)=>handleAddNewDocType(e, newDocTypeName, setNewDocTypeName)}>
                     <input
                         type="text"
                         value={newDocTypeName}

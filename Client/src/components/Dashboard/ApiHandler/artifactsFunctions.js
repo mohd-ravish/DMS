@@ -54,7 +54,8 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
 };
 
 // Function to add new doc type
-export const handleAddNewDocType = async (newDocTypeName, setNewDocTypeName) => {
+export const handleAddNewDocType = async (e, newDocTypeName, setNewDocTypeName) => {
+    e.preventDefault();
     try {
         const response = await Axios.post("http://localhost:4500/artifacts/addNewDocType", { newDocTypeName }, {
             headers: {
@@ -132,5 +133,30 @@ export const handleDeleteArtifact = async (docId) => {
         toast.error("An error occurred while deleting the document", {
             position: "top-center"
         });
+    }
+};
+
+// Function to fetch top 10 contributers
+export const fetchTopContributors = async (setContributors) => {
+    try {
+        const response = await Axios.get('http://localhost:4500/artifacts/topContributors');
+        if (response.data.status === 'success') {
+            setContributors(response.data.data);
+        }
+    } catch (error) {
+        console.error('Error fetching top contributors:', error);
+    }
+};
+
+// Function to fetch artifacts count
+export const fetchArtifactsCounts = async (setTotalDocsCount, setTotalUrlsCount) => {
+    try {
+        const response = await Axios.get('http://localhost:4500/artifacts/countArtifacts');
+        if (response.data.status === 'success') {
+            setTotalDocsCount(response.data.data.total_docs);
+            setTotalUrlsCount(response.data.data.total_urls);
+        }
+    } catch (error) {
+        console.error('Error fetching artifact counts:', error);
     }
 };

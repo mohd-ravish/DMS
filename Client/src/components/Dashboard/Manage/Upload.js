@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
-import { fetchUploadTags, handleTagChange as handleTagChangeFn } from '../ApiHandler/tagsFunctions';
+import { fetchUploadTags, handleTagChange } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
-import { handleDocumentSubmit as handleDocumentSubmitFn} from '../ApiHandler/uploadFunctions';
+import { handleDocumentSubmit } from '../ApiHandler/uploadFunctions';
 import { fetchSettings } from '../ApiHandler/settingsFunctions'
 
 const UploadDocument = () => {
@@ -23,15 +23,6 @@ const UploadDocument = () => {
         fetchDocTypes(setDocTypes);
     }, []);
 
-    const handleTagChange = (newValue) => {
-        handleTagChangeFn(newValue, availableTags, setAvailableTags, tags, setTags);
-    };
-
-    const handleDocumentSubmit = (e) => {
-        e.preventDefault();
-        handleDocumentSubmitFn(file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish);
-    };
-
     // Function to convert the limit from KB to MB
     const kbToMb = (kb) => {
         return Math.ceil(kb / 1024);
@@ -43,10 +34,10 @@ const UploadDocument = () => {
             <header className="upload-document-header">
                 <h1>Upload Document</h1>
             </header>
-            <form className="upload-document-form" onSubmit={handleDocumentSubmit}>
+            <form className="upload-document-form" onSubmit={(e) => handleDocumentSubmit(e, limit, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish)}>
                 <div className="form-group">
                     <label>Upload File</label>
-                    <input type="file" onChange={(e) => { setFile(e.target.files[0]) }} required/>
+                    <input type="file" onChange={(e) => { setFile(e.target.files[0]) }} required />
                     <small>Allowed File Size: {kbToMb(limit)} Mb</small>
                 </div>
                 <div className="form-group">
@@ -54,7 +45,7 @@ const UploadDocument = () => {
                     <CreatableSelect
                         isMulti
                         value={tags}
-                        onChange={handleTagChange}
+                        onChange={(newValue) => handleTagChange(newValue, availableTags, setAvailableTags, tags, setTags)}
                         options={availableTags}
                         placeholder="Select or create tags"
                         required
@@ -78,7 +69,7 @@ const UploadDocument = () => {
                         maxLength="500"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        required/>
+                        required />
                     <small>Max length 500 Char</small>
                 </div>
                 <div className="form-group">

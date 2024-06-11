@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Header from './Header';
 import Sidebar from './Sidebar';
-import Home from './Home/Home';
+import Home from './Home';
 import Search from './Search/Search';
 import MyArtifacts from './Manage/MyArtifacts';
 import Upload from './Manage/Upload';

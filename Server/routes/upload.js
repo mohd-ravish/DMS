@@ -6,6 +6,9 @@ const db = require('../config/db');
 
 const router = express.Router();
 
+// Define the allowed file formats
+const allowedFormats = ['jpg', 'png', 'jpeg', 'doc', 'pdf', 'docx', 'xls', 'xlsx', 'zip', 'csv', 'ppt', 'pptx', 'txt'];
+
 // Set up Multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -16,9 +19,18 @@ const storage = multer.diskStorage({
     }
 })
 
-const upload = multer({
-    storage: storage,
-}).single('file');
+// Function to check if the file format is valid
+const fileFilter = (req, file, cb) => {
+    const ext = path.extname(file.originalname).slice(1).toLowerCase();
+    if (allowedFormats.includes(ext)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Unsupported file format'));
+    }
+};
+
+// Initialize Multer with storage and file filter
+const upload = multer({ storage, fileFilter }).single('file');
 
 // Route to upload document 
 router.post('/uploadDocument', verifyUser, (req, res) => {
@@ -44,7 +56,7 @@ router.post('/uploadDocument', verifyUser, (req, res) => {
                 db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} uploaded new document [${docName}]`, current_date], (err, result) => {
                     if (err) throw err;
                 });
-                return res.json({ status: 'success' });
+                return res.json({ status: 'success', message: 'Document uploaded successfully' });
             });
         } catch (err) {
             console.error(err);

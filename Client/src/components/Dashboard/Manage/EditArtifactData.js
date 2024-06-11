@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
-import { fetchUploadTags, handleTagChange as handleTagChangeFn } from '../ApiHandler/tagsFunctions';
+import { fetchUploadTags, handleTagChange } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
-import { handleEditArtifact as handleEditArtifactFn } from '../ApiHandler/uploadFunctions';
+import { handleEditArtifact } from '../ApiHandler/uploadFunctions';
 import { handleDeleteArtifact } from '../ApiHandler/artifactsFunctions';
 
 const EditMetaData = ({ editFormData, handleClose }) => {
@@ -28,15 +28,6 @@ const EditMetaData = ({ editFormData, handleClose }) => {
             setTags(initialTags);
         }
     }, [availableTags]);
-
-    const handleTagChange = (newValue) => {
-        handleTagChangeFn(newValue, availableTags, setAvailableTags, tags, setTags);
-    };
-
-    const handleEditArtifact = (e) => {
-        e.preventDefault();
-        handleEditArtifactFn(editFormData.id, tags, docType, description, publish, status);
-    };
 
     const getStatusClass = () => {
         if (editFormData.doc_status === 'archived') {
@@ -73,7 +64,7 @@ const EditMetaData = ({ editFormData, handleClose }) => {
             <header className="upload-document-header">
                 <h1>Edit Metadata</h1>
             </header>
-            <form className="edit-document-form" onSubmit={handleEditArtifact}>
+            <form className="edit-document-form" onSubmit={(e)=>handleEditArtifact(e, editFormData.id, tags, docType, description, publish, status)}>
                 <div className="form-group">
                     <label>Document ID</label>
                     <span className="document-id">{editFormData.id}</span>
@@ -96,7 +87,7 @@ const EditMetaData = ({ editFormData, handleClose }) => {
                     <CreatableSelect
                         isMulti
                         value={tags}
-                        onChange={handleTagChange}
+                        onChange={(newValue)=>handleTagChange(newValue, availableTags, setAvailableTags, tags, setTags)}
                         options={availableTags}
                         placeholder="Select or create tags"
                         className="document-tags-select"

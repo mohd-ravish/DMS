@@ -2,7 +2,8 @@ import Axios from 'axios';
 import { toast } from 'react-toastify';
 
 // Function to login 
-export const handleLoginSubmit = async (userLoginData, setUserLoginData, navigate) => {
+export const handleLoginSubmit = async (e, userLoginData, setUserLoginData, navigate) => {
+    e.preventDefault();
     if (Object.values(userLoginData).every(value => value.length > 0)) {
         await Axios.post("http://localhost:4500/auth/login", userLoginData)
             .then(res => {
@@ -67,7 +68,7 @@ export const logout = async (navigate) => {
         })
             .then(res => {
                 if (res.data.status === "success") {
-                    localStorage.removeItem("token"); 
+                    localStorage.removeItem("token");
                     navigate("/");
                 }
             })

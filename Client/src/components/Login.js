@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { handleLoginSubmit as handleLoginSubmitFn } from './Dashboard/ApiHandler/authFunctions';
+import { handleLoginSubmit } from './Dashboard/ApiHandler/authFunctions';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -21,18 +21,13 @@ const Login = () => {
         })
     }
 
-    const handleLoginSubmit = (e) => {
-        e.preventDefault();
-        handleLoginSubmitFn(userLoginData, setUserLoginData, navigate);
-    }
-
     return (
         <div className="login-container">
             <ToastContainer />
             <div className="login-box">
                 <div className="login-left">
                     <h1 className="login-title">Sign In</h1>
-                    <form onSubmit={handleLoginSubmit}>
+                    <form onSubmit={(e)=>handleLoginSubmit(e, userLoginData, setUserLoginData, navigate)}>
                         <input
                             name="email"
                             type="email"

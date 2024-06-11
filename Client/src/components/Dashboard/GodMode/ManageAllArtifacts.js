@@ -111,7 +111,10 @@ const ManageAllArtifacts = () => {
                                 {currentEntries.map((item, index) => (
                                     <tr key={index}>
                                         <td className={getDocNameClass(item.doc_status, item.is_published)}>
-                                            {item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}
+                                            <div className="tooltip">
+                                                <p>{item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}</p>
+                                                <span className="tooltiptext">{item.doc_description}</span>
+                                            </div>
                                         </td>
                                         <td>{item.doctype_nm}</td>
                                         <td>{item.owner_author_id}</td>

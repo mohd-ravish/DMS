@@ -94,4 +94,43 @@ router.delete('/deleteArtifact/:id', verifyUser, (req, res) => {
     });
 });
 
+// Route to get top 10 contributors
+router.get('/topContributors', (req, res) => {
+    const query = `
+        SELECT owner_author_id, COUNT(*) AS doc_count
+        FROM vw_documents
+        GROUP BY owner_author_id
+        ORDER BY doc_count DESC
+        LIMIT 10
+    `;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ status: 'fail', message: err.message });
+        }
+        return res.json({ status: 'success', data: results });
+    });
+});
+
+// Route to get total count of docs and URLs
+router.get('/countArtifacts', (req, res) => {
+    const query = `
+        SELECT 
+            SUM(CASE WHEN doc_format != 'url' THEN 1 ELSE 0 END) AS total_docs,
+            SUM(CASE WHEN doc_format = 'url' THEN 1 ELSE 0 END) AS total_urls
+        FROM vw_documents
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ status: 'fail', message: err.message });
+        }
+        return res.json({ status: 'success', data: results[0] });
+    });
+});
+
+module.exports = router;
+
+
 module.exports = router;

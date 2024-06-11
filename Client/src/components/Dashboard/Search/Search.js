@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { fetchUploadTags } from '../ApiHandler/tagsFunctions';
+import { fetchUploadTags, saveSearchedTag } from '../ApiHandler/tagsFunctions';
 import { fetchAllArtifacts } from '../ApiHandler/artifactsFunctions';
 
 const Search = () => {
@@ -18,8 +18,17 @@ const Search = () => {
         filterArtifacts();
     }, [tags, allArtifacts]);
 
-    const handleTagChange = (newValue) => {
+    const handleTagChange = async (newValue) => {
+        const previousTags = tags;
         setTags(newValue);
+        // Determine the newly added tag
+        const previousTagsSet = new Set(previousTags.map(tag => tag.value));
+        const addedTags = newValue.filter(tag => !previousTagsSet.has(tag.value));
+        if (addedTags.length > 0) {
+            // Save the newly added tag to the database
+            const latestTag = addedTags[0]; // Assuming we want the most recently added tag
+            await saveSearchedTag(latestTag.label);
+        }
     };
 
     // Function to filter artifacts on the basis of tags

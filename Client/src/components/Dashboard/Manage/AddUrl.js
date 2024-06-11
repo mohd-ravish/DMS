@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
-import { fetchUploadTags, handleTagChange as handleTagChangeFn } from '../ApiHandler/tagsFunctions';
+import { fetchUploadTags, handleTagChange } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
-import { handleUrlSubmit as handleUrlSubmitFn } from '../ApiHandler/uploadFunctions';
+import { handleUrlSubmit } from '../ApiHandler/uploadFunctions';
 
 const AddUrl = () => {
     const [infoHead, setInfoHead] = useState("");
@@ -21,22 +21,13 @@ const AddUrl = () => {
         fetchDocTypes(setDocTypes);
     }, []);
 
-    const handleTagChange = (newValue) => {
-        handleTagChangeFn(newValue, availableTags, setAvailableTags, tags, setTags);
-    };
-
-    const handleUrlSubmit = (e) => {
-        e.preventDefault();
-        handleUrlSubmitFn(infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish);
-    }
-
     return (
         <div className="upload-document-container">
             <ToastContainer />
             <header className="upload-document-header">
                 <h1>Add URL</h1>
             </header>
-            <form className="upload-document-form" onSubmit={handleUrlSubmit}>
+            <form className="upload-document-form" onSubmit={(e)=>handleUrlSubmit(e, infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish)}>
                 <div className="form-group">
                     <label>Information Head</label>
                     <input
@@ -64,7 +55,7 @@ const AddUrl = () => {
                     <CreatableSelect
                         isMulti
                         value={tags}
-                        onChange={handleTagChange}
+                        onChange={(newValue) => handleTagChange(newValue, availableTags, setAvailableTags, tags, setTags)}
                         options={availableTags}
                         placeholder="Select or create tags"
                         required

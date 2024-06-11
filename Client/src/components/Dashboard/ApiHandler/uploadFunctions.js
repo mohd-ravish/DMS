@@ -2,14 +2,21 @@ import Axios from 'axios';
 import { toast } from 'react-toastify';
 
 // Function to upload document
-export const handleDocumentSubmit = async (file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish) => {
+export const handleDocumentSubmit = async (e, limit, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish) => {
+    e.preventDefault();
+    const fileSize = file.size / 1024; // In KB
+    if (fileSize > limit) {
+        toast.error("File size exceeds the allowed limit", {
+            position: "top-center"
+        });
+        return;
+    }
     const formData = new FormData();
     formData.append("file", file);
     formData.append("tags", tags.map(tag => tag.value));
     formData.append("docType", docType);
     formData.append("description", description);
     formData.append("publish", publish);
-
     try {
         const response = await Axios.post("http://localhost:4500/upload/uploadDocument", formData, {
             headers: {
@@ -18,7 +25,7 @@ export const handleDocumentSubmit = async (file, tags, docType, description, pub
             },
         });
         if (response.data.status === "success") {
-            toast.success("Document uploaded successfully", {
+            toast.success(response.data.message, {
                 position: "top-center"
             });
             setFile(null);
@@ -27,7 +34,7 @@ export const handleDocumentSubmit = async (file, tags, docType, description, pub
             setDescription("");
             setPublish("no");
         } else {
-            toast.error("Document upload failed", {
+            toast.error(response.data.message, {
                 position: "top-center"
             });
         }
@@ -39,7 +46,8 @@ export const handleDocumentSubmit = async (file, tags, docType, description, pub
 };
 
 // Function to upload url
-export const handleUrlSubmit = async (infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish) => {
+export const handleUrlSubmit = async (e, infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish) => {
+    e.preventDefault();
     const urlDetails = {
         infoHead: infoHead,
         url: url,
@@ -78,7 +86,8 @@ export const handleUrlSubmit = async (infoHead, url, tags, docType, description,
 };
 
 // Function to update document/url metadata
-export const handleEditArtifact = async (docId, tags, docType, description, publish, status) => {
+export const handleEditArtifact = async (e, docId, tags, docType, description, publish, status) => {
+    e.preventDefault();
     const editData = {
         tags: tags.map(tag => tag.value),
         docType: docType,
