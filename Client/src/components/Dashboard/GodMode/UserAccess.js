@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetchToken, fetchUsers, handleChangeRole, handleDeleteUser } from '../ApiHandler/usersFunctions';
 import usePagination from '../usePagination';
+import { fetchToken, fetchUsers, handleChangeRole, handleDeleteUser } from '../ApiHandler/usersFunctions';
+import { exportToUserCSV, exportToUserExcel, exportToPDF, handlePrint } from '../Utils';
 
 const UserAccess = () => {
     const [users, setUsers] = useState([]);  // User Data like id, username, email and role_id
@@ -49,11 +50,10 @@ const UserAccess = () => {
                     </th>
                     <th>
                         <div className="table-buttons">
-                            <button>Copy</button>
-                            <button>CSV</button>
-                            <button>Excel</button>
-                            <button>PDF</button>
-                            <button>Print</button>
+                            <button onClick={() => exportToUserCSV(filteredUsers, 'DMS Users.csv')}>CSV</button>
+                            <button onClick={() => exportToUserExcel(filteredUsers, 'DMS Users.xlsx')}>Excel</button>
+                            <button onClick={() => exportToPDF('.artifacts-table', 'DMS Users.pdf')}>PDF</button>
+                            <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                         </div>
                     </th>
                     <th className='user-search'>

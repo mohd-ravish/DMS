@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer')
 const path = require('path');
+const fs = require('fs');
 const verifyUser = require('../middleware/auth');
 const db = require('../config/db');
 
@@ -12,12 +13,21 @@ const allowedFormats = ['jpg', 'png', 'jpeg', 'doc', 'pdf', 'docx', 'xls', 'xlsx
 // Set up Multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        return cb(null, "./public/uploads")
+        cb(null, "./public/uploads");
     },
     filename: function (req, file, cb) {
-        return cb(null, `${file.originalname}`)
+        const filePath = path.join(__dirname, '..', 'public', 'uploads', file.originalname);
+        if (fs.existsSync(filePath)) {  // If a file with the same name is already present in the directory then append it with the current time
+            const now = new Date();
+            const timeString = now.toTimeString().split(' ')[0].replace(/:/g, '');  // Get HHMMSS format
+            const originalName = path.parse(file.originalname).name;
+            const extension = path.extname(file.originalname);
+            cb(null, `${originalName}_${timeString}${extension}`);
+        } else {
+            cb(null, file.originalname);
+        }
     }
-})
+});
 
 // Function to check if the file format is valid
 const fileFilter = (req, file, cb) => {
@@ -42,7 +52,7 @@ router.post('/uploadDocument', verifyUser, (req, res) => {
         const filePath = req.file.path;
         const docFormat = path.extname(req.file.originalname).slice(1);
         const ownerAuthorId = req.email;
-        const docName = req.file.originalname;
+        const docName = req.file.filename;
         const isPublished = publish === 'yes' ? 1 : 0;
         const current_date = new Date();
 

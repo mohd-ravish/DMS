@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { fetchMyArtifacts } from '../ApiHandler/artifactsFunctions';
-import usePagination from '../usePagination';
 import EditArtifactData from './EditArtifactData';
+import usePagination from '../usePagination';
+import { exportToCSV, exportToExcel, exportToPDF, handlePrint } from '../Utils';
 
 const Artifacts = () => {
     const [artifacts, setArtifacts] = useState([]);
@@ -79,11 +80,10 @@ const Artifacts = () => {
                             </th>
                             <th colSpan="4">
                                 <div className="table-buttons">
-                                    <button>Copy</button>
-                                    <button>CSV</button>
-                                    <button>Excel</button>
-                                    <button>PDF</button>
-                                    <button>Print</button>
+                                    <button onClick={() => exportToCSV(filteredArtifacts, 'DMS My Artifacts.csv')}>CSV</button>
+                                    <button onClick={() => exportToExcel(filteredArtifacts, 'DMS My Artifacts.xlsx')}>Excel</button>
+                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Artifacts.pdf')}>PDF</button>
+                                    <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
                             </th>
                             <th className='user-search'>
