@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchUsers, handleUserActivitySubmit } from '../ApiHandler/usersFunctions';  
+import { fetchUsers, handleUserActivitySubmit } from '../ApiHandler/usersFunctions';
 
 const SystemSettings = () => {
     const [users, setUsers] = useState([]);
@@ -38,24 +38,26 @@ const SystemSettings = () => {
                     </select>
                     <button onClick={() => handleUserActivitySubmit(userId, period, setUserActivity)}>Track</button>
                 </div>
-                <table className="artifacts-table">
-                    <thead>
-                        <tr>
-                            <th>Log ID</th>
-                            <th>Activity</th>
-                            <th>Log Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {userActivity.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.log_id}</td>
-                                <td>{item.activity}</td>
-                                <td>{item.log_date}</td>
+                <div className="artifacts-table-view">
+                    <table className="artifacts-table">
+                        <thead>
+                            <tr>
+                                <th>Log ID</th>
+                                <th>Activity</th>
+                                <th>Log Date</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {userActivity.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.log_id}</td>
+                                    <td>{item.activity}</td>
+                                    <td>{item.log_date}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div className="usage-instructions">
                 <h2>📢 Usage Instructions</h2>

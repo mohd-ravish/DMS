@@ -20,7 +20,6 @@ router.post("/login", async (req, res) => {
                 return res.json("Internal Server Error");
             }
             if (results.length === 0) {
-                console.log("User not found");
                 return res.json("User not found");
             } else {
                 const user = results[0];
@@ -38,11 +37,9 @@ router.post("/login", async (req, res) => {
                         db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [user.id, `User: ${user.email} successfully logged in`, log_date], (err, result) => {
                             if (err) throw err;
                         });
-                        console.log(`User: ${user.email} successfully logged in`);
                         return res.status(200).json({ token });
                     });
                 } else {
-                    console.log("Incorrect password");
                     return res.json("Incorrect password");
                 }
             }
@@ -63,7 +60,6 @@ router.post("/logout", verifyUser, (req, res) => {
     const log_date = new Date();
     db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} successfully logged out`, log_date], (err, result) => {
         if (err) throw err;
-        console.log(`User ${req.email} logged out`);
         return res.json({ status: "success" });
     });
 });

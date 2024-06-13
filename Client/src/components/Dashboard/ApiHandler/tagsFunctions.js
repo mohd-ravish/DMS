@@ -85,7 +85,7 @@ export const handleTagUpdate = async (editingTagId, editedTagValue, setAvailable
             },
         });
         if (response.data.status === "success") {
-            toast.success("Tag updated successfully", {
+            toast.success(response.data.message, {
                 position: "top-center"
             });
             // Update the local state with the updated tag value

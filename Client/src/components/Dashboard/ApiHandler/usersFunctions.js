@@ -84,7 +84,7 @@ export const handleDeleteUser = async (userId, currentUserId, setUsers, users) =
             }
         });
 
-        if (response.data.status === 'success') {
+        if (response.data.status === "success") {
             setUsers(users.filter(user => user.id !== userId));
             toast.success(response.data.message, {
                 position: "top-center"

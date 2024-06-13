@@ -97,33 +97,35 @@ const ManageAllArtifacts = () => {
                                 />
                             </th>
                         </div>
-                        <table className="artifacts-table">
-                            <thead>
-                                <tr>
-                                    <th>Document Name</th>
-                                    <th>Document Type</th>
-                                    <th>Author/Publisher</th>
-                                    <th>Uploaded date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentEntries.map((item, index) => (
-                                    <tr key={index}>
-                                        <td className={getDocNameClass(item.doc_status, item.is_published)}>
-                                            <div className="tooltip">
-                                                <p>{item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}</p>
-                                                <span className="tooltiptext">{item.doc_description}</span>
-                                            </div>
-                                        </td>
-                                        <td>{item.doctype_nm}</td>
-                                        <td>{item.owner_author_id}</td>
-                                        <td className="date">{item.date_uploaded.split('T')[0]}</td>
-                                        <td><a href="#" className="edit-link" onClick={() => editArtifact(item)}>✏️ Edit</a></td>
+                        <div className="artifacts-table-view">
+                            <table className="artifacts-table">
+                                <thead>
+                                    <tr>
+                                        <th>Document Name</th>
+                                        <th>Document Type</th>
+                                        <th>Author/Publisher</th>
+                                        <th>Uploaded date</th>
+                                        <th>Action</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {currentEntries.map((item, index) => (
+                                        <tr key={index}>
+                                            <td className={getDocNameClass(item.doc_status, item.is_published)}>
+                                                <div className="tooltip">
+                                                    <p>{item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}</p>
+                                                    <span className="tooltiptext">{item.doc_description}</span>
+                                                </div>
+                                            </td>
+                                            <td>{item.doctype_nm}</td>
+                                            <td>{item.owner_author_id}</td>
+                                            <td className="date">{item.date_uploaded.split('T')[0]}</td>
+                                            <td><a href="#" className="edit-link" onClick={() => editArtifact(item)}>✏️ Edit</a></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                         <div className="pagination">
                             <p>Showing {startEntry} to {endEntry} of {totalEntries} entries</p>
                             <div className="pagination-buttons">

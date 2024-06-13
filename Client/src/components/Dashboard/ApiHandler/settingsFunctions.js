@@ -36,7 +36,7 @@ export const submitNewSystemSettings = async (newLimit) => {
             },
         });
         if (response.data.status === "success") {
-            toast.success("System settings updated successfully", {
+            toast.success(response.data.message, {
                 position: "top-center"
             });
         } else {

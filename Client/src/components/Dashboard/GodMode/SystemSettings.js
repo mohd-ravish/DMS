@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {fetchSettings, submitNewSystemSettings} from '../ApiHandler/settingsFunctions'
+import { fetchSettings, submitNewSystemSettings } from '../ApiHandler/settingsFunctions'
 
 const SystemSettings = () => {
     const [limit, setLimit] = useState("");  // File upload size limit
@@ -21,34 +21,36 @@ const SystemSettings = () => {
                 <h1>Settings</h1>
             </header>
             <div className="artifacts-table-container">
-                <table className="artifacts-table">
-                    <thead>
-                        <tr>
-                            <th>Variable</th>
-                            <th>Value</th>
-                            <th>Description</th>
-                            <th>Last Updated</th>
-                            <th>Updated By</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>File Upload Limit</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    value={newLimit}
-                                    onChange={(e) => setNewLimit(e.target.value)}
-                                />
-                            </td>
-                            <td><p>The limit is in Kb, calculate the equivalent value in Mb. 1 Mb = 1024 Kb</p></td>
-                            <td className="date">{lastUpdated.split('T')[0]}</td>
-                            <td><p>{updatedBy}</p></td>
-                            <td><button onClick={()=>submitNewSystemSettings(newLimit)}>Update</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div className="artifacts-table-view">
+                    <table className="artifacts-table">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                                <th>Last Updated</th>
+                                <th>Updated By</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>File Upload Limit</td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        value={newLimit}
+                                        onChange={(e) => setNewLimit(e.target.value)}
+                                    />
+                                </td>
+                                <td><p>The limit is in Kb, calculate the equivalent value in Mb. 1 Mb = 1024 Kb</p></td>
+                                <td className="date">{lastUpdated.split('T')[0]}</td>
+                                <td><p>{updatedBy}</p></td>
+                                <td><button onClick={() => submitNewSystemSettings(newLimit)}>Update</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div className="usage-instructions">
                 <h2>📢 Usage Instructions</h2>

@@ -96,7 +96,7 @@ router.post('/addUrl', verifyUser, (req, res) => {
             db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} uploaded new online document [${infoHead}]`, current_date], (err, result) => {
                 if (err) throw err;
             });
-            return res.json({ status: 'success' });
+            return res.json({ status: 'success', message: 'URL added successfully' });
         });
     } catch (err) {
         console.error(err);
@@ -126,7 +126,7 @@ router.put('/updateDocument/:id', verifyUser, async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ status: 'error', message: 'Failed to update tag' });
+        res.status(500).json({ status: 'error', message: 'Failed to update metadata' });
     }
 });
 

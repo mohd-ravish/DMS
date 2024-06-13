@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Route to get document tags 
 router.get('/allTags', verifyUser, (req, res) => {
-    const query = "SELECT * FROM tags WHERE status = 'active'";
+    const query = "SELECT * FROM vw_tags";
     db.query(query, (err, results) => {
         if (err) {
             console.log(err);
@@ -21,7 +21,6 @@ router.post('/createTag', verifyUser, (req, res) => {
     const { tag_nm } = req.body;
     const created_by = req.email; // Assuming email is stored in req after verification
     const created_at = new Date();
-
     const query = "INSERT INTO tags (tag_nm, created_by, created_at, status) VALUES (?, ?, ?, 'active')";
     db.query(query, [tag_nm, created_by, created_at], (err, result) => {
         if (err) {

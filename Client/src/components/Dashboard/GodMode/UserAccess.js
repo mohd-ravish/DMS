@@ -67,56 +67,58 @@ const UserAccess = () => {
                         />
                     </th>
                 </div>
-                <table className="artifacts-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentEntries.map((user, index) => (
-                            <tr key={index}>
-                                <td>{user.id}</td>
-                                <td>{user.username}</td>
-                                <td>{user.email}</td>
-                                <td>
-                                    {user.role_id === 1 ? (
-                                        <span className="admin-role"><i className='bx bx-crown'></i> Admin</span>
-                                    ) : (
-                                        <span className="user-role"><i className='bx bx-user'></i> User</span>
-                                    )}
-                                </td>
-                                <td>
-                                    {/* <button className="delete-btn" onClick={() => handleDeleteUser(user.id, currentUserId, setUsers, users)}>
+                <div className="artifacts-table-view">
+                    <table className="artifacts-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentEntries.map((user, index) => (
+                                <tr key={index}>
+                                    <td>{user.id}</td>
+                                    <td>{user.username}</td>
+                                    <td>{user.email}</td>
+                                    <td>
+                                        {user.role_id === 1 ? (
+                                            <span className="admin-role"><i className='bx bx-crown'></i> Admin</span>
+                                        ) : (
+                                            <span className="user-role"><i className='bx bx-user'></i> User</span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        {/* <button className="delete-btn" onClick={() => handleDeleteUser(user.id, currentUserId, setUsers, users)}>
                                         <i className='bx bx-trash'></i> Delete
                                     </button> */}
-                                    <button
-                                        className="delete-btn"
-                                        onClick={() => {
-                                            if (window.confirm(`Are you sure you want to delete user ${user.username}?`)) {
-                                                handleDeleteUser(user.id, currentUserId, setUsers, users);
-                                            }
-                                        }}
-                                    >
-                                        <i className='bx bx-trash'></i> Delete
-                                    </button>
-                                    <button className="change-role-btn" onClick={() => handleChangeRole(user.id, user.role_id, currentUserId, setUsers, users)}>
-                                        {user.role_id === 1 ? (
-                                            <i className='bx bx-down-arrow-circle' ></i>
-                                        ) : (
-                                            <i className='bx bx-up-arrow-circle'></i>
-                                        )}
-                                        Change Role
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                                        <button
+                                            className="delete-btn"
+                                            onClick={() => {
+                                                if (window.confirm(`Are you sure you want to delete user ${user.username}?`)) {
+                                                    handleDeleteUser(user.id, currentUserId, setUsers, users);
+                                                }
+                                            }}
+                                        >
+                                            <i className='bx bx-trash'></i> Delete
+                                        </button>
+                                        <button className="change-role-btn" onClick={() => handleChangeRole(user.id, user.role_id, currentUserId, setUsers, users)}>
+                                            {user.role_id === 1 ? (
+                                                <i className='bx bx-down-arrow-circle' ></i>
+                                            ) : (
+                                                <i className='bx bx-up-arrow-circle'></i>
+                                            )}
+                                            Change Role
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 <div className="pagination">
                     <p>Showing {startEntry} to {endEntry} of {totalEntries} entries</p>
                     <div className="pagination-buttons">

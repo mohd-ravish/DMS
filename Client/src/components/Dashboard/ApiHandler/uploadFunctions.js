@@ -64,7 +64,7 @@ export const handleUrlSubmit = async (e, infoHead, url, tags, docType, descripti
             },
         });
         if (response.data.status === "success") {
-            toast.success("URL added successfully", {
+            toast.success(response.data.message, {
                 position: "top-center"
             });
             setInfoHead("");
@@ -102,7 +102,7 @@ export const handleEditArtifact = async (e, docId, tags, docType, description, p
             },
         });
         if (response.data.status === "success") {
-            toast.success("Your document metadata successfully updated", {
+            toast.success(response.data.message, {
                 position: "top-center"
             });
         } else {

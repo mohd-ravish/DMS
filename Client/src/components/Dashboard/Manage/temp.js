@@ -202,3 +202,13 @@
 //         console.error(error);
 //     }
 // };
+// router.get('/allTags', verifyUser, (req, res) => {
+//     const query = "SELECT * FROM tags WHERE status = 'active'";
+//     db.query(query, (err, results) => {
+//         if (err) {
+//             console.log(err);
+//             return res.status(500).json({ status: "error", message: "Database query error" });
+//         }
+//         res.json({ status: "success", data: results });
+//     });
+// });

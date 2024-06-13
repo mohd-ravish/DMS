@@ -758,75 +758,6 @@ body {
 
 
 
-/* RESPONSIVENESS  */
-@media screen and (max-width: 768px) {
-	#sidebar {
-		width: 200px;
-	}
-
-	#content {
-		width: calc(100% - 60px);
-		left: 200px;
-	}
-
-	#content nav .nav-link {
-		display: none;
-	}
-}
-
-@media screen and (max-width: 576px) {
-	#content nav form .form-input input {
-		display: none;
-	}
-
-	#content nav form .form-input button {
-		width: auto;
-		height: auto;
-		background: transparent;
-		border-radius: none;
-		color: var(--dark);
-	}
-
-	#content nav form.show .form-input input {
-		display: block;
-		width: 100%;
-	}
-
-	#content nav form.show .form-input button {
-		width: 36px;
-		height: 100%;
-		border-radius: 0 36px 36px 0;
-		color: var(--light);
-		background: var(--red);
-	}
-
-	#content nav form.show~.notification,
-	#content nav form.show~.profile {
-		display: none;
-	}
-
-	#content main .box-info {
-		grid-template-columns: 1fr;
-	}
-
-	#content main .table-data .head {
-		min-width: 420px;
-	}
-
-	#content main .table-data .order table {
-		min-width: 420px;
-	}
-
-	#content main .table-data .todo .todo-list {
-		min-width: 420px;
-	}
-}
-
-/* RESPONSIVENESS  */
-
-
-
-
 
 /* MY ARTIFACTS  */
 .artifacts-container {
@@ -1009,6 +940,7 @@ body {
 }
 
 /* MY ARTIFACTS  */
+
 
 
 
@@ -1429,3 +1361,147 @@ select {
 }
 
 /* DEFINE DOC TYPE  */
+
+
+
+
+
+/* RESPONSIVENESS  */
+@media screen and (max-width: 768px) {
+	#sidebar {
+		width: 200px;
+	}
+
+	#content {
+		width: calc(100% - 60px);
+		left: 200px;
+	}
+
+	#content nav .nav-link {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 576px) {
+	#content nav form .form-input input {
+		display: none;
+	}
+
+	#content nav form .form-input button {
+		width: auto;
+		height: auto;
+		background: transparent;
+		border-radius: none;
+		color: var(--dark);
+	}
+
+	#content nav form.show .form-input input {
+		display: block;
+		width: 100%;
+	}
+
+	#content nav form.show .form-input button {
+		width: 36px;
+		height: 100%;
+		border-radius: 0 36px 36px 0;
+		color: var(--light);
+		background: var(--red);
+	}
+
+	#content nav form.show~.notification,
+	#content nav form.show~.profile {
+		display: none;
+	}
+
+	#content main .box-info {
+		grid-template-columns: 1fr;
+	}
+
+	#content main .table-data .head {
+		min-width: 420px;
+	}
+
+	#content main .table-data .order table {
+		min-width: 420px;
+	}
+
+	#content main .table-data .todo .todo-list {
+		min-width: 420px;
+	}
+}
+
+@media (max-width: 540px) {
+
+	/* Responsive table container for horizontal scrolling */
+	.artifacts-table-view {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		/* for smooth scrolling on mobile devices */
+	}
+
+	.artifacts-table {
+		width: 100%;
+		border-collapse: collapse;
+		min-width: 600px;
+		/* minimum width to ensure horizontal scrolling on smaller screens */
+	}
+
+	.artifacts-table th,
+	.artifacts-table td {
+		white-space: nowrap;
+		/* prevent text from wrapping to keep table more compact */
+		font-size: 12px;
+		padding: 8px;
+	}
+
+	.artifacts-container .header-select-entries {
+		display: flex;
+		/* justify-content: space-between; */
+		padding-bottom: 10px;
+		font-size: 10px;
+	}
+
+	.artifacts-container .select-entries {
+		font-size: 12px;
+	}
+
+	.artifacts-container .select-entries select {
+		width: 60px;
+		font-size: 10px;
+	}
+
+	.table-buttons button {
+		font-family: "Montserrat", sans-serif;
+		cursor: pointer;
+		padding: 0px;
+		border-radius: 5px;
+		border: none;
+		margin-left: 0px;
+		font-size: 12px;
+	}
+
+	.artifacts-container .user-search label,
+	.artifacts-container .user-search input {
+		font-size: 12px;
+	}
+
+	.pagination {
+		font-size: 10px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.pagination-buttons button {
+		font-size: 10px;
+		margin-left: 2px;
+		padding: 2px 5px;
+		cursor: pointer;
+	}
+
+	.searchBar .form-input {
+		font-size: 10px;
+	}
+}
+
+/* RESPONSIVENESS  */

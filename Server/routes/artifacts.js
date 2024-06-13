@@ -49,10 +49,28 @@ router.post('/addNewDocType', verifyUser, (req, res) => {
             console.log(err);
             return res.status(500).json({ status: "error", message: "Database insertion error" });
         }
+        const newDocTypeId = result.insertId;
+        console.log(newDocTypeId);
         db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} added a new doc type[${newDocTypeName}]`, current_date], (err, result) => {
             if (err) throw err;
         });
-        res.json({ status: "success", message: "New Doc Type Added Successfully" });
+        res.json({ status: "success", message: "New Doc Type added Successfully", data: newDocTypeId });
+    });
+});
+
+// Route to delete doc type
+router.delete('/deleteDoctype/:id', verifyUser, (req, res) => {
+    const { id } = req.params;
+    const current_date = new Date();
+    const query = "DELETE FROM document_type WHERE id = ?";
+    db.query(query, [id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ status: 'fail', message: err.message });
+        }
+        db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} deleted a doc Type[with ID: ${id}]`, current_date], (err, result) => {
+            if (err) throw err;
+        });
+        return res.status(200).json({ status: 'success', message: 'Document Type deleted successfully' });
     });
 });
 
@@ -90,7 +108,7 @@ router.delete('/deleteArtifact/:id', verifyUser, (req, res) => {
         db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} deleted an artifact[with ID: ${id}]`, current_date], (err, result) => {
             if (err) throw err;
         });
-        return res.status(200).json({ status: 'success', data: results });
+        return res.status(200).json({ status: 'success', message: 'Document Deleted successfully' });
     });
 });
 
@@ -129,8 +147,5 @@ router.get('/countArtifacts', (req, res) => {
         return res.json({ status: 'success', data: results[0] });
     });
 });
-
-module.exports = router;
-
 
 module.exports = router;

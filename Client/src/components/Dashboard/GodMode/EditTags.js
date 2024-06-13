@@ -63,47 +63,49 @@ const EditTags = () => {
                         />
                     </th>
                 </div>
-                <table className="artifacts-table">
-                    <thead>
-                        <tr>
-                            <th>Tag ID</th>
-                            <th>Tag Name</th>
-                            <th>Created By</th>
-                            <th>Created On</th>
-                            <th>Used With</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentEntries.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.id}</td>
-                                <td>
-                                    {item.id === editingTagId ?
-                                        <input
-                                            type="text"
-                                            value={editedTagValue}
-                                            onChange={(e) => setEditedTagValue(e.target.value)}
-                                            className="user-search-bar"
-                                        />
-                                        :
-                                        item.tag_nm
-                                    }
-                                </td>
-                                <td>{item.created_by}</td>
-                                <td>{item.created_at.split('T')[0]}</td>
-                                <td>8 Documents</td> {/* Adjust this if usedWith is available */}
-                                <td>
-                                    {item.id === editingTagId ?
-                                        <button onClick={() => handleTagUpdate(editingTagId, editedTagValue, setAvailableTags, availableTags, setEditingTagId)}>Update</button>
-                                        :
-                                        <a href="#" className="edit-link" onClick={() => handleEdit(item.id, item.tag_nm)}>✏️ Edit</a>
-                                    }
-                                </td>
+                <div className="artifacts-table-view">
+                    <table className="artifacts-table">
+                        <thead>
+                            <tr>
+                                <th>Tag ID</th>
+                                <th>Tag Name</th>
+                                <th>Created By</th>
+                                <th>Created On</th>
+                                <th>Used With</th>
+                                <th>Action</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {currentEntries.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.id}</td>
+                                    <td>
+                                        {item.id === editingTagId ?
+                                            <input
+                                                type="text"
+                                                value={editedTagValue}
+                                                onChange={(e) => setEditedTagValue(e.target.value)}
+                                                className="user-search-bar"
+                                            />
+                                            :
+                                            item.tag_nm
+                                        }
+                                    </td>
+                                    <td>{item.created_by}</td>
+                                    <td>{item.created_at.split('T')[0]}</td>
+                                    <td>{item.used_with} Documents</td> {/* Adjust this if usedWith is available */}
+                                    <td>
+                                        {item.id === editingTagId ?
+                                            <button onClick={() => handleTagUpdate(editingTagId, editedTagValue, setAvailableTags, availableTags, setEditingTagId)}>Update</button>
+                                            :
+                                            <a href="#" className="edit-link" onClick={() => handleEdit(item.id, item.tag_nm)}>✏️ Edit</a>
+                                        }
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 <div className="pagination">
                     <p>Showing {startEntry} to {endEntry} of {totalEntries} entries</p>
                     <div className="pagination-buttons">

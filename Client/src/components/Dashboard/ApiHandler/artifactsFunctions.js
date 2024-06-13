@@ -33,7 +33,7 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
             },
         });
         if (response.data.status === "success") {
-            toast.success("Doc type updated successfully", {
+            toast.success(response.data.message, {
                 position: "top-center"
             });
             setAvailableDocTypes(availableDocTypes.map(docType => {
@@ -44,7 +44,7 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
             }));
             setEditingDocTypeId("");
         } else {
-            toast.error("Failed to update Tag", {
+            toast.error("Failed to update Doc type", {
                 position: "top-center"
             });
         }
@@ -54,7 +54,7 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
 };
 
 // Function to add new doc type
-export const handleAddNewDocType = async (e, newDocTypeName, setNewDocTypeName) => {
+export const handleAddNewDocType = async (e, newDocTypeName, setNewDocTypeName, availableDocTypes, setAvailableDocTypes) => {
     e.preventDefault();
     try {
         const response = await Axios.post("http://localhost:4500/artifacts/addNewDocType", { newDocTypeName }, {
@@ -64,11 +64,37 @@ export const handleAddNewDocType = async (e, newDocTypeName, setNewDocTypeName) 
         });
         if (response.data.status === "success") {
             setNewDocTypeName("");
-            toast.success("New Doc type added successfully", {
+            const newDocType = {
+                id: response.data.data,
+                doctype_nm: newDocTypeName,
+            };
+            setAvailableDocTypes([...availableDocTypes, newDocType]);
+            toast.success(response.data.message, {
                 position: "top-center"
             });
         } else {
             console.log("Failed to add doc type");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// Function to add new doc type
+export const handleDeleteDocType = async (docTypeId, availableDocTypes, setAvailableDocTypes) => {
+    try {
+        const response = await Axios.delete(`http://localhost:4500/artifacts/deleteDoctype/${docTypeId}`, {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        });
+        if (response.data.status === "success") {
+            setAvailableDocTypes(availableDocTypes.filter(docType => docType.id !== docTypeId));
+            toast.success(response.data.message, {
+                position: "top-center"
+            });
+        } else {
+            console.log("Failed to delete doc type");
         }
     } catch (error) {
         console.log(error);
@@ -121,7 +147,7 @@ export const handleDeleteArtifact = async (docId) => {
             },
         });
         if (response.data.status === "success") {
-            toast.success("Document Deleted successfully", {
+            toast.success(response.data.message, {
                 position: "top-center"
             });
         } else {
