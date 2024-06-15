@@ -1,5 +1,6 @@
 const express = require('express');
-const verifyUser = require('../middleware/auth');
+const fs = require('fs');
+const verifyUser = require('../middlewares/auth');
 const db = require('../config/db');
 
 const router = express.Router();
@@ -50,7 +51,6 @@ router.post('/addNewDocType', verifyUser, (req, res) => {
             return res.status(500).json({ status: "error", message: "Database insertion error" });
         }
         const newDocTypeId = result.insertId;
-        console.log(newDocTypeId);
         db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} added a new doc type[${newDocTypeName}]`, current_date], (err, result) => {
             if (err) throw err;
         });
@@ -100,15 +100,52 @@ router.get('/allArtifacts', verifyUser, (req, res) => {
 router.delete('/deleteArtifact/:id', verifyUser, (req, res) => {
     const { id } = req.params;
     const current_date = new Date();
-    const query = "DELETE FROM documents WHERE id = ?";
+
+    // Query to fetch artifact details
+    const query = "SELECT doc_nm, doc_format, file_size FROM vw_documents WHERE id = ?";
     db.query(query, [id], (err, results) => {
         if (err) {
             return res.status(500).json({ status: 'fail', message: err.message });
         }
-        db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} deleted an artifact[with ID: ${id}]`, current_date], (err, result) => {
-            if (err) throw err;
+        const docName = results[0].doc_nm;
+        const docFormat = results[0].doc_format;
+        const docSize = results[0].file_size;
+
+        // Perform deletion based on artifact type (document or URL)
+        if (docFormat !== 'url') {
+            // Delete document from local storage
+            const filePath = `D:/Git-Hub/Document-Management-System/Server/public/uploads/${docName}`;
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                    return res.status(500).json({ status: 'fail', message: 'Error deleting artifact file' });
+                }
+
+                // Update total_used_space in system_settings
+                const updateQuery = `
+                    UPDATE system_settings 
+                    SET value = value - ?
+                    WHERE variable_name = 'total_used_space'
+                `;
+                db.query(updateQuery, [docSize], (err, result) => {
+                    if (err) {
+                        console.error('Error updating total_used_space:', err);
+                        return res.status(500).json({ status: 'fail', message: 'Error updating total_used_space' });
+                    }
+                });
+            });
+        }
+        // Delete artifact from documents table
+        const deleteQuery = "DELETE FROM documents WHERE id = ?";
+        db.query(deleteQuery, [id], (err, result) => {
+            if (err) {
+                return res.status(500).json({ status: 'fail', message: err.message });
+            }
+            db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} deleted a document [ID: ${id}]`, current_date], (err, result) => {
+                if (err) throw err;
+            });
+            return res.status(200).json({ status: 'success', message: 'Document deleted successfully' });
         });
-        return res.status(200).json({ status: 'success', message: 'Document Deleted successfully' });
     });
 });
 

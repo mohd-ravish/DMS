@@ -85,7 +85,7 @@ const Search = () => {
                 ) : (
                     filteredArtifacts.map(doc => (
                         <div key={doc.id} className="document-item">
-                            {doc.doc_format === 'url' ? <a href={doc.doc_path} target='_blank'><h3><i className='bx bx-link'></i>{doc.doc_nm}</h3></a> : <a href={`http://localhost:4500/uploads/${doc.doc_nm}`} target='_blank'><h3><i className='bx bx-download'></i> {doc.doc_nm}</h3></a>}
+                            {doc.doc_format === 'url' ? <a href={doc.doc_path} target='_blank' rel='noreferrer'><h3><i className='bx bx-link'></i>{doc.doc_nm}</h3></a> : <a href={`http://localhost:4500/uploads/${doc.doc_nm}`} target='_blank' rel='noreferrer'><h3><i className='bx bx-download'></i> {doc.doc_nm}</h3></a>}
                             {/* <a href={doc.doc_path} target='_blank' download><h3>{doc.doc_format === 'url' ? <i className='bx bx-link'></i> : <i className='bx bx-download'></i>} {doc.doc_nm}</h3></a> */}
                             <p className="description">{doc.doc_description}</p>
                             <div className="document-type">

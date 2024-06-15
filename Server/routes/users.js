@@ -1,5 +1,5 @@
 const express = require('express');
-const verifyUser = require('../middleware/auth');
+const verifyUser = require('../middlewares/auth');
 const db = require('../config/db');
 
 const router = express.Router();

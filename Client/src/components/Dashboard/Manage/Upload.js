@@ -5,10 +5,11 @@ import CreatableSelect from 'react-select/creatable';
 import { fetchUploadTags, handleTagChange } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
 import { handleDocumentSubmit } from '../ApiHandler/uploadFunctions';
-import { fetchSettings } from '../ApiHandler/settingsFunctions'
+import { fetchSettings, fetchAllocatedUsedSpace } from '../ApiHandler/settingsFunctions'
 
 const UploadDocument = () => {
     const [limit, setLimit] = useState("");
+    const [remainingSpace, setRemainingSpace] = useState(0);
     const [file, setFile] = useState(null);
     const [tags, setTags] = useState([]);
     const [availableTags, setAvailableTags] = useState([]);
@@ -18,7 +19,8 @@ const UploadDocument = () => {
     const [publish, setPublish] = useState("no");
 
     useEffect(() => {
-        fetchSettings(setLimit)
+        fetchSettings(setLimit, null, null, null)
+        fetchAllocatedUsedSpace(null, null, setRemainingSpace, null, null);
         fetchUploadTags(setAvailableTags);
         fetchDocTypes(setDocTypes);
     }, []);
@@ -34,11 +36,11 @@ const UploadDocument = () => {
             <header className="upload-document-header">
                 <h1>Upload Document</h1>
             </header>
-            <form className="upload-document-form" onSubmit={(e) => handleDocumentSubmit(e, limit, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish)}>
+            <form className="upload-document-form" onSubmit={(e) => handleDocumentSubmit(e, limit, remainingSpace, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish)}>
                 <div className="form-group">
                     <label>Upload File</label>
                     <input type="file" onChange={(e) => { setFile(e.target.files[0]) }} required />
-                    <small>Allowed File Size: {kbToMb(limit)} Mb</small>
+                    <small>Allowed File Size: {kbToMb(limit)} MB</small>
                 </div>
                 <div className="form-group">
                     <label>Document Tags</label>

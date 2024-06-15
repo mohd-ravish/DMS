@@ -2,11 +2,17 @@ import Axios from 'axios';
 import { toast } from 'react-toastify';
 
 // Function to upload document
-export const handleDocumentSubmit = async (e, limit, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish) => {
+export const handleDocumentSubmit = async (e, limit, remainingSpace, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish) => {
     e.preventDefault();
     const fileSize = file.size / 1024; // In KB
     if (fileSize > limit) {
         toast.error("File size exceeds the allowed limit", {
+            position: "top-center"
+        });
+        return;
+    }
+    if (fileSize > remainingSpace) {
+        toast.error("Not enough space available", {
             position: "top-center"
         });
         return;

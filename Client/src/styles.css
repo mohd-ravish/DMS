@@ -581,7 +581,7 @@ body {
 
 #content main .table-data .order {
 	/* max-height: calc(100% - 100px); Adjust this value as needed */
-	max-height: 63vh;
+	max-height: 46vh;
 	/* overflow-y: auto; */
 	flex-grow: 1;
 	flex-basis: 500px;
@@ -610,13 +610,13 @@ body {
 
 #content main .table-data .order table th {
 	padding-bottom: 12px;
-	font-size: 13px;
+	font-size: 12px;
 	text-align: left;
 	border-bottom: 1px solid var(--grey);
 }
 
 #content main .table-data .order table td {
-	padding: 16px 0;
+	padding: 10px 0;
 }
 
 /* #content main .table-data .order table .count {
@@ -633,6 +633,30 @@ body {
 	background: var(--grey);
 }
 
+.space-text {
+	padding-bottom: 5px;
+	font-weight: 500;
+}
+
+.progress-bar-container {
+	width: 100%;
+	height: 27px;
+	background-color: #e0e0e0;
+	border-radius: 12px;
+}
+
+.progress-bar {
+	height: 27px;
+	width: 0%;
+	background-color: #87CEEB;
+	text-align: center;
+	font-size: 14px;
+	line-height: 30px;
+	color: white;
+	border-radius: 12px;
+	transition: width 0.3s;
+}
+
 /* MAIN */
 
 /* CONTENT */
@@ -645,13 +669,11 @@ body {
 .searchBar h1 {
 	color: #333;
 	font-family: "Montserrat", sans-serif;
-	/* padding: 20px 0px 0px 20px; */
 }
 
 .searchBar .search-form {
 	max-width: 100%;
 	width: 100%;
-	/* padding: 12px 20px 20px 20px; */
 }
 
 .searchBar .search-form .form-input {
@@ -662,7 +684,6 @@ body {
 
 .searchBar .search-form .form-input input {
 	flex-grow: 1;
-	/* padding: 0 16px; */
 	height: 100%;
 	border: none;
 	background-color: #ffffff;
@@ -804,13 +825,75 @@ body {
 
 .artifacts-table th,
 .artifacts-table td {
+	border: 1px solid #ddd;
 	padding: 10px;
 	text-align: left;
-	border-bottom: 1px solid #ddd;
+	/* border-bottom: 1px solid #ddd; */
 }
 
 .artifacts-table th {
 	background-color: #f9f9f9;
+}
+
+
+/* .artifacts-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+} */
+
+.artifacts-table .doc-format-cell {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0px 10px 0px 10px;
+}
+
+.artifacts-table .doc-format-cell span {
+	font-size: 14px;
+}
+
+.artifacts-table .switch {
+	position: relative;
+	display: inline-block;
+	width: 34px;
+	height: 20px;
+}
+
+.artifacts-table .switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.artifacts-table .slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	transition: 0.4s;
+	border-radius: 34px;
+}
+
+.artifacts-table .slider:before {
+	position: absolute;
+	content: "";
+	height: 12px;
+	width: 12px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	transition: 0.4s;
+	border-radius: 50%;
+}
+
+.artifacts-table input:checked+.slider {
+	background-color: #2196F3;
+}
+
+.artifacts-table input:checked+.slider:before {
+	transform: translateX(14px);
 }
 
 .artifacts-container .header-select-entries {
@@ -1246,6 +1329,10 @@ body {
 
 
 /* SYSTEM SETTINGS  */
+.system-settings {
+	padding-bottom: 0;
+}
+
 .system-settings td input {
 	width: 50%;
 }

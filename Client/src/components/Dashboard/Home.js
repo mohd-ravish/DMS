@@ -1,21 +1,27 @@
 import { useState, useEffect } from 'react';
 import { fetchArtifactsCounts, fetchTopContributors } from './ApiHandler/artifactsFunctions';
 import { fetchSearchesCounts, fetchTopSearchedTags } from './ApiHandler/tagsFunctions';
+import { fetchAllocatedUsedSpace } from './ApiHandler/settingsFunctions';
 
 const Home = () => {
     const [totalDocsCount, setTotalDocsCount] = useState(0);
     const [totalUrlsCount, setTotalUrlsCount] = useState(0);
     const [totalSearches, setTotalSearches] = useState(0);
     const [currentMonthSearches, setCurrentMonthSearches] = useState(0);
+    const [usedSpace, setUsedSpace] = useState(0);
+    const [totalAllocatedSpace, setTotalAllocatedSpace] = useState(0);
     const [searchedTags, setSearchedTags] = useState([]);
     const [contributors, setContributors] = useState([]);
 
     useEffect(() => {
         fetchArtifactsCounts(setTotalDocsCount, setTotalUrlsCount);
         fetchSearchesCounts(setTotalSearches, setCurrentMonthSearches);
+        fetchAllocatedUsedSpace(setTotalAllocatedSpace, setUsedSpace, null, null, null);
         fetchTopSearchedTags(setSearchedTags);
         fetchTopContributors(setContributors);
     }, []);
+
+    const usedSpacePercentage = totalAllocatedSpace > 0 ? (usedSpace / totalAllocatedSpace) * 100 : 0;
 
     return (
         <main>
@@ -49,6 +55,21 @@ const Home = () => {
                     </span>
                 </li>
             </ul>
+            <div className='table-data'>
+                <div className='order'>
+                    <div className='space-text'>
+                        <p>Allocated Space: {(totalAllocatedSpace).toFixed(2)}GB</p>
+                        {/* <p>Available Space : {(totalAllocatedSpace - usedSpace).toFixed(2)} GB</p> */}
+                    </div>
+                    <div className="progress-bar-container">
+                        <div className="progress-bar" style={{ width: `${usedSpacePercentage}%` }}>
+                            {usedSpacePercentage.toFixed(2)}% used
+                        </div>
+                    </div>
+                </div>
+                <div className='order'>
+                </div>
+            </div>
             <div className="table-data">
                 <div className="order">
                     <div className="head">

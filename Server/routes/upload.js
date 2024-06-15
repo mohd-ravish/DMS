@@ -1,50 +1,14 @@
 const express = require('express');
-const multer = require('multer')
 const path = require('path');
-const fs = require('fs');
-const verifyUser = require('../middleware/auth');
+const verifyUser = require('../middlewares/auth');
+const upload = require('../middlewares/upload');
 const db = require('../config/db');
 
 const router = express.Router();
 
-// Define the allowed file formats
-const allowedFormats = ['jpg', 'png', 'jpeg', 'doc', 'pdf', 'docx', 'xls', 'xlsx', 'zip', 'csv', 'ppt', 'pptx', 'txt'];
-
-// Set up Multer for file uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "./public/uploads");
-    },
-    filename: function (req, file, cb) {
-        const filePath = path.join(__dirname, '..', 'public', 'uploads', file.originalname);
-        if (fs.existsSync(filePath)) {  // If a file with the same name is already present in the directory then append it with the current time
-            const now = new Date();
-            const timeString = now.toTimeString().split(' ')[0].replace(/:/g, '');  // Get HHMMSS format
-            const originalName = path.parse(file.originalname).name;
-            const extension = path.extname(file.originalname);
-            cb(null, `${originalName}_${timeString}${extension}`);
-        } else {
-            cb(null, file.originalname);
-        }
-    }
-});
-
-// Function to check if the file format is valid
-const fileFilter = (req, file, cb) => {
-    const ext = path.extname(file.originalname).slice(1).toLowerCase();
-    if (allowedFormats.includes(ext)) {
-        cb(null, true);
-    } else {
-        cb(new Error('Unsupported file format'));
-    }
-};
-
-// Initialize Multer with storage and file filter
-const upload = multer({ storage, fileFilter }).single('file');
-
 // Route to upload document 
 router.post('/uploadDocument', verifyUser, (req, res) => {
-    upload(req, res, (err) => {
+    upload.single('file')(req, res, async (err) => {
         if (err) {
             return res.json({ status: 'fail', message: err.message });
         }
@@ -55,10 +19,11 @@ router.post('/uploadDocument', verifyUser, (req, res) => {
         const docName = req.file.filename;
         const isPublished = publish === 'yes' ? 1 : 0;
         const current_date = new Date();
+        const fileSize = req.file.size / 1024; // In KB
 
-        const query = "INSERT INTO documents (doc_nm, owner_author_id, doc_path, doc_type, doc_format, assoc_tags, doc_description, doc_status, is_published, date_uploaded, uploaded_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const query = "INSERT INTO documents (doc_nm, owner_author_id, doc_path, doc_type, doc_format, assoc_tags, doc_description, doc_status, is_published, date_uploaded, uploaded_by, file_size) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            db.query(query, [docName, ownerAuthorId, filePath, docType, docFormat, tags, description, 'active', isPublished, current_date, req.email], (err, result) => {
+            db.query(query, [docName, ownerAuthorId, filePath, docType, docFormat, tags, description, 'active', isPublished, current_date, req.email, fileSize], async (err, result) => {
                 if (err) {
                     console.log(err);
                     return res.json({ status: 'fail', message: err.message });
@@ -66,6 +31,7 @@ router.post('/uploadDocument', verifyUser, (req, res) => {
                 db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} uploaded new document [${docName}]`, current_date], (err, result) => {
                     if (err) throw err;
                 });
+                await db.promise().query("UPDATE system_settings SET value = value + ? WHERE variable_name = 'total_used_space'", [fileSize]);
                 return res.json({ status: 'success', message: 'Document uploaded successfully' });
             });
         } catch (err) {
