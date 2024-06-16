@@ -65,7 +65,7 @@ export const fetchAllocatedUsedSpace = async (setTotalAllocatedSpace, setUsedSpa
             const totalSpace = parseInt(total_allocated_space.value);
             const usedSpace = parseInt(total_used_space.value);
             if (setTotalAllocatedSpace) setTotalAllocatedSpace(totalSpace / (1024 * 1024)); // In GB
-            if (setUsedSpace) setUsedSpace(usedSpace / (1024 * 1024));
+            if (setUsedSpace) setUsedSpace(usedSpace / (1024 * 1024)); // In GB
             if (setRemainingSpace) setRemainingSpace(totalSpace - usedSpace);
             if (setSpaceLastUpdated) setSpaceLastUpdated(total_allocated_space.last_updated_on);
             if (setSpaceUpdatedBy) setSpaceUpdatedBy(total_allocated_space.updated_by);
@@ -127,14 +127,14 @@ export const fetchDocFormats = async (setDocFormats) => {
 };
 
 // Function to update doc format
-export const updateDocFormatControl = async (id, control_id, setDocFormats) => {
+export const updateDocFormatControl = async (formatName, controlId, setDocFormats) => {
     try {
-        const response = await Axios.post("http://localhost:4500/settings/updateDocFormatControl", { id, control_id }, {
+        const response = await Axios.post("http://localhost:4500/settings/updateDocFormatControl", { formatName, controlId }, {
             headers: { Authorization: localStorage.getItem("token") },
         });
         if (response.data.status === "success") {
             setDocFormats(prevFormats => prevFormats.map(format =>
-                format.id === id ? { ...format, control_id } : format
+                format.formatName === formatName ? { ...format, controlId } : format
             ));
             toast.success(response.data.message, {
                 position: "top-center"

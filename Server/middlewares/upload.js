@@ -4,10 +4,23 @@ const fs = require('fs');
 const db = require('../config/db');
 
 // Middleware to fetch allowed formats from the database
+// const fetchAllowedFormats = async () => {
+//     const [results] = await db.promise().query("SELECT doc_format_nm FROM doc_formats WHERE control_id = 1");
+//     return results.map(format => format.doc_format_nm);
+// };
 const fetchAllowedFormats = async () => {
-    const [results] = await db.promise().query("SELECT doc_format_nm FROM doc_formats WHERE control_id = 1");
-    return results.map(format => format.doc_format_nm);
+    const [results] = await db.promise().query("SELECT value FROM system_settings WHERE variable_name = 'doc_formats'");
+    if (results.length === 0) {
+        return [];
+    }
+    const formatsString = results[0].value;
+    const formatsArray = formatsString.split(',').map(format => {
+        const [formatName, controlId] = format.split(':');
+        return { formatName, controlId: parseInt(controlId) };
+    });
+    return formatsArray.filter(format => format.controlId === 1).map(format => format.formatName);
 };
+
 
 // Set up Multer for file uploads
 const storage = multer.diskStorage({

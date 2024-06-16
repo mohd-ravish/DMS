@@ -19,7 +19,7 @@ router.post('/uploadDocument', verifyUser, (req, res) => {
         const docName = req.file.filename;
         const isPublished = publish === 'yes' ? 1 : 0;
         const current_date = new Date();
-        const fileSize = req.file.size / 1024; // In KB
+        const fileSize = Math.ceil(req.file.size / 1024); // In KB
 
         const query = "INSERT INTO documents (doc_nm, owner_author_id, doc_path, doc_type, doc_format, assoc_tags, doc_description, doc_status, is_published, date_uploaded, uploaded_by, file_size) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {

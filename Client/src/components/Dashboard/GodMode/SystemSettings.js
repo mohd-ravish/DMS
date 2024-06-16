@@ -27,9 +27,9 @@ const SystemSettings = () => {
         setNewAllocateSpace(totalAllocatedSpace);
     }, [totalAllocatedSpace]);
 
-    const handleToggleChange = (id, control_id) => {
-        const newControlId = control_id === 1 ? 0 : 1;
-        updateDocFormatControl(id, newControlId, setDocFormats);
+    const handleToggleChange = (formatName, controlId) => {
+        const newControlId = controlId === 1 ? 0 : 1;
+        updateDocFormatControl(formatName, newControlId, setDocFormats);
     };
 
     const chunkArray = (arr, chunkSize) => {
@@ -110,12 +110,12 @@ const SystemSettings = () => {
                                         {chunk.map((format, colIndex) => (
                                             <td key={colIndex}>
                                                 <div className="doc-format-cell">
-                                                    <span>{format.doc_format_nm}</span>
+                                                    <span>{format.formatName}</span>
                                                     <label className="switch">
                                                         <input
                                                             type="checkbox"
-                                                            checked={format.control_id === 1}
-                                                            onChange={() => handleToggleChange(format.id, format.control_id)}
+                                                            checked={format.controlId === 1}
+                                                            onChange={() => handleToggleChange(format.formatName, format.controlId)}
                                                         />
                                                         <span className="slider round"></span>
                                                     </label>

@@ -79,7 +79,6 @@ router.get('/fetchAllocatedUsedSpace', verifyUser, (req, res) => {
     });
 });
 
-
 // Route to update Allocated Space
 router.post('/updateAllocatedSpace', verifyUser, (req, res) => {
     const { newAllocateSpace } = req.body;
@@ -103,32 +102,78 @@ router.post('/updateAllocatedSpace', verifyUser, (req, res) => {
 });
 
 // Router to fetch Doc Formats
-router.get('/fetchDocFormats', verifyUser, (req, res) => {
-    const query = "SELECT * FROM doc_formats";
-    db.query(query, (err, results) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ status: "error", message: "Database query error" });
+// router.get('/fetchDocFormats', verifyUser, (req, res) => {
+//     const query = "SELECT * FROM doc_formats";
+//     db.query(query, (err, results) => {
+//         if (err) {
+//             console.log(err);
+//             return res.status(500).json({ status: "error", message: "Database query error" });
+//         }
+//         res.json({ status: "success", data: results });
+//     });
+// });
+router.get('/fetchDocFormats', verifyUser, async (req, res) => {
+    try {
+        const [results] = await db.promise().query("SELECT value FROM vw_system_settings WHERE variable_name = 'doc_formats'");
+        if (results.length === 0) {
+            return res.json({ status: 'fail', message: 'No document formats found' });
         }
-        res.json({ status: "success", data: results });
-    });
+        const formatsString = results[0].value;
+        const formatsArray = formatsString.split(',').map(format => {
+            const [formatName, controlId] = format.split(':');
+            return { formatName, controlId: parseInt(controlId) };
+        });
+        res.json({ status: 'success', data: formatsArray });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'error', message: 'Database query error' });
+    }
 });
 
-// Route to update doc fomrat control
-router.post('/updateDocFormatControl', verifyUser, (req, res) => {
-    const { id, control_id } = req.body;
-    const current_date = new Date();
-    const query = "UPDATE doc_formats SET control_id = ? WHERE id = ?";
-    db.query(query, [control_id, id], (err, result) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ status: "error", message: "Database update error" });
+// Route to update document format control bit
+// router.post('/updateDocFormatControl', verifyUser, (req, res) => {
+//     const { id, control_id } = req.body;
+//     const current_date = new Date();
+//     const query = "UPDATE doc_formats SET control_id = ? WHERE id = ?";
+//     db.query(query, [control_id, id], (err, result) => {
+//         if (err) {
+//             console.log(err);
+//             return res.status(500).json({ status: "error", message: "Database update error" });
+//         }
+//         db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} updated doc formats`, current_date], (err, result) => {
+//             if (err) throw err;
+//         });
+//         res.json({ status: "success", message: "Document format updated successfully" });
+//     });
+// });
+router.post('/updateDocFormatControl', verifyUser, async (req, res) => {
+    const { formatName, controlId } = req.body;
+    try {
+        const [results] = await db.promise().query("SELECT value FROM system_settings WHERE variable_name = 'doc_formats'");
+        if (results.length === 0) {
+            return res.status(404).json({ status: 'fail', message: 'Document formats not found' });
         }
-        db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} updated doc formats`, current_date], (err, result) => {
+        const formatsString = results[0].value;
+        const formatsArray = formatsString.split(',').map(format => {
+            const [name, id] = format.split(':');
+            return { name, id: parseInt(id) };
+        });
+        const updatedFormatsArray = formatsArray.map(format => {
+            if (format.name === formatName) {
+                format.id = controlId;
+            }
+            return format;
+        });
+        const updatedFormatsString = updatedFormatsArray.map(format => `${format.name}:${format.id}`).join(',');
+        await db.promise().query("UPDATE system_settings SET value = ?, updated_by = ?, last_updated_on = NOW() WHERE variable_name = 'doc_formats'", [updatedFormatsString, req.email]);
+        db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, NOW())", [req.id, `User: ${req.email} updated doc formats`], (err) => {
             if (err) throw err;
         });
-        res.json({ status: "success", message: "Document format updated successfully" });
-    });
+        res.json({ status: 'success', message: 'Document format updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'error', message: 'Database update error' });
+    }
 });
 
 module.exports = router;
