@@ -7,13 +7,16 @@ import Search from './Search/Search';
 import MyArtifacts from './Manage/MyArtifacts';
 import Upload from './Manage/Upload';
 import AddUrl from './Manage/AddUrl';
+import Demo from './Manage/Demo';
 import SystemSettings from './GodMode/SystemSettings';
 import UserActivity from './GodMode/UserActivity';
 import UserAccess from './GodMode/UserAccess';
+import ControlAccess from './GodMode/ControlAccess'
 import ManageAllArtifacts from './GodMode/ManageAllArtifacts';
 import EditTags from './GodMode/EditTags';
 import DefineDocType from './GodMode/DefineDocType';
 import { verifyUser } from './ApiHandler/authFunctions';
+import { getControlAcessInfo } from './ApiHandler/usersFunctions';
 
 function Dashboard() {
     // All dashboard components initial states (Home is set to true by default)
@@ -23,9 +26,11 @@ function Dashboard() {
         myArtifacts: false,
         upload: false,
         addUrl: false,
+        demo: false,
         systemSettings: false,
         userActivity: false,
         userAccess: false,
+        controlAccess: false,
         manageAllArtifacts: false,
         editTags: false,
         defineDocType: false,
@@ -37,6 +42,7 @@ function Dashboard() {
     const [role, setRole] = useState(null);  // Role ID (If 1 then Admin, 0 for user cannot access God Mode )
     const [auth, setAuth] = useState(false); // To check if user is authentic or not
     const [message, setMessage] = useState(""); // To store message from API
+    const [controlAccess, setControlAccess] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(true); // To hide and show sidebar
 
     // To toggle(hide and show) sidebar
@@ -62,6 +68,7 @@ function Dashboard() {
     // If the user is authenticate then the dashboard will be visible
     useEffect(() => {
         verifyUser(setAuth, setUsername, setRole, setMessage);
+        getControlAcessInfo(setControlAccess);
     }, []);
 
     const navigate = useNavigate();
@@ -75,6 +82,7 @@ function Dashboard() {
                         handleDashboard={handleDashboard}
                         handleClick={handleClick}
                         role={role}
+                        controlAccess={controlAccess}
                         isSidebarOpen={isSidebarOpen}
                     />
                     <section id="content">
@@ -84,9 +92,11 @@ function Dashboard() {
                         {isClicked.myArtifacts && <MyArtifacts />}
                         {isClicked.upload && <Upload />}
                         {isClicked.addUrl && <AddUrl />}
+                        {isClicked.demo && <Demo />}
                         {isClicked.systemSettings && <SystemSettings />}
                         {isClicked.userActivity && <UserActivity />}
                         {isClicked.userAccess && <UserAccess />}
+                        {isClicked.controlAccess && <ControlAccess />}
                         {isClicked.defineDocType && <DefineDocType />}
                         {isClicked.manageAllArtifacts && <ManageAllArtifacts />}
                         {isClicked.editTags && <EditTags />}

@@ -93,7 +93,9 @@ const Search = () => {
                                 <p><span className="highlight">Last Updated </span>: {new Date(doc.date_uploaded).toLocaleString()}</p>
                                 <p className="type">{doc.doctype_nm}</p>
                             </div>
-                            <p className="tags">{getTagNames(doc.assoc_tags)}</p>
+                            <p className="tags">
+                                <span className='tag-content'>{getTagNames(doc.assoc_tags)}</span>
+                            </p>
                         </div>
                     ))
                 )}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import docLogo from '../assets/doc-logo.png';
 import { logout } from './ApiHandler/authFunctions';
 
-const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, isSidebarOpen }) => {
+const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, controlAccess, isSidebarOpen }) => {
     const [isManageOpen, setIsManageOpen] = useState(false); // To open Manage section
     const [isGodModeOpen, setIsGodModeOpen] = useState(false); // To open God Mode section
     const [active, setActive] = useState('home');
@@ -70,6 +70,16 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, isS
                             <span className="text">Add URL</span>
                         </a>
                     </li>
+                    {controlAccess === 'yes' && (
+                        <>
+                            <li className={active === 'demo' ? 'active' : ''}>
+                                <a href="#" onClick={() => { handleSlideBarClick('demo'); handleClick('demo'); handleDashboard() }}>
+                                    <i class='bx bx-square-rounded' ></i>
+                                    <span className="text">Demo</span>
+                                </a>
+                            </li>
+                        </>
+                    )}
                 </ul>
                 {role === 1 && ( // Only render God Mode if role is admin
                     <>
@@ -97,6 +107,12 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, isS
                                 <a href="#" onClick={() => { handleSlideBarClick('changeUserAccess'); handleClick('userAccess'); handleDashboard() }}>
                                     <i className='bx bx-accessibility'></i>
                                     <span className="text">Change User Access</span>
+                                </a>
+                            </li>
+                            <li className={active === 'controlAccess' ? 'active' : ''}>
+                                <a href="#" onClick={() => { handleSlideBarClick('controlAccess'); handleClick('controlAccess'); handleDashboard() }}>
+                                    <i class='bx bx-street-view'></i>
+                                    <span className="text">Control Access</span>
                                 </a>
                             </li>
                             <li className={active === 'defineDocumentType' ? 'active' : ''}>

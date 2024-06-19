@@ -130,7 +130,9 @@ export const fetchDocFormats = async (setDocFormats) => {
 export const updateDocFormatControl = async (formatName, controlId, setDocFormats) => {
     try {
         const response = await Axios.post("http://localhost:4500/settings/updateDocFormatControl", { formatName, controlId }, {
-            headers: { Authorization: localStorage.getItem("token") },
+            headers: {
+                Authorization: localStorage.getItem("token")
+            },
         });
         if (response.data.status === "success") {
             setDocFormats(prevFormats => prevFormats.map(format =>
@@ -140,7 +142,9 @@ export const updateDocFormatControl = async (formatName, controlId, setDocFormat
                 position: "top-center"
             });
         } else {
-            console.log("Failed to update document format");
+            toast.error(response.data.message, {
+                position: "top-center"
+            });
         }
     } catch (error) {
         console.log(error);

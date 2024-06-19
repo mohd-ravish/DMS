@@ -76,7 +76,6 @@ export const handleDeleteUser = async (userId, currentUserId, setUsers, users) =
         });
         return;
     }
-
     try {
         const response = await Axios.delete(`http://localhost:4500/users/deleteUser/${userId}`, {
             headers: {
@@ -100,6 +99,70 @@ export const handleDeleteUser = async (userId, currentUserId, setUsers, users) =
         });
     }
 };
+
+// Function to get control access info
+export const getControlAcessInfo = async (setControlAccess) => {
+    try {
+        const response = await Axios.get("http://localhost:4500/users/hasAccess", {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            }
+        });
+        if (response.data.status === "success") {
+            setControlAccess(response.data.data);
+        } else {
+            console.log(response.data.message);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+// Function to get control access users
+export const getControlAccessUsers = async (setControlAccessUsers) => {
+    try {
+        const response = await Axios.get("http://localhost:4500/users/controlAccessUsers", {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            }
+        });
+        if (response.data.status === "success") {
+            setControlAccessUsers(response.data.data);
+        } else {
+            console.log(response.data.message);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+// Function to update user access
+export const handleControlAccessUpdate = async (userId, setControlAccessUsers) => {
+    try {
+        const response = await Axios.put(`http://localhost:4500/users/updateUserAccess/${userId}`, {}, {
+            headers: {
+                Authorization: localStorage.getItem("token")
+            },
+        });
+        if (response.data.status === "success") {
+            setControlAccessUsers(prevUsers => prevUsers.map(user =>
+                user.id === userId ? { ...user, has_access: user.has_access === 1 ? 0 : 1 } : user
+            ));
+            toast.success(response.data.message, {
+                position: "top-center"
+            });
+        } else {
+            toast.error(response.data.message, {
+                position: "top-center"
+            });
+        }
+    } catch (error) {
+        toast.error("Failed to update user access", {
+            position: "top-center"
+        });
+    }
+};
+
 
 // Function to get user activity logs
 export const handleUserActivitySubmit = async (userId, period, setUserActivity) => {
