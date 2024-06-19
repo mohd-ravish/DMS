@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import EditArtifactData from '../Manage/EditArtifactData';
 import usePagination from '../usePagination';
 import { fetchAllArtifacts } from '../ApiHandler/artifactsFunctions';
 import { exportToCSV, exportToExcel, exportToPDF, handlePrint } from '../Utils';
 
 const ManageAllArtifacts = () => {
-    const [allArtifacts, setAllArtifacts] = useState([]);
+    const [artifacts, setArtifacts] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [editSection, setEditSection] = useState(false);
     const [artifactsSection, setArtifactsSection] = useState(true);
     const [editFormData, setEditFormData] = useState([]);
 
     useEffect(() => {
-        fetchAllArtifacts(setAllArtifacts);
+        fetchAllArtifacts(setArtifacts);
     }, []);
 
-    const filteredArtifacts = allArtifacts.filter(artifact =>
+    const filteredArtifacts = artifacts.filter(artifact =>
         artifact.doc_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
         artifact.doctype_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
         artifact.owner_author_id.toLowerCase().includes(searchQuery.toLowerCase())
@@ -61,11 +63,14 @@ const ManageAllArtifacts = () => {
             {editSection && (
                 <EditArtifactData
                     editFormData={editFormData}
+                    artifacts={artifacts}
+                    setArtifacts={setArtifacts}
                     handleClose={handleClose}
                 />
             )}
             {artifactsSection && (
                 <div className="artifacts-container">
+                    <ToastContainer />
                     <header className="artifacts-header">
                         <h1>Manage All Artifacts</h1>
                     </header>

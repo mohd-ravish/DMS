@@ -7,7 +7,7 @@ import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
 import { handleEditArtifact } from '../ApiHandler/uploadFunctions';
 import { handleDeleteArtifact } from '../ApiHandler/artifactsFunctions';
 
-const EditMetaData = ({ editFormData, handleClose }) => {
+const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) => {
     const [availableTags, setAvailableTags] = useState([]);
     const [tags, setTags] = useState([]);
     const [docTypes, setDocTypes] = useState([]);
@@ -64,7 +64,7 @@ const EditMetaData = ({ editFormData, handleClose }) => {
             <header className="upload-document-header">
                 <h1>Edit Metadata</h1>
             </header>
-            <form className="edit-document-form" onSubmit={(e)=>handleEditArtifact(e, editFormData.id, tags, docType, description, publish, status)}>
+            <form className="edit-document-form" onSubmit={(e) => handleEditArtifact(e, editFormData.id, tags, docType, description, publish, status)}>
                 <div className="form-group">
                     <label>Document ID</label>
                     <span className="document-id">{editFormData.id}</span>
@@ -87,7 +87,7 @@ const EditMetaData = ({ editFormData, handleClose }) => {
                     <CreatableSelect
                         isMulti
                         value={tags}
-                        onChange={(newValue)=>handleTagChange(newValue, availableTags, setAvailableTags, tags, setTags)}
+                        onChange={(newValue) => handleTagChange(newValue, availableTags, setAvailableTags, tags, setTags)}
                         options={availableTags}
                         placeholder="Select or create tags"
                         className="document-tags-select"
@@ -167,7 +167,7 @@ const EditMetaData = ({ editFormData, handleClose }) => {
                         className="delete-btn"
                         onClick={() => {
                             if (window.confirm(`Are you sure you want to delete the document`)) {
-                                handleDeleteArtifact(editFormData.id);
+                                handleDeleteArtifact(editFormData.id, artifacts, setArtifacts, handleClose);
                             }
                         }}>Delete Artifact</button>
                 </div>

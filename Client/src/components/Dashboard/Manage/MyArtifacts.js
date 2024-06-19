@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { fetchMyArtifacts } from '../ApiHandler/artifactsFunctions';
 import EditArtifactData from './EditArtifactData';
 import usePagination from '../usePagination';
@@ -60,11 +62,14 @@ const Artifacts = () => {
             {editSection && (
                 <EditArtifactData
                     editFormData={editFormData}
+                    artifacts={artifacts}
+                    setArtifacts={setArtifacts}
                     handleClose={handleClose}
                 />
             )}
             {artifactsSection && (
                 <div className="artifacts-container">
+                    <ToastContainer />
                     <header className="artifacts-header">
                         <h1>My Artifacts</h1>
                     </header>

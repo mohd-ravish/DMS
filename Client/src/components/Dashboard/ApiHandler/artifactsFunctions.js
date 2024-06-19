@@ -120,7 +120,7 @@ export const fetchMyArtifacts = async (setArtifacts) => {
 };
 
 // Function to fetch all artifacts
-export const fetchAllArtifacts = async (setAllArtifacts) => {
+export const fetchAllArtifacts = async (setArtifacts) => {
     try {
         const response = await Axios.get("http://localhost:4500/artifacts/allArtifacts", {
             headers: {
@@ -128,7 +128,7 @@ export const fetchAllArtifacts = async (setAllArtifacts) => {
             },
         });
         if (response.data.status === "success") {
-            setAllArtifacts(response.data.data);
+            setArtifacts(response.data.data);
         } else {
             console.log(response);
 
@@ -139,7 +139,7 @@ export const fetchAllArtifacts = async (setAllArtifacts) => {
 };
 
 // Function to delete artifacts
-export const handleDeleteArtifact = async (docId) => {
+export const handleDeleteArtifact = async (docId, artifacts, setArtifacts, handleClose) => {
     try {
         const response = await Axios.delete(`http://localhost:4500/artifacts/deleteArtifact/${docId}`, {
             headers: {
@@ -147,6 +147,8 @@ export const handleDeleteArtifact = async (docId) => {
             },
         });
         if (response.data.status === "success") {
+            setArtifacts(artifacts.filter(artifact => artifact.id !== docId));
+            handleClose();
             toast.success(response.data.message, {
                 position: "top-center"
             });
