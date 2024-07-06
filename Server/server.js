@@ -16,6 +16,7 @@ const tagsRoutes = require('./routes/tags');
 const upoadRoutes = require('./routes/upload');
 const settingsRoute = require('./routes/settings');
 const artifactsRoutes = require('./routes/artifacts');
+const schoolRoutes = require('./routes/school');
 const usersRoutes = require('./routes/users');
 
 //Use Routes
@@ -24,6 +25,7 @@ app.use('/tags', tagsRoutes);
 app.use('/upload', upoadRoutes);
 app.use('/settings', settingsRoute);
 app.use('/artifacts', artifactsRoutes);
+app.use('/school', schoolRoutes);
 app.use('/users', usersRoutes);
 
 // Port

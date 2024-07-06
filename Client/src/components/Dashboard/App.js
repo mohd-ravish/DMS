@@ -8,6 +8,8 @@ import MyArtifacts from './Manage/MyArtifacts';
 import Upload from './Manage/Upload';
 import AddUrl from './Manage/AddUrl';
 import Demo from './Manage/Demo';
+import AddSchool from './School/AddSchool';
+import AddLab from './School/AddLab';
 import SystemSettings from './GodMode/SystemSettings';
 import UserActivity from './GodMode/UserActivity';
 import UserAccess from './GodMode/UserAccess';
@@ -27,6 +29,8 @@ function Dashboard() {
         upload: false,
         addUrl: false,
         demo: false,
+        addSchool: false,
+        addLab: false,
         systemSettings: false,
         userActivity: false,
         userAccess: false,
@@ -93,6 +97,8 @@ function Dashboard() {
                         {isClicked.upload && <Upload />}
                         {isClicked.addUrl && <AddUrl />}
                         {isClicked.demo && <Demo />}
+                        {isClicked.addSchool && <AddSchool />}
+                        {isClicked.addLab && <AddLab />}
                         {isClicked.systemSettings && <SystemSettings />}
                         {isClicked.userActivity && <UserActivity />}
                         {isClicked.userAccess && <UserAccess />}

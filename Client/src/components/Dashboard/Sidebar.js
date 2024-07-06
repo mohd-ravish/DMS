@@ -5,6 +5,7 @@ import { logout } from './ApiHandler/authFunctions';
 
 const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, controlAccess, isSidebarOpen }) => {
     const [isManageOpen, setIsManageOpen] = useState(false); // To open Manage section
+    const [isSchoolOpen, setIsSchoolOpen] = useState(false); // To open School section
     const [isGodModeOpen, setIsGodModeOpen] = useState(false); // To open God Mode section
     const [active, setActive] = useState('home');
 
@@ -15,12 +16,20 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
 
     const toggleManage = () => {
         setIsManageOpen(!isManageOpen);
+        setIsSchoolOpen(false); // Close School Section when Manage is opened
         setIsGodModeOpen(false); // Close God Mode when Manage is opened
+    };
+
+    const toggleSchool = () => {
+        setIsSchoolOpen(!isSchoolOpen);
+        setIsManageOpen(false); // Close Manage when School Section is opened
+        setIsGodModeOpen(false); // Close God Mode when School Section is opened
     };
 
     const toggleGodMode = () => {
         setIsGodModeOpen(!isGodModeOpen);
         setIsManageOpen(false); // Close Manage when God Mode is opened
+        setIsSchoolOpen(false); // Close School Section when God Mode is opened
     };
 
     const navigate = useNavigate();
@@ -80,6 +89,27 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
                             </li>
                         </>
                     )}
+                </ul>
+                <li className={active === 'school' ? 'active' : ''}>
+                    <a href="#" onClick={() => { handleSlideBarClick('school'); toggleSchool(); }}>
+                        <i class='bx bxs-school'></i>
+                        <span className="text">School</span>
+                        <i className={`bx ${isSchoolOpen ? 'bx-chevron-up' : 'bx-chevron-down'}`} style={{ marginLeft: 'auto' }}></i>
+                    </a>
+                </li>
+                <ul className={`submenu ${isSchoolOpen ? 'open' : ''}`}>
+                    <li className={active === 'addSchool' ? 'active' : ''}>
+                        <a href="#" onClick={() => { handleSlideBarClick('addSchool'); handleClick('addSchool'); handleDashboard() }}>
+                            <i class='bx bx-plus'></i>
+                            <span className="text">Add School</span>
+                        </a>
+                    </li>
+                    <li className={active === 'addLab' ? 'active' : ''}>
+                        <a href="#" onClick={() => { handleSlideBarClick('addLab'); handleClick('addLab'); handleDashboard() }}>
+                            <i class='bx bx-test-tube'></i>
+                            <span className="text">Add Lab</span>
+                        </a>
+                    </li>
                 </ul>
                 {role === 1 && ( // Only render God Mode if role is admin
                     <>
