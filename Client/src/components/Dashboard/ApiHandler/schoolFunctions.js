@@ -29,7 +29,7 @@ export const handleAddSchool = async (e, formData, setFormData) => {
             });
         }
     } catch (error) {
-        toast.error("An error occurred while adding the School", {
+        toast.error("An error occurred while adding the school", {
             position: "top-center"
         });
     }
@@ -77,7 +77,36 @@ export const handleAddLab = async (e, labData, setLabData) => {
             });
         }
     } catch (error) {
-        toast.error("An error occurred while adding the Lab", {
+        toast.error("An error occurred while adding the lab", {
+            position: "top-center"
+        });
+    }
+};
+
+// Function to add equipment
+export const handleAddEquipment = async (e, equipmentData, setEquipmentData) => {
+    e.preventDefault();
+    try {
+        const response = await Axios.post("http://localhost:4500/school/addEquipment", equipmentData, {
+            headers: {
+                Authorization: localStorage.getItem("token"),
+            },
+        });
+        if (response.data.status === "success") {
+            toast.success(response.data.message, {
+                position: "top-center"
+            });
+            setEquipmentData({
+                equipmentName: "",
+                equipmentType: "",
+            });
+        } else {
+            toast.error("Equipment add failed", {
+                position: "top-center"
+            });
+        }
+    } catch (error) {
+        toast.error("An error occurred while adding the equipment", {
             position: "top-center"
         });
     }

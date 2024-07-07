@@ -110,6 +110,12 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
                             <span className="text">Add Lab</span>
                         </a>
                     </li>
+                    <li className={active === 'addEquipment' ? 'active' : ''}>
+                        <a href="#" onClick={() => { handleSlideBarClick('addEquipment'); handleClick('addEquipment'); handleDashboard() }}>
+                            <i class='bx bx-wrench'></i>
+                            <span className="text">Add Equipment</span>
+                        </a>
+                    </li>
                 </ul>
                 {role === 1 && ( // Only render God Mode if role is admin
                     <>

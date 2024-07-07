@@ -10,6 +10,7 @@ import AddUrl from './Manage/AddUrl';
 import Demo from './Manage/Demo';
 import AddSchool from './School/AddSchool';
 import AddLab from './School/AddLab';
+import AddEquipment from './School/AddEquipment';
 import SystemSettings from './GodMode/SystemSettings';
 import UserActivity from './GodMode/UserActivity';
 import UserAccess from './GodMode/UserAccess';
@@ -31,6 +32,7 @@ function Dashboard() {
         demo: false,
         addSchool: false,
         addLab: false,
+        addEquipment: false,
         systemSettings: false,
         userActivity: false,
         userAccess: false,
@@ -99,6 +101,7 @@ function Dashboard() {
                         {isClicked.demo && <Demo />}
                         {isClicked.addSchool && <AddSchool />}
                         {isClicked.addLab && <AddLab />}
+                        {isClicked.addEquipment && <AddEquipment />}
                         {isClicked.systemSettings && <SystemSettings />}
                         {isClicked.userActivity && <UserActivity />}
                         {isClicked.userAccess && <UserAccess />}

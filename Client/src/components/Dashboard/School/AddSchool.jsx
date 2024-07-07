@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { handleAddSchool } from '../ApiHandler/schoolFunctions';
 
-const AddUrl = () => {
+const AddSchool = () => {
     const [schoolData, setSchoolData] = useState({
         schoolName: "",
         state: "",
@@ -126,4 +126,4 @@ const AddUrl = () => {
     );
 };
 
-export default AddUrl;
+export default AddSchool;

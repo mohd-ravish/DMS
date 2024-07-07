@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchSchoolNames, handleAddLab } from '../ApiHandler/schoolFunctions';
 
-const AddUrl = () => {
+const AddLab = () => {
     const [labData, setLabData] = useState({
         labName: "",
         labType: "",
@@ -50,9 +50,8 @@ const AddUrl = () => {
                         name="labType"
                         value={labData.labType}
                         onChange={handleChange}
-                        placeholder="Enter Lab Type"
+                        placeholder="Enter Lab Type if there is any"
                         autoComplete='off'
-                        required
                     />
                 </div>
                 <div className="form-group">
@@ -80,4 +79,4 @@ const AddUrl = () => {
     );
 };
 
-export default AddUrl;
+export default AddLab;

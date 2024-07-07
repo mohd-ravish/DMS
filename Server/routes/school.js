@@ -67,4 +67,30 @@ router.post('/addLab', verifyUser, (req, res) => {
     }
 });
 
+// Route to add equipment
+router.post('/addEquipment', verifyUser, (req, res) => {
+    const { equipmentName, equipmentType } = req.body;
+    const equipmentAddedBy = req.id;
+    const equipmentAddedOn = new Date();
+    const query = `INSERT INTO equipments 
+        (equipment_name, equipment_type, equipment_added_by, equipment_added_on) 
+        VALUES (?, ?, ?, ?)`;
+
+    try {
+        db.query(query, [equipmentName, equipmentType, equipmentAddedBy, equipmentAddedOn], (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.json({ status: 'fail', message: err.message });
+            }
+            db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} added new equipment [${equipmentName}]`, equipmentAddedOn], (err, result) => {
+                if (err) throw err;
+            });
+            return res.json({ status: 'success', message: 'Equipment added successfully' });
+        });
+    } catch (err) {
+        console.error(err);
+        return res.json({ status: 'error', message: 'Internal Server Error' });
+    }
+});
+
 module.exports = router;
