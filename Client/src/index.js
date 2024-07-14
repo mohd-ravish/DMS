@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import App from './components/Dashboard/App';
-import Login from './components/Login';
+import Login from './components/Login/Login';
 import './styles.css';
 
 import {

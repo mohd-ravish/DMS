@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import docLogo from '../../assets/logo.png';
 import { useNavigate } from "react-router-dom";
-import docLogo from '../assets/doc-logo.png';
 import { logout } from './ApiHandler/authFunctions';
 
 const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, controlAccess, isSidebarOpen }) => {
@@ -114,6 +114,18 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
                         <a href="#" onClick={() => { handleSlideBarClick('addEquipment'); handleClick('addEquipment'); handleDashboard() }}>
                             <i class='bx bx-wrench'></i>
                             <span className="text">Add Equipment</span>
+                        </a>
+                    </li>
+                    <li className={active === 'equipmentAllocation' ? 'active' : ''}>
+                        <a href="#" onClick={() => { handleSlideBarClick('equipmentAllocation'); handleClick('equipmentAllocation'); handleDashboard() }}>
+                            <i class='bx bx-box'></i>
+                            <span className="text">Equipment Allocation</span>
+                        </a>
+                    </li>
+                    <li className={active === 'myEntries' ? 'active' : ''}>
+                        <a href="#" onClick={() => { handleSlideBarClick('myEntries'); handleClick('myEntries'); handleDashboard() }}>
+                            <i class='bx bx-clipboard' ></i>
+                            <span className="text">My Entries</span>
                         </a>
                     </li>
                 </ul>

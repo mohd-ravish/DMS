@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EditArtifactData from '../Manage/EditArtifactData';
-import usePagination from '../usePagination';
-import { fetchAllArtifacts } from '../ApiHandler/artifactsFunctions';
-import { exportToCSV, exportToExcel, exportToPDF, handlePrint } from '../Utils';
+import { fetchMyArtifacts } from '../ApiHandler/artifactsFunctions';
+import EditArtifactData from './EditArtifactData';
+import { exportToCSV, exportToExcel, exportToPDF, handlePrint } from '../../utils/Utils';
+import usePagination from '../../hooks/usePagination';
 
-const ManageAllArtifacts = () => {
+const Artifacts = () => {
     const [artifacts, setArtifacts] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [editSection, setEditSection] = useState(false);
@@ -14,13 +14,12 @@ const ManageAllArtifacts = () => {
     const [editFormData, setEditFormData] = useState([]);
 
     useEffect(() => {
-        fetchAllArtifacts(setArtifacts);
+        fetchMyArtifacts(setArtifacts);
     }, []);
 
     const filteredArtifacts = artifacts.filter(artifact =>
         artifact.doc_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        artifact.doctype_nm.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        artifact.owner_author_id.toLowerCase().includes(searchQuery.toLowerCase())
+        artifact.doctype_nm.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const {
@@ -72,7 +71,7 @@ const ManageAllArtifacts = () => {
                 <div className="artifacts-container">
                     <ToastContainer />
                     <header className="artifacts-header">
-                        <h1>Manage All Artifacts</h1>
+                        <h1>My Artifacts</h1>
                     </header>
                     <div className="artifacts-table-container">
                         <div className='header-select-entries'>
@@ -82,12 +81,13 @@ const ManageAllArtifacts = () => {
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
-                                </select>entries</th>
+                                </select>entries
+                            </th>
                             <th colSpan="4">
                                 <div className="table-buttons">
-                                    <button onClick={() => exportToCSV(filteredArtifacts, 'DMS All Artifacts.csv')}>CSV</button>
-                                    <button onClick={() => exportToExcel(filteredArtifacts, 'DMS All Artifacts.xlsx')}>Excel</button>
-                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS All Artifacts.pdf')}>PDF</button>
+                                    <button onClick={() => exportToCSV(filteredArtifacts, 'DMS My Artifacts.csv')}>CSV</button>
+                                    <button onClick={() => exportToExcel(filteredArtifacts, 'DMS My Artifacts.xlsx')}>Excel</button>
+                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Artifacts.pdf')}>PDF</button>
                                     <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
                             </th>
@@ -95,7 +95,7 @@ const ManageAllArtifacts = () => {
                                 <label>Search</label>
                                 <input
                                     type="text"
-                                    placeholder="Type Name or Email..."
+                                    placeholder="Type name or type..."
                                     className="user-search-bar"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -108,7 +108,6 @@ const ManageAllArtifacts = () => {
                                     <tr>
                                         <th>Document Name</th>
                                         <th>Document Type</th>
-                                        <th>Author/Publisher</th>
                                         <th>Uploaded date</th>
                                         <th>Action</th>
                                     </tr>
@@ -123,7 +122,6 @@ const ManageAllArtifacts = () => {
                                                 </div>
                                             </td>
                                             <td>{item.doctype_nm}</td>
-                                            <td>{item.owner_author_id}</td>
                                             <td className="date">{item.date_uploaded.split('T')[0]}</td>
                                             <td><a href="#" className="edit-link" onClick={() => editArtifact(item)}>✏️ Edit</a></td>
                                         </tr>
@@ -151,11 +149,11 @@ const ManageAllArtifacts = () => {
                     <div className="usage-instructions">
                         <h2>📢 Usage Instructions</h2>
                         <ul>
-                            <li><i class='bx bx-paper-plane'></i> All documents/urls uploaded by you will be listed here in descending order, i.e., latest first.</li>
-                            <li><i class='bx bx-paper-plane'></i> All Active and published documents will be eligible for end-user searches.</li>
-                            <li><i class='bx bx-paper-plane'></i> Color Legend: <span className="active">Active and Search Ready</span>, <span className="inactive">Active but Not published</span>, and <span className="archived">Archived i.e. Neither Active Nor Search Ready</span></li>
-                            <li><i class='bx bx-paper-plane'></i> To read the description, hover your cursor on the document name.</li>
-                            <li><i class='bx bx-paper-plane'></i> Symbol 🔗 after the document name shows that it's a URL and 📄 shows that it's an uploaded document.</li>
+                            <li><i className='bx bx-paper-plane'></i> All documents/urls uploaded by you will be listed here in descending order, i.e., latest first.</li>
+                            <li><i className='bx bx-paper-plane'></i> All Active and published documents will be eligible for end-user searches.</li>
+                            <li><i className='bx bx-paper-plane'></i> Color Legend: <span className="active">Active and Search Ready</span>, <span className="inactive">Active but Not published</span>, and <span className="archived">Archived i.e. Neither Active Nor Search Ready</span></li>
+                            <li><i className='bx bx-paper-plane'></i> To read the description, hover your cursor on the document name.</li>
+                            <li><i className='bx bx-paper-plane'></i> Symbol 🔗 after the document name shows that it's a URL and 📄 shows that it's an uploaded document.</li>
                         </ul>
                     </div>
                 </div>
@@ -164,4 +162,4 @@ const ManageAllArtifacts = () => {
     );
 };
 
-export default ManageAllArtifacts;
+export default Artifacts;

@@ -1,10 +1,12 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Function to fetch current system settings
 export const fetchSettings = async (setLimit, setUpdatedBy, setLastUpdated, setAllowedToChange) => {
     try {
-        const response = await Axios.get("http://localhost:4500/settings/fetchSystemSettings", {
+        const response = await Axios.get(`${API_URL}/settings/fetchSystemSettings`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -31,7 +33,7 @@ export const submitNewSystemSettings = async (newLimit) => {
         return;
     }
     try {
-        const response = await Axios.post("http://localhost:4500/settings/updateSystemSettings", { newLimit }, {
+        const response = await Axios.post(`${API_URL}/settings/updateSystemSettings`, { newLimit }, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -55,7 +57,7 @@ export const submitNewSystemSettings = async (newLimit) => {
 // Function to fetch allocated and used space
 export const fetchAllocatedUsedSpace = async (setTotalAllocatedSpace, setUsedSpace, setRemainingSpace, setSpaceLastUpdated, setSpaceUpdatedBy) => {
     try {
-        const response = await Axios.get('http://localhost:4500/settings/fetchAllocatedUsedSpace', {
+        const response = await Axios.get(`${API_URL}/settings/fetchAllocatedUsedSpace`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -87,7 +89,7 @@ export const submitNewAllocatedSpace = async (newAllocateSpace) => {
         return;
     }
     try {
-        const response = await Axios.post("http://localhost:4500/settings/updateAllocatedSpace", { newAllocateSpace }, {
+        const response = await Axios.post(`${API_URL}/settings/updateAllocatedSpace`, { newAllocateSpace }, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -111,7 +113,7 @@ export const submitNewAllocatedSpace = async (newAllocateSpace) => {
 // Function to fetch doc formats
 export const fetchDocFormats = async (setDocFormats) => {
     try {
-        const response = await Axios.get("http://localhost:4500/settings/fetchDocFormats", {
+        const response = await Axios.get(`${API_URL}/settings/fetchDocFormats`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -129,7 +131,7 @@ export const fetchDocFormats = async (setDocFormats) => {
 // Function to update doc format
 export const updateDocFormatControl = async (formatName, controlId, setDocFormats) => {
     try {
-        const response = await Axios.post("http://localhost:4500/settings/updateDocFormatControl", { formatName, controlId }, {
+        const response = await Axios.post(`${API_URL}/settings/updateDocFormatControl`, { formatName, controlId }, {
             headers: {
                 Authorization: localStorage.getItem("token")
             },

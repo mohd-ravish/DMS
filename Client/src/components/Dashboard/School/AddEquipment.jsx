@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { handleAddEquipment } from '../ApiHandler/schoolFunctions';
+import { handleAddEquipment } from '../ApiHandler/equipmentFunctions';
 
 const AddEquipment = () => {
     const [equipmentData, setEquipmentData] = useState({

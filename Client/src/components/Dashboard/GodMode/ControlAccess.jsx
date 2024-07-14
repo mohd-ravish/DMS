@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import usePagination from '../usePagination';
 import { getControlAccessUsers, handleControlAccessUpdate } from '../ApiHandler/usersFunctions';
-import { exportToUserCSV, exportToUserExcel, exportToPDF, handlePrint } from '../Utils';
+import { exportToUserCSV, exportToUserExcel, exportToPDF, handlePrint } from '../../utils/Utils';
+import usePagination from '../../hooks/usePagination';
 
 const UserAccess = () => {
     const [controlAccessUsers, setControlAccessUsers] = useState([]);  // User Data like id, username, email and role_id

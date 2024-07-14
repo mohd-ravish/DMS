@@ -2,6 +2,8 @@ import Axios from 'axios';
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Function to fetch token from local storage
 export const fetchToken = async (setCurrentUserId) => {
     const token = localStorage.getItem("token");
@@ -14,7 +16,7 @@ export const fetchToken = async (setCurrentUserId) => {
 // Function to fetch user info 
 export const fetchUsers = async (setUsers) => {
     try {
-        const response = await Axios.get("http://localhost:4500/users/getUsers", {
+        const response = await Axios.get(`${API_URL}/users/getUsers`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -40,7 +42,7 @@ export const handleChangeRole = async (userId, currentRoleId, currentUserId, set
 
     const newRoleId = currentRoleId === 1 ? 2 : 1;
     try {
-        const response = await Axios.put("http://localhost:4500/users/changeRole", {
+        const response = await Axios.put(`${API_URL}/users/changeRole`, {
             userId,
             newRoleId
         }, {
@@ -77,7 +79,7 @@ export const handleDeleteUser = async (userId, currentUserId, setUsers, users) =
         return;
     }
     try {
-        const response = await Axios.delete(`http://localhost:4500/users/deleteUser/${userId}`, {
+        const response = await Axios.delete(`${API_URL}/users/deleteUser/${userId}`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             }
@@ -103,7 +105,7 @@ export const handleDeleteUser = async (userId, currentUserId, setUsers, users) =
 // Function to get control access info
 export const getControlAcessInfo = async (setControlAccess) => {
     try {
-        const response = await Axios.get("http://localhost:4500/users/hasAccess", {
+        const response = await Axios.get(`${API_URL}/users/hasAccess`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             }
@@ -121,7 +123,7 @@ export const getControlAcessInfo = async (setControlAccess) => {
 // Function to get control access users
 export const getControlAccessUsers = async (setControlAccessUsers) => {
     try {
-        const response = await Axios.get("http://localhost:4500/users/controlAccessUsers", {
+        const response = await Axios.get(`${API_URL}/users/controlAccessUsers`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             }
@@ -139,7 +141,7 @@ export const getControlAccessUsers = async (setControlAccessUsers) => {
 // Function to update user access
 export const handleControlAccessUpdate = async (userId, setControlAccessUsers) => {
     try {
-        const response = await Axios.put(`http://localhost:4500/users/updateUserAccess/${userId}`, {}, {
+        const response = await Axios.put(`${API_URL}/users/updateUserAccess/${userId}`, {}, {
             headers: {
                 Authorization: localStorage.getItem("token")
             },
@@ -170,7 +172,7 @@ export const handleUserActivitySubmit = async (userId, period, setUserActivity) 
         return;
     }
     try {
-        const response = await Axios.post("http://localhost:4500/users/userActivity", { userId, period }, {
+        const response = await Axios.post(`${API_URL}/users/userActivity`, { userId, period }, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },

@@ -3,11 +3,11 @@ import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-// Function to add school
-export const handleAddSchool = async (e, formData, setFormData) => {
+// Function to add lab
+export const handleAddLab = async (e, labData, setLabData) => {
     e.preventDefault();
     try {
-        const response = await Axios.post(`${API_URL}/schools/addSchool`, formData, {
+        const response = await Axios.post(`${API_URL}/labs/addLab`, labData, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -16,68 +16,64 @@ export const handleAddSchool = async (e, formData, setFormData) => {
             toast.success(response.data.message, {
                 position: "top-center"
             });
-            setFormData({
-                schoolName: "",
-                state: "",
-                address: "",
-                geoLocation: "",
-                schoolEmail: "",
-                contactPerson: "",
-                contactNo: ""
+            setLabData({
+                labName: "",
+                labType: "",
+                schoolId: "",
             });
         } else {
-            toast.error("School add failed", {
+            toast.error("Lab add failed", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while adding the school", {
+        toast.error("An error occurred while adding the lab", {
             position: "top-center"
         });
     }
 };
 
-// Function to fetch user's schools
-export const fetchMySchools = async (setMySchools) => {
+// Function to fetch user's labs
+export const fetchMyLabs = async (setMyLabs) => {
     try {
-        const response = await Axios.get(`${API_URL}/schools/getMySchools`, {
+        const response = await Axios.get(`${API_URL}/labs/getMyLabs`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
         });
         if (response.data.status === "success") {
-            setMySchools(response.data.data);
+            setMyLabs(response.data.data);
         } else {
-            console.log("Failed to fetch schools");
+            console.log("Failed to fetch labs");
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-// Function to fetch all schools
-export const fetchAllSchools = async (setSchoolNames) => {
+// Function to fetch labs for a specific school
+export const fetchLabsForSchool = async (schoolId, setLabs) => {
     try {
-        const response = await Axios.get(`${API_URL}/schools/getAllSchools`, {
+        const response = await Axios.get(`${API_URL}/labs/getLabs/${schoolId}`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
         });
         if (response.data.status === "success") {
-            setSchoolNames(response.data.data);
+            setLabs(response.data.labs);
         } else {
-            console.log("Failed to fetch school names");
+            console.error("Failed to fetch labs");
         }
     } catch (error) {
-        console.log(error);
+        console.error("An error occurred while fetching labs:", error);
     }
 };
 
-// Function to update school data
-export const handleEditSchoolData = async (e, schoolId, newSchoolData) => {
+// Function to update lab data
+export const handleEditLabData = async (e, labId, newLabData) => {
     e.preventDefault();
     try {
-        const response = await Axios.put(`${API_URL}/schools/updateSchoolData/${schoolId}`, newSchoolData, {
+        const response = await Axios.put(`${API_URL}/labs/updateLabData/${labId}`, newLabData, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -87,38 +83,38 @@ export const handleEditSchoolData = async (e, schoolId, newSchoolData) => {
                 position: "top-center"
             });
         } else {
-            toast.error("Failed to update school data", {
+            toast.error("Failed to update lab data", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while updating school data", {
+        toast.error("An error occurred while updating lab data", {
             position: "top-center"
         });
     }
 };
 
-// Function to delete school
-export const handleDeleteSchool = async (schoolId, mySchools, setMySchools, handleClose) => {
+// Function to delete lab
+export const handleDeleteLab = async (labId, myLabs, setMyLabs, handleClose) => {
     try {
-        const response = await Axios.delete(`${API_URL}/schools/deleteSchool/${schoolId}`, {
+        const response = await Axios.delete(`${API_URL}/labs/deleteLab/${labId}`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
         });
         if (response.data.status === "success") {
-            setMySchools(mySchools.filter(school => school.id !== schoolId));
+            setMyLabs(myLabs.filter(lab => lab.id !== labId));
             handleClose();
             toast.success(response.data.message, {
                 position: "top-center"
             });
         } else {
-            toast.error("School delete failed", {
+            toast.error("Lab delete failed", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while deleting the school", {
+        toast.error("An error occurred while deleting the lab", {
             position: "top-center"
         });
     }

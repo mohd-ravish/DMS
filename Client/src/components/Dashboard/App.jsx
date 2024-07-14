@@ -11,6 +11,8 @@ import Demo from './Manage/Demo';
 import AddSchool from './School/AddSchool';
 import AddLab from './School/AddLab';
 import AddEquipment from './School/AddEquipment';
+import EquipmentAllocation from './School/EquipmentAllocation';
+import MyEntries from './School/MyEntries';
 import SystemSettings from './GodMode/SystemSettings';
 import UserActivity from './GodMode/UserActivity';
 import UserAccess from './GodMode/UserAccess';
@@ -33,6 +35,8 @@ function Dashboard() {
         addSchool: false,
         addLab: false,
         addEquipment: false,
+        equipmentAllocation: false,
+        myEntries: false,
         systemSettings: false,
         userActivity: false,
         userAccess: false,
@@ -102,6 +106,8 @@ function Dashboard() {
                         {isClicked.addSchool && <AddSchool />}
                         {isClicked.addLab && <AddLab />}
                         {isClicked.addEquipment && <AddEquipment />}
+                        {isClicked.equipmentAllocation && <EquipmentAllocation />}
+                        {isClicked.myEntries && <MyEntries />}
                         {isClicked.systemSettings && <SystemSettings />}
                         {isClicked.userActivity && <UserActivity />}
                         {isClicked.userAccess && <UserAccess />}

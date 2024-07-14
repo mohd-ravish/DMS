@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchDocTypes, handleDocTypeUpdate, handleAddNewDocType, handleDeleteDocType } from '../ApiHandler/artifactsFunctions';
-import usePagination from '../usePagination';
+import usePagination from '../../hooks/usePagination';
 
 const DefineDocType = () => {
     const [availableDocTypes, setAvailableDocTypes] = useState([]);

@@ -1,6 +1,8 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Function to upload document
 export const handleDocumentSubmit = async (e, limit, remainingSpace, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ export const handleDocumentSubmit = async (e, limit, remainingSpace, file, tags,
     formData.append("description", description);
     formData.append("publish", publish);
     try {
-        const response = await Axios.post("http://localhost:4500/upload/uploadDocument", formData, {
+        const response = await Axios.post(`${API_URL}/upload/uploadDocument`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 Authorization: localStorage.getItem("token"),
@@ -64,7 +66,7 @@ export const handleUrlSubmit = async (e, infoHead, url, tags, docType, descripti
     };
 
     try {
-        const response = await Axios.post("http://localhost:4500/upload/addUrl", urlDetails, {
+        const response = await Axios.post(`${API_URL}/upload/addUrl`, urlDetails, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -102,7 +104,7 @@ export const handleEditArtifact = async (e, docId, tags, docType, description, p
         status: status
     };
     try {
-        const response = await Axios.put(`http://localhost:4500/upload/updateDocument/${docId}`, editData, {
+        const response = await Axios.put(`${API_URL}/upload/updateDocument/${docId}`, editData, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },

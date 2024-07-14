@@ -1,11 +1,13 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Function to login 
 export const handleLoginSubmit = async (e, userLoginData, setUserLoginData, navigate) => {
     e.preventDefault();
     if (Object.values(userLoginData).every(value => value.length > 0)) {
-        await Axios.post("http://localhost:4500/auth/login", userLoginData)
+        await Axios.post(`${API_URL}/auth/login`, userLoginData)
             .then(res => {
                 if (res.data === "User not found") {
                     toast.error("User not found!", {
@@ -38,7 +40,7 @@ export const verifyUser = async (setAuth, setUsername, setRole, setMessage) => {
     try {
         const option = {
             method: 'get',
-            url: "http://localhost:4500/auth/verifyUser",
+            url: `${API_URL}/auth/verifyUser`,
             headers: {
                 Authorization: localStorage.getItem("token") // Get token from local storage
             }
@@ -61,7 +63,7 @@ export const verifyUser = async (setAuth, setUsername, setRole, setMessage) => {
 export const logout = async (navigate) => {
     const token = localStorage.getItem("token");
     if (token) {
-        await Axios.post("http://localhost:4500/auth/logout", {}, {
+        await Axios.post(`${API_URL}/auth/logout`, {}, {
             headers: {
                 Authorization: token
             }

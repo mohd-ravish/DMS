@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchTags, handleTagUpdate } from '../ApiHandler/tagsFunctions';
-import usePagination from '../usePagination';
+import usePagination from '../../hooks/usePagination';
 
 const EditTags = () => {
     const [availableTags, setAvailableTags] = useState([]);

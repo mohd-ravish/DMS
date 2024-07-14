@@ -2,20 +2,15 @@ import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { fetchAllSchools } from '../ApiHandler/schoolFunctions';
-import {handleAddLab} from '../ApiHandler/labFunctions';
+import {handleEditLabData, handleDeleteLab} from '../ApiHandler/labFunctions';
 
-const AddLab = () => {
-    const [labData, setLabData] = useState({
-        labName: "",
-        labType: "",
-        schoolId: "",
-    });
-
+const EditSchoolData = ({ editFormData, myLabs, setMyLabs, handleClose }) => {
+    const [newLabData, setNewLabData] = useState({ ...editFormData });
     const [schoolNames, setSchoolNames] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setLabData(prevData => ({
+        setNewLabData(prevData => ({
             ...prevData,
             [name]: value
         }));
@@ -26,18 +21,22 @@ const AddLab = () => {
     }, []);
 
     return (
-        <div className="upload-document-container">
+        <div className="edit-document-container my-entries-edit-container">
             <ToastContainer />
             <header className="upload-document-header">
-                <h1>Add Lab</h1>
+                <h1>Edit Lab Data</h1>
             </header>
-            <form className="upload-document-form" onSubmit={(e) => handleAddLab(e, labData, setLabData)}>
+            <form className="edit-document-form" onSubmit={(e) => handleEditLabData(e, editFormData.id, newLabData)}>
+                <div className="form-group">
+                    <label>Lab ID</label>
+                    <span className="document-id">{newLabData.lab_id}</span>
+                </div>
                 <div className="form-group">
                     <label>Lab Name</label>
                     <input
                         type="text"
-                        name="labName"
-                        value={labData.labName}
+                        name="lab_name"
+                        value={newLabData.lab_name}
                         onChange={handleChange}
                         placeholder="Enter Lab Name"
                         autoComplete='off'
@@ -48,16 +47,16 @@ const AddLab = () => {
                     <label>Lab Type</label>
                     <input
                         type="text"
-                        name="labType"
-                        value={labData.labType}
+                        name="lab_type"
+                        value={newLabData.lab_type}
                         onChange={handleChange}
-                        placeholder="Enter Lab Type if there is any"
+                        placeholder="Enter Lab type if there is any"
                         autoComplete='off'
                     />
                 </div>
                 <div className="form-group">
                     <label>School Name</label>
-                    <select name="schoolId" value={labData.schoolId} onChange={handleChange} required>
+                    <select name="school_id" value={newLabData.school_id} onChange={handleChange} required>
                         <option value="">Select</option>
                         {schoolNames.map((type) => (
                             <option key={type.id} value={type.id}>
@@ -66,8 +65,20 @@ const AddLab = () => {
                         ))}
                     </select>
                 </div>
-                <div className="form-group">
-                    <button type="submit">Submit</button>
+                <div className="form-actions">
+                    <div>
+                        <button type="button" className="cancel-btn" onClick={handleClose}>Cancel</button>
+                        <button type="submit" className="update-btn">Update</button>
+                    </div>
+                    <button
+                        type="button"
+                        className="delete-btn"
+                        onClick={() => {
+                            if (window.confirm(`Are you sure you want to delete the lab`)) {
+                                handleDeleteLab(editFormData.id, myLabs, setMyLabs, handleClose);
+                            }
+                        }}>Delete Lab</button>
+
                 </div>
             </form>
             <div className="usage-instructions">
@@ -77,7 +88,7 @@ const AddLab = () => {
                 </ul>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default AddLab;
+export default EditSchoolData;

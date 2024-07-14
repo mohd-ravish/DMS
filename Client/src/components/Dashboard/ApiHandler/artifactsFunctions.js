@@ -1,10 +1,12 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Function to fetch document types
 export const fetchDocTypes = async (setDocTypes) => {
     try {
-        const response = await Axios.get("http://localhost:4500/artifacts/documentTypes", {
+        const response = await Axios.get(`${API_URL}/artifacts/documentTypes`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -25,7 +27,7 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
         return;
     }
     try {
-        const response = await Axios.put(`http://localhost:4500/artifacts/updateDocTypes/${editingDocTypeId}`, {
+        const response = await Axios.put(`${API_URL}/artifacts/updateDocTypes/${editingDocTypeId}`, {
             docTypeName: editedDocTypeValue
         }, {
             headers: {
@@ -57,7 +59,7 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
 export const handleAddNewDocType = async (e, newDocTypeName, setNewDocTypeName, availableDocTypes, setAvailableDocTypes) => {
     e.preventDefault();
     try {
-        const response = await Axios.post("http://localhost:4500/artifacts/addNewDocType", { newDocTypeName }, {
+        const response = await Axios.post(`${API_URL}/artifacts/addNewDocType`, { newDocTypeName }, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -83,7 +85,7 @@ export const handleAddNewDocType = async (e, newDocTypeName, setNewDocTypeName, 
 // Function to add new doc type
 export const handleDeleteDocType = async (docTypeId, availableDocTypes, setAvailableDocTypes) => {
     try {
-        const response = await Axios.delete(`http://localhost:4500/artifacts/deleteDoctype/${docTypeId}`, {
+        const response = await Axios.delete(`${API_URL}/artifacts/deleteDoctype/${docTypeId}`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -104,7 +106,7 @@ export const handleDeleteDocType = async (docTypeId, availableDocTypes, setAvail
 // Function to fetch user's artifacts
 export const fetchMyArtifacts = async (setArtifacts) => {
     try {
-        const response = await Axios.get("http://localhost:4500/artifacts/myArtifacts", {
+        const response = await Axios.get(`${API_URL}/artifacts/myArtifacts`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -122,7 +124,7 @@ export const fetchMyArtifacts = async (setArtifacts) => {
 // Function to fetch all artifacts
 export const fetchAllArtifacts = async (setArtifacts) => {
     try {
-        const response = await Axios.get("http://localhost:4500/artifacts/allArtifacts", {
+        const response = await Axios.get(`${API_URL}/artifacts/allArtifacts`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -141,7 +143,7 @@ export const fetchAllArtifacts = async (setArtifacts) => {
 // Function to delete artifacts
 export const handleDeleteArtifact = async (docId, artifacts, setArtifacts, handleClose) => {
     try {
-        const response = await Axios.delete(`http://localhost:4500/artifacts/deleteArtifact/${docId}`, {
+        const response = await Axios.delete(`${API_URL}/artifacts/deleteArtifact/${docId}`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -167,7 +169,7 @@ export const handleDeleteArtifact = async (docId, artifacts, setArtifacts, handl
 // Function to fetch top 10 contributers
 export const fetchTopContributors = async (setContributors) => {
     try {
-        const response = await Axios.get('http://localhost:4500/artifacts/topContributors');
+        const response = await Axios.get(`${API_URL}/artifacts/topContributors`);
         if (response.data.status === 'success') {
             setContributors(response.data.data);
         }
@@ -179,7 +181,7 @@ export const fetchTopContributors = async (setContributors) => {
 // Function to fetch artifacts count
 export const fetchArtifactsCounts = async (setTotalDocsCount, setTotalUrlsCount) => {
     try {
-        const response = await Axios.get('http://localhost:4500/artifacts/countArtifacts');
+        const response = await Axios.get(`${API_URL}/artifacts/countArtifacts`);
         if (response.data.status === 'success') {
             setTotalDocsCount(response.data.data.total_docs);
             setTotalUrlsCount(response.data.data.total_urls);

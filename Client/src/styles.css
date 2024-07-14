@@ -780,7 +780,6 @@ body {
 .highlight {
 	color: blue;
 }
-
 /* SEARCHBAR  */
 
 
@@ -1599,3 +1598,43 @@ select {
 }
 
 /* RESPONSIVENESS  */
+
+
+
+
+
+/* My Entries  */
+.my-entries-section {
+	padding: 0px;
+}
+
+.my-entries-edit-container{
+	padding: 0px;
+}
+
+.my-entries-container {
+	padding: 20px;
+}
+
+.switch-buttons {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 0px;
+}
+
+.switch-buttons button {
+	margin: 0 10px;
+	padding: 10px 20px;
+	cursor: pointer;
+	border: solid #ffffff 1px;
+	background-color: #f0f0f0;
+	border-radius: 5px;
+	transition: background-color 0.3s;
+}
+
+.switch-buttons button.active {
+	background-color: #007bff;
+	color: white;
+	border: none;
+}
+/* My Entries  */

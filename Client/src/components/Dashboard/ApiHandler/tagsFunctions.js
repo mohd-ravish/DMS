@@ -1,10 +1,12 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Function to fetch tags for editing
 export const fetchTags = async (setAvailableTags) => {
     try {
-        const response = await Axios.get("http://localhost:4500/tags/allTags", {
+        const response = await Axios.get(`${API_URL}/tags/allTags`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -22,7 +24,7 @@ export const fetchTags = async (setAvailableTags) => {
 // Function to fetch tags for document/Url upload
 export const fetchUploadTags = async (setAvailableTags) => {
     try {
-        const response = await Axios.get("http://localhost:4500/tags/allTags", {
+        const response = await Axios.get(`${API_URL}/tags/allTags`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -51,7 +53,7 @@ export const handleTagChange = async (newValue, availableTags, setAvailableTags,
     const newTags = newValue.filter(option => option.__isNew__);
     if (newTags.length > 0) {
         try {
-            const response = await Axios.post("http://localhost:4500/tags/createTag", { tag_nm: newTags[0].label }, {
+            const response = await Axios.post(`${API_URL}/tags/createTag`, { tag_nm: newTags[0].label }, {
                 headers: {
                     Authorization: localStorage.getItem("token"),
                 },
@@ -77,7 +79,7 @@ export const handleTagUpdate = async (editingTagId, editedTagValue, setAvailable
         return;
     }
     try {
-        const response = await Axios.put(`http://localhost:4500/tags/updateTags/${editingTagId}`, {
+        const response = await Axios.put(`${API_URL}/tags/updateTags/${editingTagId}`, {
             tagName: editedTagValue
         }, {
             headers: {
@@ -109,7 +111,7 @@ export const handleTagUpdate = async (editingTagId, editedTagValue, setAvailable
 // Function to save searched tag 
 export const saveSearchedTag = async (tagName) => {
     try {
-        const response = await Axios.post('http://localhost:4500/tags/saveSearchedTag', { tagName }, {
+        const response = await Axios.post(`${API_URL}/tags/saveSearchedTag`, { tagName }, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -128,7 +130,7 @@ export const saveSearchedTag = async (tagName) => {
 // Function to get top 10 searched tags
 export const fetchTopSearchedTags = async (setSearchedTags) => {
     try {
-        const response = await Axios.get('http://localhost:4500/tags/topSearchedTags');
+        const response = await Axios.get(`${API_URL}/tags/topSearchedTags`);
         if (response.data.status === 'success') {
             setSearchedTags(response.data.data);
         }
@@ -140,7 +142,7 @@ export const fetchTopSearchedTags = async (setSearchedTags) => {
 // Function to get total searches and total searches in the current month
 export const fetchSearchesCounts = async (setTotalSearches, setCurrentMonthSearches) => {
     try {
-        const response = await Axios.get('http://localhost:4500/tags/countSearches');
+        const response = await Axios.get(`${API_URL}/tags/countSearches`);
         if (response.data.status === 'success') {
             setTotalSearches(response.data.data.total_searches);
             setCurrentMonthSearches(response.data.data.current_month_searches);
