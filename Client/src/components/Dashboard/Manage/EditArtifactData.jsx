@@ -27,7 +27,7 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
             }).filter(tag => tag !== null);
             setTags(initialTags);
         }
-    }, [availableTags]);
+    }, [availableTags, editFormData.assoc_tags]);
 
     const getStatusClass = () => {
         if (editFormData.doc_status === 'archived') {

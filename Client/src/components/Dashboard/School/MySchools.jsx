@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditSchoolData from './EditSchoolData';
 import { fetchMySchools } from '../ApiHandler/schoolFunctions';
-import { exportToCSV, exportToExcel, exportToPDF, handlePrint } from '../../utils/Utils';
+import { exportToSchoolCSV, exportToSchoolExcel, exportToPDF, handlePrint } from '../../utils/Utils';
 import usePagination from '../../hooks/usePagination';
 
 const MySchools = () => {
@@ -18,7 +18,8 @@ const MySchools = () => {
     }, []);
 
     const filteredSchools = mySchools.filter(school =>
-        school.school_name.toLowerCase().includes(searchQuery.toLowerCase())
+        school.school_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        school.school_email_id.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const {
@@ -72,8 +73,8 @@ const MySchools = () => {
                             </th>
                             <th colSpan="4">
                                 <div className="table-buttons">
-                                    <button onClick={() => exportToCSV(filteredSchools, 'DMS My Schools.csv')}>CSV</button>
-                                    <button onClick={() => exportToExcel(filteredSchools, 'DMS My Schools.xlsx')}>Excel</button>
+                                    <button onClick={() => exportToSchoolCSV(filteredSchools, 'DMS My Schools.csv')}>CSV</button>
+                                    <button onClick={() => exportToSchoolExcel(filteredSchools, 'DMS My Schools.xlsx')}>Excel</button>
                                     <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Schools.pdf')}>PDF</button>
                                     <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
@@ -82,7 +83,7 @@ const MySchools = () => {
                                 <label>Search</label>
                                 <input
                                     type="text"
-                                    placeholder="Type name or type..."
+                                    placeholder="Type here..."
                                     className="user-search-bar"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -110,7 +111,7 @@ const MySchools = () => {
                                             </td>
                                             <td>{item.school_email_id}</td>
                                             <td className="date">{item.on_boarded_on.split('T')[0]}</td>
-                                            <td><a href="#" className="edit-link" onClick={() => editSchoolData(item)}>✏️ Edit</a></td>
+                                            <td><a href="# " className="edit-link" onClick={() => editSchoolData(item)}>✏️ Edit</a></td>
                                         </tr>
                                     ))}
                                 </tbody>

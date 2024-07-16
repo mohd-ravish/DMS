@@ -90,9 +90,9 @@ const DefineDocType = () => {
                                         {item.id === editingDocTypeId ?
                                             <button onClick={() => handleDocTypeUpdate(editingDocTypeId, editedDocTypeValue, setAvailableDocTypes, availableDocTypes, setEditingDocTypeId)}>Update</button>
                                             :
-                                            <a href="#" className="edit-link" onClick={() => handleEdit(item.id, item.doctype_nm)}>✏️ Edit </a>
+                                            <a href="# " className="edit-link" onClick={() => handleEdit(item.id, item.doctype_nm)}>✏️ Edit </a>
                                         }
-                                        <a href="#" className="delete-btn"
+                                        <a href="# " className="delete-btn"
                                             onClick={() => {
                                                 if (window.confirm(`Are you sure you want to delete Document Type ${item.doctype_nm}?`)) {
                                                     handleDeleteDocType(item.id, availableDocTypes, setAvailableDocTypes);

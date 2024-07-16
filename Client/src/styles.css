@@ -412,28 +412,6 @@ body {
 	color: var(--blue);
 }
 
-#content nav .notification {
-	font-size: 20px;
-	position: relative;
-}
-
-#content nav .notification .num {
-	position: absolute;
-	top: -6px;
-	right: -6px;
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	border: 2px solid var(--light);
-	background: var(--red);
-	color: var(--light);
-	font-weight: 700;
-	font-size: 12px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
 #content nav .profile {
 	display: flex;
 	justify-content: space-between;
@@ -446,6 +424,42 @@ body {
 	object-fit: cover;
 	border-radius: 50%;
 	margin-left: 6px;
+}
+
+#content nav .notification-icon {
+	cursor: pointer;
+	padding: 6.2px 30px 0px 0px;
+}
+
+#content nav .notification-drawer {
+	position: fixed;
+	top: 0;
+	right: -100%;
+	width: 300px;
+	height: 100%;
+	background-color: white;
+	box-shadow: -2px 0 5px rgba(0, 0, 0, 0.4);
+	transition: right 0.3s ease-in-out;
+	z-index: 1000;
+}
+
+#content nav .notification-drawer.open {
+	right: 0;
+}
+
+#content nav .drawer-header {
+	font-family: "Montserrat", sans-serif;
+	font-size: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+
+#content nav .drawer-content {
+	padding: 16px;
 }
 
 /* SIDEBAR */
@@ -780,6 +794,7 @@ body {
 .highlight {
 	color: blue;
 }
+
 /* SEARCHBAR  */
 
 
@@ -1113,6 +1128,7 @@ body {
 }
 
 .form-group input[type="text"],
+.form-group input[type="date"],
 .form-group select,
 .form-group textarea {
 	width: 100%;
@@ -1604,11 +1620,36 @@ select {
 
 
 /* My Entries  */
+.geo-location-container {
+	position: relative;
+}
+
+/* .geo-location-container input {
+	width: 100%;
+	padding-right: 40px;
+} */
+
+.get-location-button {
+	position: absolute;
+	right: 4px;
+	top: 70%;
+	transform: translateY(-50%);
+	/* background-color: #505050; */
+	border: none;
+	padding: 5px 8px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.get-location-button:hover {
+	background-color: #e9e9e9;
+}
+
 .my-entries-section {
 	padding: 0px;
 }
 
-.my-entries-edit-container{
+.my-entries-edit-container {
 	padding: 0px;
 }
 
@@ -1637,4 +1678,5 @@ select {
 	color: white;
 	border: none;
 }
+
 /* My Entries  */

@@ -27,7 +27,7 @@ const Login = () => {
             <div className="login-box">
                 <div className="login-left">
                     <h1 className="login-title">Sign In</h1>
-                    <form onSubmit={(e)=>handleLoginSubmit(e, userLoginData, setUserLoginData, navigate)}>
+                    <form onSubmit={(e) => handleLoginSubmit(e, userLoginData, setUserLoginData, navigate)}>
                         <input
                             name="email"
                             type="email"
@@ -44,7 +44,7 @@ const Login = () => {
                             onChange={handleLoginChange}
                             autoComplete="off"
                             required />
-                        <a href="#" className="forgot-password">Forgot your password?</a>
+                        <a href="# " className="forgot-password">Forgot your password?</a>
                         <button type="submit" className="login-button">SIGN IN</button>
                     </form>
                 </div>

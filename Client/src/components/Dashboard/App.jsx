@@ -13,6 +13,7 @@ import AddLab from './School/AddLab';
 import AddEquipment from './School/AddEquipment';
 import EquipmentAllocation from './School/EquipmentAllocation';
 import MyEntries from './School/MyEntries';
+import SessionSetup from './School/SessionSetup';
 import SystemSettings from './GodMode/SystemSettings';
 import UserActivity from './GodMode/UserActivity';
 import UserAccess from './GodMode/UserAccess';
@@ -37,6 +38,7 @@ function Dashboard() {
         addEquipment: false,
         equipmentAllocation: false,
         myEntries: false,
+        sessionSetup: false,
         systemSettings: false,
         userActivity: false,
         userAccess: false,
@@ -108,6 +110,7 @@ function Dashboard() {
                         {isClicked.addEquipment && <AddEquipment />}
                         {isClicked.equipmentAllocation && <EquipmentAllocation />}
                         {isClicked.myEntries && <MyEntries />}
+                        {isClicked.sessionSetup && <SessionSetup />}
                         {isClicked.systemSettings && <SystemSettings />}
                         {isClicked.userActivity && <UserActivity />}
                         {isClicked.userAccess && <UserAccess />}

@@ -22,6 +22,20 @@ const AddSchool = () => {
         }));
     };
 
+    const handleGetLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const { latitude, longitude } = position.coords;
+                setSchoolData(prevData => ({
+                    ...prevData,
+                    geoLocation: `${latitude}, ${longitude}`
+                }));
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    };
+
     return (
         <div className="upload-document-container">
             <ToastContainer />
@@ -65,7 +79,7 @@ const AddSchool = () => {
                         required
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group geo-location-container">
                     <label>Geo Location</label>
                     <input
                         type="text"
@@ -76,6 +90,7 @@ const AddSchool = () => {
                         autoComplete='off'
                         required
                     />
+                    <a type="button" className="get-location-button" onClick={handleGetLocation}><i class='bx bx-map-pin' ></i></a>
                 </div>
                 <div className="form-group">
                     <label>School Email ID</label>

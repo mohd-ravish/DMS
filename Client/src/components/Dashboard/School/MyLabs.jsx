@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditLabData from './EditLabData'
 import { fetchMyLabs } from '../ApiHandler/labFunctions';
-import { exportToCSV, exportToExcel, exportToPDF, handlePrint } from '../../utils/Utils';
+import { exportToLabCSV, exportToLabExcel, exportToPDF, handlePrint } from '../../utils/Utils';
 import usePagination from '../../hooks/usePagination';
 
 const MyLabs = () => {
@@ -19,8 +19,7 @@ const MyLabs = () => {
 
   const filteredLabs = myLabs.filter(labs =>
     labs.lab_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    labs.lab_type.toLowerCase().includes(searchQuery.toLowerCase())
-
+    labs.lab_school.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const {
@@ -74,9 +73,9 @@ const MyLabs = () => {
               </th>
               <th colSpan="4">
                 <div className="table-buttons">
-                  <button onClick={() => exportToCSV(filteredLabs, 'DMS My Schools.csv')}>CSV</button>
-                  <button onClick={() => exportToExcel(filteredLabs, 'DMS My Schools.xlsx')}>Excel</button>
-                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Schools.pdf')}>PDF</button>
+                  <button onClick={() => exportToLabCSV(filteredLabs, 'DMS My Labs.csv')}>CSV</button>
+                  <button onClick={() => exportToLabExcel(filteredLabs, 'DMS My Labs.xlsx')}>Excel</button>
+                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Labs.pdf')}>PDF</button>
                   <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                 </div>
               </th>
@@ -84,7 +83,7 @@ const MyLabs = () => {
                 <label>Search</label>
                 <input
                   type="text"
-                  placeholder="Type name or type..."
+                  placeholder="Type here..."
                   className="user-search-bar"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -112,7 +111,7 @@ const MyLabs = () => {
                       </td>
                       <td>{item.lab_school}</td>
                       <td className="date">{item.lab_added_on.split('T')[0]}</td>
-                      <td><a href="#" className="edit-link" onClick={() => editLabData(item)}>✏️ Edit</a></td>
+                      <td><a href="# " className="edit-link" onClick={() => editLabData(item)}>✏️ Edit</a></td>
                     </tr>
                   ))}
                 </tbody>

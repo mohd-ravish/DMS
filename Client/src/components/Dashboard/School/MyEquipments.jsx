@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditEquipmentData from './EditEquipmentData'
 import { fetchMyEquipments } from '../ApiHandler/equipmentFunctions';
-import { exportToCSV, exportToExcel, exportToPDF, handlePrint } from '../../utils/Utils';
+import { exportToEquipmentCSV, exportToEquipmentExcel, exportToPDF, handlePrint } from '../../utils/Utils';
 import usePagination from '../../hooks/usePagination';
 
 const MyEquipments = () => {
@@ -74,9 +74,9 @@ const MyEquipments = () => {
               </th>
               <th colSpan="4">
                 <div className="table-buttons">
-                  <button onClick={() => exportToCSV(filteredEquipments, 'DMS My Schools.csv')}>CSV</button>
-                  <button onClick={() => exportToExcel(filteredEquipments, 'DMS My Schools.xlsx')}>Excel</button>
-                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Schools.pdf')}>PDF</button>
+                  <button onClick={() => exportToEquipmentCSV(filteredEquipments, 'DMS My Equipments.csv')}>CSV</button>
+                  <button onClick={() => exportToEquipmentExcel(filteredEquipments, 'DMS My Equipments.xlsx')}>Excel</button>
+                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Equipments.pdf')}>PDF</button>
                   <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                 </div>
               </th>
@@ -84,7 +84,7 @@ const MyEquipments = () => {
                 <label>Search</label>
                 <input
                   type="text"
-                  placeholder="Type name or type..."
+                  placeholder="Type here..."
                   className="user-search-bar"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -111,7 +111,7 @@ const MyEquipments = () => {
                       </td>
                       <td>{item.equipment_type}</td>
                       <td className="date">{item.equipment_added_on.split('T')[0]}</td>
-                      <td><a href="#" className="edit-link" onClick={() => editEquipmentData(item)}>✏️ Edit</a></td>
+                      <td><a href="# " className="edit-link" onClick={() => editEquipmentData(item)}>✏️ Edit</a></td>
                     </tr>
                   ))}
                 </tbody>

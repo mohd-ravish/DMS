@@ -98,7 +98,7 @@ const EditTags = () => {
                                         {item.id === editingTagId ?
                                             <button onClick={() => handleTagUpdate(editingTagId, editedTagValue, setAvailableTags, availableTags, setEditingTagId)}>Update</button>
                                             :
-                                            <a href="#" className="edit-link" onClick={() => handleEdit(item.id, item.tag_nm)}>✏️ Edit</a>
+                                            <a href="# " className="edit-link" onClick={() => handleEdit(item.id, item.tag_nm)}>✏️ Edit</a>
                                         }
                                     </td>
                                 </tr>

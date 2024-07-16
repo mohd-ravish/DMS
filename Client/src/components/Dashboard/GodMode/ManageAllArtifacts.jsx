@@ -125,7 +125,7 @@ const ManageAllArtifacts = () => {
                                             <td>{item.doctype_nm}</td>
                                             <td>{item.owner_author_id}</td>
                                             <td className="date">{item.date_uploaded.split('T')[0]}</td>
-                                            <td><a href="#" className="edit-link" onClick={() => editArtifact(item)}>✏️ Edit</a></td>
+                                            <td><a href="# " className="edit-link" onClick={() => editArtifact(item)}>✏️ Edit</a></td>
                                         </tr>
                                     ))}
                                 </tbody>

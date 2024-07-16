@@ -19,6 +19,7 @@ const artifactsRoutes = require('./routes/artifacts');
 const schoolRoutes = require('./routes/schools');
 const labRoutes = require('./routes/labs');
 const equipmentRoutes = require('./routes/equipments');
+const sessionRoutes = require('./routes/sessions');
 const usersRoutes = require('./routes/users');
 
 //Use Routes
@@ -30,6 +31,7 @@ app.use('/artifacts', artifactsRoutes);
 app.use('/schools', schoolRoutes);
 app.use('/labs', labRoutes);
 app.use('/equipments', equipmentRoutes);
+app.use('/sessions', sessionRoutes);
 app.use('/users', usersRoutes);
 
 // Port

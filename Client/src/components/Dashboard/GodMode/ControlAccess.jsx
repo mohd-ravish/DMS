@@ -38,7 +38,7 @@ const UserAccess = () => {
         <div className="artifacts-container">
             <ToastContainer />
             <header className="artifacts-header">
-                <h1>User Access</h1>
+                <h1>Control Access</h1>
             </header>
             <div className="artifacts-table-container">
                 <div className='header-select-entries'>
