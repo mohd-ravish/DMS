@@ -1,13 +1,10 @@
-const multer = require('multer')
+const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
 const db = require('../config/db');
+const storage = require('../config/firebase');
 
-// Middleware to fetch allowed formats from the database
-// const fetchAllowedFormats = async () => {
-//     const [results] = await db.promise().query("SELECT doc_format_nm FROM doc_formats WHERE control_id = 1");
-//     return results.map(format => format.doc_format_nm);
-// };
+// To fetch allowed formats from the database
 const fetchAllowedFormats = async () => {
     const [results] = await db.promise().query("SELECT value FROM system_settings WHERE variable_name = 'doc_formats'");
     if (results.length === 0) {
@@ -20,26 +17,6 @@ const fetchAllowedFormats = async () => {
     });
     return formatsArray.filter(format => format.controlId === 1).map(format => format.formatName);
 };
-
-
-// Set up Multer for file uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "./public/uploads");
-    },
-    filename: function (req, file, cb) {
-        const filePath = path.join(__dirname, '..', 'public', 'uploads', file.originalname);
-        if (fs.existsSync(filePath)) {  // If a file with the same name is already present in the directory then append it with the current time
-            const now = new Date();
-            const timeString = now.toTimeString().split(' ')[0].replace(/:/g, '');  // Get HHMMSS format
-            const originalName = path.parse(file.originalname).name;
-            const extension = path.extname(file.originalname);
-            cb(null, `${originalName}_${timeString}${extension}`);
-        } else {
-            cb(null, file.originalname);
-        }
-    }
-});
 
 // Function to check if the file format is valid
 const fileFilter = async (req, file, cb) => {
@@ -56,7 +33,36 @@ const fileFilter = async (req, file, cb) => {
     }
 };
 
-// Initialize Multer with storage and file filter
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const multerStorage = multer.memoryStorage();
 
-module.exports = upload;
+const upload = multer({ storage: multerStorage, fileFilter: fileFilter });
+
+const uploadToFirebase = async (fileBuffer, originalName) => {
+    const now = new Date();
+    const timeString = now.toTimeString().split(' ')[0].replace(/:/g, ''); // Get HHMMSS format
+    const baseName = path.parse(originalName).name;
+    const extension = path.extname(originalName);
+    const newFileName = `${baseName}_${timeString}${extension}`;
+    const storageRef = ref(storage, `uploads/${newFileName}`);
+    await uploadBytes(storageRef, fileBuffer);
+    const downloadURL = await getDownloadURL(storageRef);
+    return { newFileName, downloadURL };
+};
+
+const handleFileUpload = async (req, res, next) => {
+    if (!req.file) {
+        return next();
+    }
+    try {
+        const originalName = req.file.originalname;
+        const fileBuffer = req.file.buffer;
+        const { newFileName, downloadURL } = await uploadToFirebase(fileBuffer, originalName);
+        req.file.filenameWithTimestamp = newFileName;
+        req.fileDownloadURL = downloadURL;
+        next();
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { upload, handleFileUpload };

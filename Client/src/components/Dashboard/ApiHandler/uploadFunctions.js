@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 const API_URL = process.env.REACT_APP_API_URL;
 
 // Function to upload document
-export const handleDocumentSubmit = async (e, limit, remainingSpace, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish) => {
+export const handleDocumentSubmit = async (e, limit, remainingSpace, setLoading, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish) => {
     e.preventDefault();
     const fileSize = file.size / 1024; // In KB
     if (fileSize > limit) {
@@ -19,6 +19,8 @@ export const handleDocumentSubmit = async (e, limit, remainingSpace, file, tags,
         });
         return;
     }
+    // Set loading state to true to show progress indicator
+    setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("tags", tags.map(tag => tag.value));
@@ -50,6 +52,9 @@ export const handleDocumentSubmit = async (e, limit, remainingSpace, file, tags,
         toast.error("An error occurred while uploading the document", {
             position: "top-center"
         });
+    } finally {
+        // Reset loading state after upload completes or fails
+        setLoading(false);
     }
 };
 

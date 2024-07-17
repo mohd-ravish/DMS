@@ -15,6 +15,7 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
     const [description, setDescription] = useState(editFormData.doc_description);
     const [publish, setPublish] = useState(editFormData.is_published);
     const [status, setStatus] = useState(editFormData.doc_status);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchUploadTags(setAvailableTags);
@@ -165,11 +166,12 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
                     <button
                         type="button"
                         className="delete-btn"
+                        disabled={loading}
                         onClick={() => {
                             if (window.confirm(`Are you sure you want to delete the document`)) {
-                                handleDeleteArtifact(editFormData.id, artifacts, setArtifacts, handleClose);
+                                handleDeleteArtifact(editFormData.id, artifacts, setArtifacts, setLoading, handleClose);
                             }
-                        }}>Delete Artifact</button>
+                        }}>{loading ? 'Deleting...' : 'Delete Artifact'}</button>
                 </div>
             </form>
             <div className="usage-instructions">

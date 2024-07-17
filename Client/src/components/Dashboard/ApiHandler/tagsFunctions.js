@@ -109,9 +109,9 @@ export const handleTagUpdate = async (editingTagId, editedTagValue, setAvailable
 };
 
 // Function to save searched tag 
-export const saveSearchedTag = async (tagName) => {
+export const saveSearchedTag = async (tagId, tagName) => {
     try {
-        const response = await Axios.post(`${API_URL}/tags/saveSearchedTag`, { tagName }, {
+        const response = await Axios.post(`${API_URL}/tags/saveSearchedTag`, { tagId, tagName }, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },

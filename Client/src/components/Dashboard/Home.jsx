@@ -78,9 +78,9 @@ const Home = () => {
                     <table>
                         <tbody>
                             {searchedTags.map(tag => (
-                                <tr key={tag.tag_nm}>
+                                <tr key={tag.tag_name}>
                                     <td>
-                                        <p>{tag.tag_nm}</p>
+                                        <p>{tag.tag_name}</p>
                                     </td>
                                     <td>
                                         <p className="count">{tag.search_count}</p>

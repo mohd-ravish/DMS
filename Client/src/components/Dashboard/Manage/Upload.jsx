@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
+import { Oval } from 'react-loader-spinner'
 import { fetchUploadTags, handleTagChange } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
 import { handleDocumentSubmit } from '../ApiHandler/uploadFunctions';
@@ -17,6 +18,7 @@ const UploadDocument = () => {
     const [docTypes, setDocTypes] = useState([]);
     const [description, setDescription] = useState("");
     const [publish, setPublish] = useState("no");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchSettings(setLimit, null, null, null)
@@ -35,8 +37,9 @@ const UploadDocument = () => {
             <ToastContainer />
             <header className="upload-document-header">
                 <h1>Upload Document</h1>
+                {loading ? <Oval height="22" width="22" color="blue" ariaLabel="loading" /> : ''}
             </header>
-            <form className="upload-document-form" onSubmit={(e) => handleDocumentSubmit(e, limit, remainingSpace, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish)}>
+            <form className="upload-document-form" onSubmit={(e) => handleDocumentSubmit(e, limit, remainingSpace, setLoading, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish)}>
                 <div className="form-group">
                     <label>Upload File</label>
                     <input type="file" onChange={(e) => { setFile(e.target.files[0]) }} required />
@@ -98,7 +101,7 @@ const UploadDocument = () => {
                     </div>
                 </div>
                 <div className="form-group">
-                    <button type="submit">Upload</button>
+                    <button type="submit" disabled={loading}>{loading ? 'Uploading...' : 'Upload'}</button>
                 </div>
             </form>
             <div className="usage-instructions">

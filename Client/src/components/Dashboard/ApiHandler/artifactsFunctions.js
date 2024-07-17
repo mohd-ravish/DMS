@@ -141,7 +141,8 @@ export const fetchAllArtifacts = async (setArtifacts) => {
 };
 
 // Function to delete artifacts
-export const handleDeleteArtifact = async (docId, artifacts, setArtifacts, handleClose) => {
+export const handleDeleteArtifact = async (docId, artifacts, setArtifacts, setLoading, handleClose) => {
+    setLoading(true);
     try {
         const response = await Axios.delete(`${API_URL}/artifacts/deleteArtifact/${docId}`, {
             headers: {
@@ -163,6 +164,8 @@ export const handleDeleteArtifact = async (docId, artifacts, setArtifacts, handl
         toast.error("An error occurred while deleting the document", {
             position: "top-center"
         });
+    } finally {
+        setLoading(false);
     }
 };
 
