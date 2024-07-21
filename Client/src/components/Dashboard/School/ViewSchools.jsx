@@ -2,22 +2,27 @@ import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditSchoolData from './EditSchoolData';
-import { fetchMySchools } from '../ApiHandler/schoolFunctions';
+import { fetchAllSchools, fetchMySchools } from '../ApiHandler/schoolFunctions';
 import { exportToSchoolCSV, exportToSchoolExcel, exportToPDF, handlePrint } from '../../utils/Utils';
 import usePagination from '../../hooks/usePagination';
 
-const MySchools = () => {
-    const [mySchools, setMySchools] = useState([]);
+const ViewSchools = () => {
+    const [schools, setSchools] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [editSection, setEditSection] = useState(false);
     const [schoolsSection, setSchoolsSection] = useState(true);
     const [editFormData, setEditFormData] = useState([]);
+    const [showUserSchools, setShowUserSchools] = useState(false);
 
     useEffect(() => {
-        fetchMySchools(setMySchools);
-    }, []);
+        if (showUserSchools) {
+            fetchMySchools(setSchools); // Fetch only user schools
+        } else {
+            fetchAllSchools(setSchools); // Fetch all schools
+        }
+    }, [showUserSchools]);
 
-    const filteredSchools = mySchools.filter(school =>
+    const filteredSchools = schools.filter(school =>
         school.school_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         school.school_email_id.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -45,13 +50,17 @@ const MySchools = () => {
         setSchoolsSection(true);
     }
 
+    const handleToggleSwitch = () => {
+        setShowUserSchools(!showUserSchools);
+    };
+
     return (
         <div>
             {editSection && (
                 <EditSchoolData
                     editFormData={editFormData}
-                    mySchools={mySchools}
-                    setMySchools={setMySchools}
+                    schools={schools}
+                    setSchools={setSchools}
                     handleClose={handleClose}
                 />
             )}
@@ -59,7 +68,7 @@ const MySchools = () => {
                 <div className="artifacts-container my-entries-section">
                     <ToastContainer />
                     <header className="artifacts-header">
-                        <h1>My schools</h1>
+                        <h1>{showUserSchools ? 'My Schools' : 'Schools'}</h1>
                     </header>
                     <div className="artifacts-table-container">
                         <div className='header-select-entries'>
@@ -79,6 +88,16 @@ const MySchools = () => {
                                     <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
                             </th>
+                            <th>
+                                <label className="switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={showUserSchools}
+                                        onChange={handleToggleSwitch}
+                                    />
+                                    <span className="slider round"></span>
+                                </label>
+                            </th>
                             <th className='user-search'>
                                 <label>Search</label>
                                 <input
@@ -96,8 +115,9 @@ const MySchools = () => {
                                     <tr>
                                         <th>School Name</th>
                                         <th>School Email ID</th>
+                                        <th>Added By</th>
                                         <th>Added On</th>
-                                        <th>Action</th>
+                                        {showUserSchools && <th>Action</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -106,12 +126,14 @@ const MySchools = () => {
                                             <td>
                                                 <div className="tooltip">
                                                     <p>{item.school_name}</p>
-                                                    <span className="tooltiptext">{item.state}</span>
                                                 </div>
                                             </td>
                                             <td>{item.school_email_id}</td>
+                                            <td>{item.on_boarded_by_owner}</td>
                                             <td className="date">{item.on_boarded_on.split('T')[0]}</td>
-                                            <td><a href="# " className="edit-link" onClick={() => editSchoolData(item)}>✏️ Edit</a></td>
+                                            {showUserSchools && (
+                                                <td><a href="# " className="edit-link" onClick={() => editSchoolData(item)}>✏️ Edit</a></td>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -146,4 +168,4 @@ const MySchools = () => {
     );
 };
 
-export default MySchools;
+export default ViewSchools;

@@ -1,25 +1,30 @@
 import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EditLabData from './EditLabData'
-import { fetchMyLabs } from '../ApiHandler/labFunctions';
-import { exportToLabCSV, exportToLabExcel, exportToPDF, handlePrint } from '../../utils/Utils';
+import EditEquipmentData from './EditEquipmentData';
+import { fetchAllEquipments, fetchMyEquipments } from '../ApiHandler/equipmentFunctions';
+import { exportToEquipmentCSV, exportToEquipmentExcel, exportToPDF, handlePrint } from '../../utils/Utils';
 import usePagination from '../../hooks/usePagination';
 
-const MyLabs = () => {
-  const [myLabs, setMyLabs] = useState([]);
+const ViewEquipments = () => {
+  const [equipments, setEquipments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [editSection, setEditSection] = useState(false);
-  const [labsSection, setLabsSection] = useState(true);
+  const [equipmentsSection, setEquipmentsSection] = useState(true);
   const [editFormData, setEditFormData] = useState([]);
+  const [showUserEquipments, setShowUserEquipments] = useState(false);
 
   useEffect(() => {
-    fetchMyLabs(setMyLabs);
-  }, []);
+    if (showUserEquipments) {
+      fetchMyEquipments(setEquipments); // Fetch only user equipments
+    } else {
+      fetchAllEquipments(setEquipments); // Fetch all equipments
+    }
+  }, [showUserEquipments]);
 
-  const filteredLabs = myLabs.filter(labs =>
-    labs.lab_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    labs.lab_school.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredEquipments = equipments.filter(equipment =>
+    equipment.equipment_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    equipment.equipment_type.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const {
@@ -32,34 +37,38 @@ const MyLabs = () => {
     startEntry,
     endEntry,
     totalPages
-  } = usePagination(filteredLabs, 10);
+  } = usePagination(filteredEquipments, 10);
 
-  const editLabData = (editData) => {
+  const editEquipmentData = (editData) => {
     setEditFormData(editData);
     setEditSection(true);
-    setLabsSection(false);
-  }
+    setEquipmentsSection(false);
+  };
 
   const handleClose = () => {
     setEditSection(false);
-    setLabsSection(true);
-  }
+    setEquipmentsSection(true);
+  };
+
+  const handleToggleSwitch = () => {
+    setShowUserEquipments(!showUserEquipments);
+  };
 
   return (
     <div>
       {editSection && (
-        <EditLabData
+        <EditEquipmentData
           editFormData={editFormData}
-          myLabs={myLabs}
-          setMyLabs={setMyLabs}
+          equipments={equipments}
+          setEquipments={setEquipments}
           handleClose={handleClose}
         />
       )}
-      {labsSection && (
+      {equipmentsSection && (
         <div className="artifacts-container my-entries-section">
           <ToastContainer />
           <header className="artifacts-header">
-            <h1>My Labs</h1>
+            <h1>{showUserEquipments ? 'My Equipments' : 'Equipments'}</h1>
           </header>
           <div className="artifacts-table-container">
             <div className='header-select-entries'>
@@ -69,15 +78,25 @@ const MyLabs = () => {
                   <option value="25">25</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
-                </select>entries
+                </select> entries
               </th>
               <th colSpan="4">
                 <div className="table-buttons">
-                  <button onClick={() => exportToLabCSV(filteredLabs, 'DMS My Labs.csv')}>CSV</button>
-                  <button onClick={() => exportToLabExcel(filteredLabs, 'DMS My Labs.xlsx')}>Excel</button>
-                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Labs.pdf')}>PDF</button>
+                  <button onClick={() => exportToEquipmentCSV(filteredEquipments, 'DMS My Equipments.csv')}>CSV</button>
+                  <button onClick={() => exportToEquipmentExcel(filteredEquipments, 'DMS My Equipments.xlsx')}>Excel</button>
+                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Equipments.pdf')}>PDF</button>
                   <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                 </div>
+              </th>
+              <th>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={showUserEquipments}
+                    onChange={handleToggleSwitch}
+                  />
+                  <span className="slider round"></span>
+                </label>
               </th>
               <th className='user-search'>
                 <label>Search</label>
@@ -94,10 +113,12 @@ const MyLabs = () => {
               <table className="artifacts-table">
                 <thead>
                   <tr>
-                    <th>Lab Name</th>
-                    <th>School</th>
-                    <th>Added on</th>
-                    <th>Action</th>
+                    <th>Equipment Name</th>
+                    <th>Equipment Type</th>
+                    <th>Equipment Quantity</th>
+                    <th>Added By</th>
+                    <th>Added On</th>
+                    {showUserEquipments && <th>Action</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -105,13 +126,16 @@ const MyLabs = () => {
                     <tr key={index}>
                       <td>
                         <div className="tooltip">
-                          <p>{item.lab_name}</p>
-                          <span className="tooltiptext">{item.lab_type}</span>
+                          <p>{item.equipment_name}</p>
                         </div>
                       </td>
-                      <td>{item.lab_school}</td>
-                      <td className="date">{item.lab_added_on.split('T')[0]}</td>
-                      <td><a href="# " className="edit-link" onClick={() => editLabData(item)}>✏️ Edit</a></td>
+                      <td>{item.equipment_type}</td>
+                      <td>{item.equipment_quantity}</td>
+                      <td>{item.equipment_added_by_owner}</td>
+                      <td className="date">{item.equipment_added_on.split('T')[0]}</td>
+                      {showUserEquipments && (
+                        <td><a href="# " className="edit-link" onClick={() => editEquipmentData(item)}>✏️ Edit</a></td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -146,4 +170,4 @@ const MyLabs = () => {
   );
 };
 
-export default MyLabs;
+export default ViewEquipments;

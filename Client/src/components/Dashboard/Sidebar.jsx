@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { logout } from './ApiHandler/authFunctions';
 
 const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, controlAccess, isSidebarOpen }) => {
-    const [isManageOpen, setIsManageOpen] = useState(false); // To open Manage section
+    const [isLibraryOpen, setIsLibraryOpen] = useState(false); // To open Manage section
     const [isSchoolOpen, setIsSchoolOpen] = useState(false); // To open School section
     const [isGodModeOpen, setIsGodModeOpen] = useState(false); // To open God Mode section
     const [active, setActive] = useState('home');
@@ -14,21 +14,21 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
         setActive(item);
     };
 
-    const toggleManage = () => {
-        setIsManageOpen(!isManageOpen);
+    const toggleLibrary = () => {
+        setIsLibraryOpen(!isLibraryOpen);
         setIsSchoolOpen(false); // Close School Section when Manage is opened
         setIsGodModeOpen(false); // Close God Mode when Manage is opened
     };
 
     const toggleSchool = () => {
         setIsSchoolOpen(!isSchoolOpen);
-        setIsManageOpen(false); // Close Manage when School Section is opened
+        setIsLibraryOpen(false); // Close Manage when School Section is opened
         setIsGodModeOpen(false); // Close God Mode when School Section is opened
     };
 
     const toggleGodMode = () => {
         setIsGodModeOpen(!isGodModeOpen);
-        setIsManageOpen(false); // Close Manage when God Mode is opened
+        setIsLibraryOpen(false); // Close Manage when God Mode is opened
         setIsSchoolOpen(false); // Close School Section when God Mode is opened
     };
 
@@ -47,20 +47,21 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
                         <span className="text">Dashboard</span>
                     </a>
                 </li>
-                <li className={active === 'search' ? 'active' : ''}>
-                    <a href="# " onClick={() => { handleSlideBarClick('search'); handleClick('search'); handleDashboard(); }}>
-                        <i className='bx bx-search'></i>
-                        <span className="text">Search</span>
-                    </a>
-                </li>
-                <li className={active === 'manage' ? 'active' : ''}>
-                    <a href="# " onClick={() => { handleSlideBarClick('manage'); toggleManage(); }}>
+                <li className={active === 'library' ? 'active' : ''}>
+                    <a href="# " onClick={() => { handleSlideBarClick('library'); toggleLibrary(); }}>
+                        {/* <i class='bx bx-library'></i> */}
                         <i className='bx bx-brush-alt'></i>
-                        <span className="text">Manage</span>
-                        <i className={`bx ${isManageOpen ? 'bx-chevron-up' : 'bx-chevron-down'}`} style={{ marginLeft: 'auto' }}></i>
+                        <span className="text">Library</span>
+                        <i className={`bx ${isLibraryOpen ? 'bx-chevron-up' : 'bx-chevron-down'}`} style={{ marginLeft: 'auto' }}></i>
                     </a>
                 </li>
-                <ul className={`submenu ${isManageOpen ? 'open' : ''}`}>
+                <ul className={`submenu ${isLibraryOpen ? 'open' : ''}`}>
+                    <li className={active === 'search' ? 'active' : ''}>
+                        <a href="# " onClick={() => { handleSlideBarClick('search'); handleClick('search'); handleDashboard(); }}>
+                            <i className='bx bx-search'></i>
+                            <span className="text">Search</span>
+                        </a>
+                    </li>
                     <li className={active === 'myArtifacts' ? 'active' : ''}>
                         <a href="# " onClick={() => { handleSlideBarClick('myArtifacts'); handleClick('myArtifacts'); handleDashboard() }}>
                             <i className='bx bx-folder-open'></i>
@@ -122,16 +123,16 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
                             <span className="text">Equipment Allocation</span>
                         </a>
                     </li>
-                    <li className={active === 'myEntries' ? 'active' : ''}>
-                        <a href="# " onClick={() => { handleSlideBarClick('myEntries'); handleClick('myEntries'); handleDashboard() }}>
-                            <i class='bx bx-clipboard' ></i>
-                            <span className="text">My Entries</span>
-                        </a>
-                    </li>
                     <li className={active === 'sessionSetup' ? 'active' : ''}>
                         <a href="# " onClick={() => { handleSlideBarClick('sessionSetup'); handleClick('sessionSetup'); handleDashboard() }}>
                             <i class='bx bx-calendar'></i>
                             <span className="text">Session Setup</span>
+                        </a>
+                    </li>
+                    <li className={active === 'myEntries' ? 'active' : ''}>
+                        <a href="# " onClick={() => { handleSlideBarClick('myEntries'); handleClick('myEntries'); handleDashboard() }}>
+                            <i class='bx bx-clipboard' ></i>
+                            <span className="text">All Entries</span>
                         </a>
                     </li>
                 </ul>

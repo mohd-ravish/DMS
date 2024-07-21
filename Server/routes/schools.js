@@ -9,12 +9,20 @@ router.post('/addSchool', verifyUser, (req, res) => {
     const { schoolName, state, address, geoLocation, schoolEmail, contactPerson, contactNo } = req.body;
     const onBoardedBy = req.id;
     const onBoardedOn = new Date();
+
+    // Convert school name to camel case
+    const camelCaseSchoolName = schoolName
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+
     const query = `INSERT INTO schools 
         (school_name, state, address, geo_location, school_email_id, primary_contact_person, contact_no, on_boarded_by, on_boarded_on) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     try {
-        db.query(query, [schoolName, state, address, geoLocation, schoolEmail, contactPerson, contactNo, onBoardedBy, onBoardedOn], (err, result) => {
+        db.query(query, [camelCaseSchoolName, state, address, geoLocation, schoolEmail, contactPerson, contactNo, onBoardedBy, onBoardedOn], (err, result) => {
             if (err) {
                 console.log(err);
                 return res.json({ status: 'fail', message: err.message });
@@ -43,7 +51,7 @@ router.get('/getMySchools', verifyUser, (req, res) => {
 
 // Route to get all schools 
 router.get('/getAllSchools', verifyUser, (req, res) => {
-    const query = "SELECT * FROM vw_schools";
+    const query = "SELECT * FROM vw_schools ORDER BY id DESC";
     db.query(query, (err, results) => {
         if (err) {
             return res.status(500).json({ status: 'fail', message: err.message });

@@ -872,20 +872,20 @@ body {
 	font-size: 14px;
 }
 
-.artifacts-table .switch {
+.artifacts-table-container .switch {
 	position: relative;
 	display: inline-block;
 	width: 34px;
 	height: 20px;
 }
 
-.artifacts-table .switch input {
+.artifacts-table-container .switch input {
 	opacity: 0;
 	width: 0;
 	height: 0;
 }
 
-.artifacts-table .slider {
+.artifacts-table-container .slider {
 	position: absolute;
 	cursor: pointer;
 	top: 0;
@@ -897,7 +897,7 @@ body {
 	border-radius: 34px;
 }
 
-.artifacts-table .slider:before {
+.artifacts-table-container .slider:before {
 	position: absolute;
 	content: "";
 	height: 12px;
@@ -909,11 +909,11 @@ body {
 	border-radius: 50%;
 }
 
-.artifacts-table input:checked+.slider {
+.artifacts-table-container input:checked+.slider {
 	background-color: #2196F3;
 }
 
-.artifacts-table input:checked+.slider:before {
+.artifacts-table-container input:checked+.slider:before {
 	transform: translateX(14px);
 }
 
@@ -929,6 +929,11 @@ body {
 }
 
 .artifacts-container .select-entries select {
+	/* width: 25%; */
+	padding: 5px;
+	margin: 0px 6px 0px 6px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 	width: 60px;
 }
 
@@ -1109,9 +1114,16 @@ body {
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.upload-document-form .in-row-input {
+	display: flex;
+	gap: 20px;
+	width: 100%;
+}
+
 .form-group {
 	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 	margin-bottom: 20px;
+	width: 100%;
 }
 
 .form-group label {
@@ -1129,6 +1141,9 @@ body {
 
 .form-group input[type="text"],
 .form-group input[type="date"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="number"],
 .form-group select,
 .form-group textarea {
 	width: 100%;
@@ -1379,8 +1394,7 @@ body {
 
 
 /* USER ACTIVITY  */
-.user-activity input,
-select {
+.log-search select {
 	width: 25%;
 	padding: 5px;
 	margin-left: 6px;
@@ -1389,7 +1403,7 @@ select {
 	margin-right: 40px;
 }
 
-.user-activity button {
+.user-activity-button {
 	padding: 6px 8px;
 	background-color: #007BFF;
 	color: white;
@@ -1398,7 +1412,7 @@ select {
 	cursor: pointer;
 }
 
-.user-activity button:hover {
+.user-activity-button:hover {
 	background-color: #0056b3;
 }
 

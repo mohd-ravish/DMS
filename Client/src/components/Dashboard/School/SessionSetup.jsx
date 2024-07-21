@@ -5,7 +5,7 @@ import { fetchAllSchools } from '../ApiHandler/schoolFunctions';
 import { fetchLabsForSchool } from '../ApiHandler/labFunctions';
 import { handleSessionSetup } from '../ApiHandler/sessionFunctions';
 
-const AddSchool = () => {
+const SessionSetup = () => {
     const [sessionData, setSessionData] = useState({
         sessionTitle: "",
         sessionHost: "",
@@ -65,51 +65,55 @@ const AddSchool = () => {
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Session Date</label>
-                    <input
-                        type="date"
-                        name="sessionDate"
-                        value={sessionData.sessionDate}
-                        onChange={handleChange}
-                        placeholder="Enter Session Date"
-                        autoComplete='off'
-                        required
-                    />
+                <div className='in-row-input'>
+                    <div className="form-group">
+                        <label>Session Date</label>
+                        <input
+                            type="date"
+                            name="sessionDate"
+                            value={sessionData.sessionDate}
+                            onChange={handleChange}
+                            placeholder="Enter Session Date"
+                            autoComplete='off'
+                            required
+                        />
+                    </div>
+                    <div className="form-group geo-location-container">
+                        <label>Session Time</label>
+                        <input
+                            type="text"
+                            name="sessionTime"
+                            value={sessionData.sessionTime}
+                            onChange={handleChange}
+                            placeholder="Enter Session Time"
+                            autoComplete='off'
+                            required
+                        />
+                    </div>
                 </div>
-                <div className="form-group geo-location-container">
-                    <label>Session Time</label>
-                    <input
-                        type="text"
-                        name="sessionTime"
-                        value={sessionData.sessionTime}
-                        onChange={handleChange}
-                        placeholder="Enter Session Time"
-                        autoComplete='off'
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>School Name</label>
-                    <select name="schoolId" value={sessionData.schoolId} onChange={handleChange} required>
-                        <option value="">Select</option>
-                        {schoolNames.map((school) => (
-                            <option key={school.id} value={school.id}>
-                                {school.school_name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label>Lab Name</label>
-                    <select name="labId" value={sessionData.labId} onChange={handleChange} required>
-                        <option value="">Select</option>
-                        {labs.map((lab) => (
-                            <option key={lab.id} value={lab.id}>
-                                {lab.lab_name}
-                            </option>
-                        ))}
-                    </select>
+                <div className='in-row-input'>
+                    <div className="form-group">
+                        <label>School Name</label>
+                        <select name="schoolId" value={sessionData.schoolId} onChange={handleChange} required>
+                            <option value="">Select</option>
+                            {schoolNames.map((school) => (
+                                <option key={school.id} value={school.id}>
+                                    {school.school_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Lab Name</label>
+                        <select name="labId" value={sessionData.labId} onChange={handleChange} required>
+                            <option value="">Select</option>
+                            {labs.map((lab) => (
+                                <option key={lab.id} value={lab.id}>
+                                    {lab.lab_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
                 <div className="form-group">
                     <label>List Of Invitees</label>
@@ -137,4 +141,4 @@ const AddSchool = () => {
     );
 };
 
-export default AddSchool;
+export default SessionSetup;

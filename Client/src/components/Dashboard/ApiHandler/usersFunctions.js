@@ -167,7 +167,7 @@ export const handleControlAccessUpdate = async (userId, setControlAccessUsers) =
 
 
 // Function to get user activity logs
-export const handleUserActivitySubmit = async (userId, period, setUserActivity) => {
+export const handleUserActivitySubmit = async (userId, period, setUserActivity, setActivitySection) => {
     if (!userId || userId.trim() === "") {
         return;
     }
@@ -179,6 +179,7 @@ export const handleUserActivitySubmit = async (userId, period, setUserActivity) 
         });
         if (response.data.status === "success") {
             setUserActivity(response.data.data);
+            setActivitySection(true);
         } else {
             console.log(response.data.message);
         }

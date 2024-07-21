@@ -7,6 +7,7 @@ const AddEquipment = () => {
     const [equipmentData, setEquipmentData] = useState({
         equipmentName: "",
         equipmentType: "",
+        equipmentQuantity: "",
     });
 
 
@@ -46,6 +47,18 @@ const AddEquipment = () => {
                         onChange={handleChange}
                         placeholder="Enter Equipment Type if there is any"
                         autoComplete='off'
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Equipment Quantity</label>
+                    <input
+                        type="number"
+                        name="equipmentQuantity"
+                        value={equipmentData.equipmentQuantity}
+                        onChange={handleChange}
+                        placeholder="Enter Quantity of Equipment"
+                        autoComplete='off'
+                        required
                     />
                 </div>
                 <div className="form-group">

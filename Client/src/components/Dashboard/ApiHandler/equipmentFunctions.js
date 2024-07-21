@@ -19,6 +19,7 @@ export const handleAddEquipment = async (e, equipmentData, setEquipmentData) => 
             setEquipmentData({
                 equipmentName: "",
                 equipmentType: "",
+                equipmentQuantity: "",
             });
         } else {
             toast.error("Equipment add failed", {
@@ -33,7 +34,7 @@ export const handleAddEquipment = async (e, equipmentData, setEquipmentData) => 
 };
 
 // Function to fetch user's equipments
-export const fetchMyEquipments = async (setMyEquipments) => {
+export const fetchMyEquipments = async (setEquipments) => {
     try {
         const response = await Axios.get(`${API_URL}/equipments/getMyEquipments`, {
             headers: {
@@ -41,7 +42,7 @@ export const fetchMyEquipments = async (setMyEquipments) => {
             },
         });
         if (response.data.status === "success") {
-            setMyEquipments(response.data.data);
+            setEquipments(response.data.data);
         } else {
             console.log("Failed to fetch equipments");
         }
@@ -51,7 +52,7 @@ export const fetchMyEquipments = async (setMyEquipments) => {
 };
 
 // Function to fetch equipments
-export const fetchAllEquipments = async (setEquipmentNames) => {
+export const fetchAllEquipments = async (setEquipments) => {
     try {
         const response = await Axios.get(`${API_URL}/equipments/getAllEquipments`, {
             headers: {
@@ -59,7 +60,7 @@ export const fetchAllEquipments = async (setEquipmentNames) => {
             },
         });
         if (response.data.status === "success") {
-            setEquipmentNames(response.data.data);
+            setEquipments(response.data.data);
         } else {
             console.log("Failed to fetch equipment names");
         }
@@ -85,6 +86,7 @@ export const handleAllocateEquipment = async (e, equipmentData, setEquipmentData
                 equipmentId: "",
                 schoolId: "",
                 labId: "",
+                allocatedQuantity: "",
             });
         } else {
             toast.error("Equipment allocation failed", {

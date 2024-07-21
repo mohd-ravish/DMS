@@ -90,12 +90,12 @@ const AddSchool = () => {
                         autoComplete='off'
                         required
                     />
-                    <a type="button" className="get-location-button" onClick={handleGetLocation}><i class='bx bx-map-pin' ></i></a>
+                    <a href="# " type="button" className="get-location-button" onClick={handleGetLocation}><i class='bx bx-map-pin' ></i></a>
                 </div>
                 <div className="form-group">
                     <label>School Email ID</label>
                     <input
-                        type="text"
+                        type="email"
                         name="schoolEmail"
                         value={schoolData.schoolEmail}
                         onChange={handleChange}
@@ -118,12 +118,13 @@ const AddSchool = () => {
                 <div className="form-group">
                     <label>Contact No</label>
                     <input
-                        type="text"
+                        type="tel"
                         name="contactNo"
                         value={schoolData.contactNo}
                         onChange={handleChange}
                         placeholder="Primary Contact Person"
                         autoComplete='off'
+                        maxLength={10}
                         required
                     />
                 </div>

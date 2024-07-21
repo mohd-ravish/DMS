@@ -48,7 +48,8 @@ export const exportToSchoolCSV = (data, filename) => {
         SchoolEmailId: item.school_email_id,
         PrimaryContactPerson: item.primary_contact_person,
         ContactNo: item.contact_no,
-        BoardedOn: item.on_boarded_on,
+        BoardedBy: item.on_boarded_by_owner,
+        BoardedOn: item.on_boarded_on.split('T')[0],
     }));
     const csv = Papa.unparse(csvData);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -66,7 +67,8 @@ export const exportToLabCSV = (data, filename) => {
         LabName: item.lab_name,
         LabType: item.lab_type,
         LabSchool: item.lab_school,
-        AddedOn: item.lab_added_on,
+        AddedBy: item.lab_added_by_owner,
+        AddedOn: item.lab_added_on.split('T')[0],
     }));
     const csv = Papa.unparse(csvData);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -83,7 +85,24 @@ export const exportToEquipmentCSV = (data, filename) => {
         ID: item.equipment_id,
         EquipmentName: item.equipment_name,
         EquipmentType: item.equipment_type,
-        AddedOn: item.equipment_added_on,
+        AddedBy: item.equipment_added_by_owner,
+        AddedOn: item.equipment_added_on.split('T')[0],
+    }));
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
+export const exportToUserActivityCSV = (data, filename) => {
+    const csvData = data.map(item => ({
+        ID: item.log_id,
+        Activity: item.activity,
+        LogDate: item.log_date.split('T')[0],
     }));
     const csv = Papa.unparse(csvData);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -130,7 +149,8 @@ export const exportToSchoolExcel = (data, filename) => {
         SchoolEmailId: item.school_email_id,
         PrimaryContactPerson: item.primary_contact_person,
         ContactNo: item.contact_no,
-        BoardedOn: item.on_boarded_on,
+        BoardedBy: item.on_boarded_by_owner,
+        BoardedOn: item.on_boarded_on.split('T')[0],
     })));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Data');
@@ -143,7 +163,8 @@ export const exportToLabExcel = (data, filename) => {
         LabName: item.lab_name,
         LabType: item.lab_type,
         LabSchool: item.lab_school,
-        AddedOn: item.lab_added_on,
+        AddedBy: item.lab_added_by_owner,
+        AddedOn: item.lab_added_on.split('T')[0],
     })));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Data');
@@ -155,7 +176,19 @@ export const exportToEquipmentExcel = (data, filename) => {
         ID: item.equipment_id,
         EquipmentName: item.equipment_name,
         EquipmentType: item.equipment_type,
-        AddedOn: item.equipment_added_on,
+        AddedBy: item.equipment_added_by_owner,
+        AddedOn: item.equipment_added_on.split('T')[0],
+    })));
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Data');
+    writeFile(wb, filename);
+};
+
+export const exportToUserActivityExcel = (data, filename) => {
+    const ws = utils.json_to_sheet(data.map(item => ({
+        ID: item.log_id,
+        Activity: item.activity,
+        LogDate: item.log_date.split('T')[0],
     })));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Data');

@@ -6,15 +6,15 @@ const router = express.Router();
 
 // Route to add equipment
 router.post('/addEquipment', verifyUser, (req, res) => {
-    const { equipmentName, equipmentType } = req.body;
+    const { equipmentName, equipmentType, equipmentQuantity } = req.body;
     const equipmentAddedBy = req.id;
     const equipmentAddedOn = new Date();
     const query = `INSERT INTO equipments 
-        (equipment_name, equipment_type, equipment_added_by, equipment_added_on) 
-        VALUES (?, ?, ?, ?)`;
+        (equipment_name, equipment_type, equipment_quantity, equipment_added_by, equipment_added_on) 
+        VALUES (?, ?, ?, ?, ?)`;
 
     try {
-        db.query(query, [equipmentName, equipmentType, equipmentAddedBy, equipmentAddedOn], (err, result) => {
+        db.query(query, [equipmentName, equipmentType, equipmentQuantity, equipmentAddedBy, equipmentAddedOn], (err, result) => {
             if (err) {
                 console.log(err);
                 return res.json({ status: 'fail', message: err.message });
@@ -43,7 +43,7 @@ router.get('/getMyEquipments', verifyUser, (req, res) => {
 
 // Route to fetch all equipments 
 router.get('/getAllEquipments', verifyUser, (req, res) => {
-    const query = "SELECT * FROM vw_equipments";
+    const query = "SELECT * FROM vw_equipments ORDER BY id DESC";
     db.query(query, (err, results) => {
         if (err) {
             return res.status(500).json({ status: 'fail', message: err.message });
@@ -54,19 +54,20 @@ router.get('/getAllEquipments', verifyUser, (req, res) => {
 
 // Route to allocate the equipment
 router.post('/allocateEquipment', verifyUser, (req, res) => {
-    const { equipmentId, schoolId, labId } = req.body;
+    const { equipmentId, schoolId, labId, allocatedQuantity } = req.body;
     const equipmentAllocatedBy = req.id;
     const equipmentAllocatedOn = new Date();
     const query = `INSERT INTO equipments_allocation
-        (equipment_id, school_id, lab_id, allocated_by, allocated_on) 
-        VALUES (?, ?, ?, ?, ?)`;
+        (equipment_id, school_id, lab_id, allocated_quantity, allocated_by, allocated_on) 
+        VALUES (?, ?, ?, ?, ?, ?)`;
 
     try {
-        db.query(query, [equipmentId, schoolId, labId, equipmentAllocatedBy, equipmentAllocatedOn], (err, result) => {
+        db.query(query, [equipmentId, schoolId, labId, allocatedQuantity, equipmentAllocatedBy, equipmentAllocatedOn], (err, result) => {
             if (err) {
                 console.log(err);
                 return res.json({ status: 'fail', message: err.message });
             }
+            db.promise().query("UPDATE equipments SET equipment_quantity = equipment_quantity - ? WHERE id = ?", [allocatedQuantity, equipmentId]);
             db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} allocated a new equipment with ID: [${equipmentId}]`, equipmentAllocatedOn], (err, result) => {
                 if (err) throw err;
             });

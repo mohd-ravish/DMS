@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import MySchools from './MySchools';
-import MyLabs from './MyLabs';
-import MyEquipments from './MyEquipments';
+import AllSchools from './ViewSchools';
+import AllLabs from './ViewLabs';
+import AllEquipments from './ViewEquipments';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const MyEntries = () => {
+const AllEntries = () => {
     const [activeComponent, setActiveComponent] = useState('schools');
 
     const renderComponent = () => {
         switch (activeComponent) {
             case 'schools':
-                return <MySchools />;
+                return <AllSchools />;
             case 'labs':
-                return <MyLabs />;
+                return <AllLabs />;
             case 'equipment':
-                return <MyEquipments />;
+                return <AllEquipments />;
             default:
-                return <MySchools />;
+                return <AllSchools />;
         }
     };
 
@@ -29,19 +29,19 @@ const MyEntries = () => {
                     className={activeComponent === 'schools' ? 'active' : ''}
                     onClick={() => setActiveComponent('schools')}
                 >
-                    My Schools
+                    Schools
                 </button>
                 <button
                     className={activeComponent === 'labs' ? 'active' : ''}
                     onClick={() => setActiveComponent('labs')}
                 >
-                    My Labs
+                    Labs
                 </button>
                 <button
                     className={activeComponent === 'equipment' ? 'active' : ''}
                     onClick={() => setActiveComponent('equipment')}
                 >
-                    My Equipments
+                    Equipments
                 </button>
             </div>
             <div className="component-container">
@@ -51,4 +51,4 @@ const MyEntries = () => {
     );
 };
 
-export default MyEntries;
+export default AllEntries;

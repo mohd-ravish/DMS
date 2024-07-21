@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { handleEditEquipmentData, handleDeleteEquipment } from '../ApiHandler/equipmentFunctions';
 
-const EditSchoolData = ({ editFormData, myEquipments, setMyEquipments, handleClose }) => {
+const EditEquipmentData = ({ editFormData, myEquipments, setMyEquipments, handleClose }) => {
     const [newEquipmentData, setNewEquipmentData] = useState({ ...editFormData });
 
     const handleChange = (e) => {
@@ -48,6 +48,18 @@ const EditSchoolData = ({ editFormData, myEquipments, setMyEquipments, handleClo
                         autoComplete='off'
                     />
                 </div>
+                <div className="form-group">
+                    <label>Equipment Quantity</label>
+                    <input
+                        type="number"
+                        name="equipment_quantity"
+                        value={newEquipmentData.equipment_quantity}
+                        onChange={handleChange}
+                        placeholder="Enter Quantity of Equipment"
+                        autoComplete='off'
+                        required
+                    />
+                </div>
                 <div className="form-actions">
                     <div>
                         <button type="button" className="cancel-btn" onClick={handleClose}>Cancel</button>
@@ -74,4 +86,4 @@ const EditSchoolData = ({ editFormData, myEquipments, setMyEquipments, handleClo
     )
 }
 
-export default EditSchoolData;
+export default EditEquipmentData;

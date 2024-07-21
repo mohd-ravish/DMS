@@ -38,7 +38,7 @@ export const handleAddSchool = async (e, formData, setFormData) => {
 };
 
 // Function to fetch user's schools
-export const fetchMySchools = async (setMySchools) => {
+export const fetchMySchools = async (setSchools) => {
     try {
         const response = await Axios.get(`${API_URL}/schools/getMySchools`, {
             headers: {
@@ -46,7 +46,7 @@ export const fetchMySchools = async (setMySchools) => {
             },
         });
         if (response.data.status === "success") {
-            setMySchools(response.data.data);
+            setSchools(response.data.data);
         } else {
             console.log("Failed to fetch schools");
         }
@@ -56,7 +56,7 @@ export const fetchMySchools = async (setMySchools) => {
 };
 
 // Function to fetch all schools
-export const fetchAllSchools = async (setSchoolNames) => {
+export const fetchAllSchools = async (setSchools) => {
     try {
         const response = await Axios.get(`${API_URL}/schools/getAllSchools`, {
             headers: {
@@ -64,7 +64,7 @@ export const fetchAllSchools = async (setSchoolNames) => {
             },
         });
         if (response.data.status === "success") {
-            setSchoolNames(response.data.data);
+            setSchools(response.data.data);
         } else {
             console.log("Failed to fetch school names");
         }

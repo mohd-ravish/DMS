@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fetchAllSchools } from '../ApiHandler/schoolFunctions';
 import {handleEditLabData, handleDeleteLab} from '../ApiHandler/labFunctions';
 
-const EditSchoolData = ({ editFormData, myLabs, setMyLabs, handleClose }) => {
+const EditLabData = ({ editFormData, myLabs, setMyLabs, handleClose }) => {
     const [newLabData, setNewLabData] = useState({ ...editFormData });
     const [schoolNames, setSchoolNames] = useState([]);
 
@@ -91,4 +91,4 @@ const EditSchoolData = ({ editFormData, myLabs, setMyLabs, handleClose }) => {
     )
 }
 
-export default EditSchoolData;
+export default EditLabData;

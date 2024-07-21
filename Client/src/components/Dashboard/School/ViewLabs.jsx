@@ -1,26 +1,30 @@
 import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EditEquipmentData from './EditEquipmentData'
-import { fetchMyEquipments } from '../ApiHandler/equipmentFunctions';
-import { exportToEquipmentCSV, exportToEquipmentExcel, exportToPDF, handlePrint } from '../../utils/Utils';
+import EditLabData from './EditLabData'
+import { fetchAllLabs, fetchMyLabs } from '../ApiHandler/labFunctions';
+import { exportToLabCSV, exportToLabExcel, exportToPDF, handlePrint } from '../../utils/Utils';
 import usePagination from '../../hooks/usePagination';
 
-const MyEquipments = () => {
-  const [myEquipments, setMyEquipments] = useState([]);
+const ViewLabs = () => {
+  const [labs, setLabs] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [editSection, setEditSection] = useState(false);
-  const [equipmentsSection, setEquipmentsSection] = useState(true);
+  const [labsSection, setLabsSection] = useState(true);
   const [editFormData, setEditFormData] = useState([]);
+  const [showUserLabs, setShowUserLabs] = useState(false);
 
   useEffect(() => {
-    fetchMyEquipments(setMyEquipments);
-  }, []);
+    if (showUserLabs) {
+      fetchMyLabs(setLabs); // Fetch only user labs
+    } else {
+      fetchAllLabs(setLabs); // Fetch all labs
+    }
+  }, [showUserLabs]);
 
-  const filteredEquipments = myEquipments.filter(equipment =>
-    equipment.equipment_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    equipment.equipment_type.toLowerCase().includes(searchQuery.toLowerCase())
-
+  const filteredLabs = labs.filter(labs =>
+    labs.lab_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    labs.lab_school.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const {
@@ -33,34 +37,38 @@ const MyEquipments = () => {
     startEntry,
     endEntry,
     totalPages
-  } = usePagination(filteredEquipments, 10);
+  } = usePagination(filteredLabs, 10);
 
-  const editEquipmentData = (editData) => {
+  const editLabData = (editData) => {
     setEditFormData(editData);
     setEditSection(true);
-    setEquipmentsSection(false);
+    setLabsSection(false);
   }
 
   const handleClose = () => {
     setEditSection(false);
-    setEquipmentsSection(true);
+    setLabsSection(true);
   }
+
+  const handleToggleSwitch = () => {
+    setShowUserLabs(!showUserLabs);
+  };
 
   return (
     <div>
       {editSection && (
-        <EditEquipmentData
+        <EditLabData
           editFormData={editFormData}
-          myEquipments={myEquipments}
-          setMyEquipments={setMyEquipments}
+          labs={labs}
+          setLabs={setLabs}
           handleClose={handleClose}
         />
       )}
-      {equipmentsSection && (
+      {labsSection && (
         <div className="artifacts-container my-entries-section">
           <ToastContainer />
           <header className="artifacts-header">
-            <h1>My Equipments</h1>
+            <h1>{showUserLabs ? 'My Labs' : 'Labs'}</h1>
           </header>
           <div className="artifacts-table-container">
             <div className='header-select-entries'>
@@ -74,11 +82,21 @@ const MyEquipments = () => {
               </th>
               <th colSpan="4">
                 <div className="table-buttons">
-                  <button onClick={() => exportToEquipmentCSV(filteredEquipments, 'DMS My Equipments.csv')}>CSV</button>
-                  <button onClick={() => exportToEquipmentExcel(filteredEquipments, 'DMS My Equipments.xlsx')}>Excel</button>
-                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Equipments.pdf')}>PDF</button>
+                  <button onClick={() => exportToLabCSV(filteredLabs, 'DMS My Labs.csv')}>CSV</button>
+                  <button onClick={() => exportToLabExcel(filteredLabs, 'DMS My Labs.xlsx')}>Excel</button>
+                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Labs.pdf')}>PDF</button>
                   <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                 </div>
+              </th>
+              <th>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={showUserLabs}
+                    onChange={handleToggleSwitch}
+                  />
+                  <span className="slider round"></span>
+                </label>
               </th>
               <th className='user-search'>
                 <label>Search</label>
@@ -95,10 +113,11 @@ const MyEquipments = () => {
               <table className="artifacts-table">
                 <thead>
                   <tr>
-                    <th>Equipment Name</th>
-                    <th>Equipment Type</th>
-                    <th>Added on</th>
-                    <th>Action</th>
+                    <th>Lab Name</th>
+                    <th>School</th>
+                    <th>Added By</th>
+                    <th>Added On</th>
+                    {showUserLabs && <th>Action</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -106,12 +125,16 @@ const MyEquipments = () => {
                     <tr key={index}>
                       <td>
                         <div className="tooltip">
-                          <p>{item.equipment_name}</p>
+                          <p>{item.lab_name}</p>
+                          <span className="tooltiptext">{item.lab_type}</span>
                         </div>
                       </td>
-                      <td>{item.equipment_type}</td>
-                      <td className="date">{item.equipment_added_on.split('T')[0]}</td>
-                      <td><a href="# " className="edit-link" onClick={() => editEquipmentData(item)}>✏️ Edit</a></td>
+                      <td>{item.lab_school}</td>
+                      <td>{item.lab_added_by_owner}</td>
+                      <td className="date">{item.lab_added_on.split('T')[0]}</td>
+                      {showUserLabs && (
+                        <td><a href="# " className="edit-link" onClick={() => editLabData(item)}>✏️ Edit</a></td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -146,4 +169,4 @@ const MyEquipments = () => {
   );
 };
 
-export default MyEquipments;
+export default ViewLabs;

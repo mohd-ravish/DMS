@@ -7,7 +7,7 @@ const router = express.Router();
 // Route to add lab
 router.post('/addLab', verifyUser, (req, res) => {
     const { labName, labType, schoolId } = req.body;
-    const labAddedBy = req.id;
+    const labAddedBy = req.email;
     const labAddedOn = new Date();
     const query = `INSERT INTO labs 
         (lab_name, lab_type, school_id, lab_added_by, lab_added_on) 
@@ -42,18 +42,18 @@ router.get('/getMyLabs', verifyUser, (req, res) => {
 });
 
 // // Route to fetch all labs 
-// router.get('/getAllLabs', verifyUser, (req, res) => {
-//     const query = "SELECT * FROM vw_labs";
-//     db.query(query, (err, results) => {
-//         if (err) {
-//             return res.status(500).json({ status: 'fail', message: err.message });
-//         }
-//         return res.status(200).json({ status: 'success', data: results });
-//     });
-// });
+router.get('/getAllLabs', verifyUser, (req, res) => {
+    const query = "SELECT * FROM vw_labs ORDER BY id DESC";
+    db.query(query, (err, results) => {
+        if (err) {
+            return res.status(500).json({ status: 'fail', message: err.message });
+        }
+        return res.status(200).json({ status: 'success', data: results });
+    });
+});
 
 // Route to fetch labs for a specific school
-router.get('/getLabs/:schoolId', verifyUser, (req, res) => {
+router.get('/getLabsForSchool/:schoolId', verifyUser, (req, res) => {
     const { schoolId } = req.params;
 
     const query = `SELECT id, lab_name FROM vw_labs WHERE school_id = ?`;
