@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const verifyUser = require('../middlewares/auth');
-const { upload, handleFileUpload } = require('../middlewares/upload');
+const { upload, handleFileUpload } = require('../middlewares/firebaseUpload');
 const db = require('../config/db');
 
 const router = express.Router();

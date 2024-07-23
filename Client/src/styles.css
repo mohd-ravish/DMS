@@ -1694,3 +1694,86 @@ body {
 }
 
 /* My Entries  */
+
+/* Student List  */
+.student-list-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.overlay-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.overlay-content {
+	position: relative;
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	z-index: 1001;
+	max-width: 500px;
+	width: 100%;
+	max-height: 80vh;
+	overflow-y: auto;
+}
+
+.overlay-content::-webkit-scrollbar {
+	width: 0.5rem;
+	height: 0.5rem;
+}
+
+.overlay-content::-webkit-scrollbar-thumb {
+	border-radius: .5rem;
+	background-color: #0004;
+	visibility: hidden;
+}
+
+.overlay-content:hover::-webkit-scrollbar-thumb {
+	visibility: visible;
+}
+
+.overlay-content h2 {
+	font-family: "Montserrat", sans-serif;
+	margin-bottom: 10px;
+}
+
+.overlay-actions {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.overlay-actions button {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.overlay-actions button:hover {
+	opacity: 0.8;
+}
+
+.student-list-button button{
+	color: #000000;
+	background-color: rgba(83, 83, 83, 0.267);
+	padding: 5px 10px 5px 10px;
+}
+
+.student-list-button button:hover{
+	background-color: rgba(51, 51, 51, 0.267);
+}
+
+/* Student List  */

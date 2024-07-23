@@ -27,7 +27,7 @@ router.post("/login", async (req, res) => {
                 const passwordMatch = await bcrypt.compare(password, user.password);
                 if (passwordMatch) {
                     // Generate JWT token
-                    jwt.sign({ id: user.id, username: user.username, email: user.email, role_id: user.role_id }, JWT_SECRET_KEY, { expiresIn: '8h' }, (err, token) => {
+                    jwt.sign({ id: user.id, username: user.username, email: user.email, role_id: user.role_id }, JWT_SECRET_KEY, { expiresIn: '24h' }, (err, token) => {
                         if (err) {
                             console.error(err);
                             return res.json({ error: "Token generation failed" });

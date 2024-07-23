@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { handleEditEquipmentData, handleDeleteEquipment } from '../ApiHandler/equipmentFunctions';
 
-const EditEquipmentData = ({ editFormData, myEquipments, setMyEquipments, handleClose }) => {
+const EditEquipmentData = ({ editFormData, equipments, setEquipments, handleClose }) => {
     const [newEquipmentData, setNewEquipmentData] = useState({ ...editFormData });
 
     const handleChange = (e) => {
@@ -70,7 +70,7 @@ const EditEquipmentData = ({ editFormData, myEquipments, setMyEquipments, handle
                         className="delete-btn"
                         onClick={() => {
                             if (window.confirm(`Are you sure you want to delete the equipment`)) {
-                                handleDeleteEquipment(editFormData.id, myEquipments, setMyEquipments, handleClose);
+                                handleDeleteEquipment(editFormData.id, equipments, setEquipments, handleClose);
                             }
                         }}>Delete Equipment</button>
 

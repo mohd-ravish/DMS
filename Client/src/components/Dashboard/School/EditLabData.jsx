@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fetchAllSchools } from '../ApiHandler/schoolFunctions';
 import {handleEditLabData, handleDeleteLab} from '../ApiHandler/labFunctions';
 
-const EditLabData = ({ editFormData, myLabs, setMyLabs, handleClose }) => {
+const EditLabData = ({ editFormData, labs, setLabs, handleClose }) => {
     const [newLabData, setNewLabData] = useState({ ...editFormData });
     const [schoolNames, setSchoolNames] = useState([]);
 
@@ -75,7 +75,7 @@ const EditLabData = ({ editFormData, myLabs, setMyLabs, handleClose }) => {
                         className="delete-btn"
                         onClick={() => {
                             if (window.confirm(`Are you sure you want to delete the lab`)) {
-                                handleDeleteLab(editFormData.id, myLabs, setMyLabs, handleClose);
+                                handleDeleteLab(editFormData.id, labs, setLabs, handleClose);
                             }
                         }}>Delete Lab</button>
 

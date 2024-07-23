@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import AllSchools from './ViewSchools';
-import AllLabs from './ViewLabs';
-import AllEquipments from './ViewEquipments';
+import ViewSchools from './ViewSchools';
+import ViewLabs from './ViewLabs';
+import ViewEquipments from './ViewEquipments';
+import ViewSessions from './ViewSessions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,13 +12,15 @@ const AllEntries = () => {
     const renderComponent = () => {
         switch (activeComponent) {
             case 'schools':
-                return <AllSchools />;
+                return <ViewSchools />;
             case 'labs':
-                return <AllLabs />;
-            case 'equipment':
-                return <AllEquipments />;
+                return <ViewLabs />;
+            case 'equipments':
+                return <ViewEquipments />;
+            case 'sessions':
+                return <ViewSessions />;
             default:
-                return <AllSchools />;
+                return <ViewSchools />;
         }
     };
 
@@ -38,10 +41,16 @@ const AllEntries = () => {
                     Labs
                 </button>
                 <button
-                    className={activeComponent === 'equipment' ? 'active' : ''}
-                    onClick={() => setActiveComponent('equipment')}
+                    className={activeComponent === 'equipments' ? 'active' : ''}
+                    onClick={() => setActiveComponent('equipments')}
                 >
                     Equipments
+                </button>
+                <button
+                    className={activeComponent === 'sessions' ? 'active' : ''}
+                    onClick={() => setActiveComponent('sessions')}
+                >
+                    Sessions
                 </button>
             </div>
             <div className="component-container">

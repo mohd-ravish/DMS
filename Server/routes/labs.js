@@ -7,7 +7,7 @@ const router = express.Router();
 // Route to add lab
 router.post('/addLab', verifyUser, (req, res) => {
     const { labName, labType, schoolId } = req.body;
-    const labAddedBy = req.email;
+    const labAddedBy = req.id;
     const labAddedOn = new Date();
     const query = `INSERT INTO labs 
         (lab_name, lab_type, school_id, lab_added_by, lab_added_on) 

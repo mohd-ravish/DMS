@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { handleEditSchoolData, handleDeleteSchool } from '../ApiHandler/schoolFunctions';
 
-const EditSchoolData = ({ editFormData, mySchools, setMySchools, handleClose }) => {
+const EditSchoolData = ({ editFormData, schools, setSchools, handleClose }) => {
     const [newSchoolData, setNewSchoolData] = useState({ ...editFormData });
 
     const handleChange = (e) => {
@@ -107,7 +107,7 @@ const EditSchoolData = ({ editFormData, mySchools, setMySchools, handleClose }) 
                         className="delete-btn"
                         onClick={() => {
                             if (window.confirm(`Are you sure you want to delete the school`)) {
-                                handleDeleteSchool(editFormData.id, mySchools, setMySchools, handleClose);
+                                handleDeleteSchool(editFormData.id, schools, setSchools, handleClose);
                             }
                         }}>Delete School</button>
 

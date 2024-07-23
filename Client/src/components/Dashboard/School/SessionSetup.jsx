@@ -13,9 +13,8 @@ const SessionSetup = () => {
         sessionTime: "",
         schoolId: "",
         labId: "",
-        invitees: ""
     });
-
+    const [attendeesFile, setAttendeesFile] = useState(null);
     const [schoolNames, setSchoolNames] = useState([]);
     const [labs, setLabs] = useState([]);
 
@@ -40,7 +39,7 @@ const SessionSetup = () => {
             <header className="upload-document-header">
                 <h1>Session Setup</h1>
             </header>
-            <form className="upload-document-form" onSubmit={(e) => handleSessionSetup(e, sessionData, setSessionData)}>
+            <form className="upload-document-form" onSubmit={(e) => handleSessionSetup(e, sessionData, attendeesFile, setSessionData, setAttendeesFile)}>
                 <div className="form-group">
                     <label>Session Title</label>
                     <input
@@ -117,15 +116,7 @@ const SessionSetup = () => {
                 </div>
                 <div className="form-group">
                     <label>List Of Invitees</label>
-                    <input
-                        type="text"
-                        name="invitees"
-                        value={sessionData.invitees}
-                        onChange={handleChange}
-                        placeholder="Primary Contact Person"
-                        autoComplete='off'
-                        required
-                    />
+                    <input type="file" onChange={(e) => { setAttendeesFile(e.target.files[0]) }} required />
                 </div>
                 <div className="form-group">
                     <button type="submit">Submit</button>
