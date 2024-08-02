@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
-import { fetchUploadTags, handleTagChange } from '../ApiHandler/tagsFunctions';
+import { fetchUploadTags } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
 import { handleUrlSubmit } from '../ApiHandler/uploadFunctions';
 
@@ -21,13 +21,24 @@ const AddUrl = () => {
         fetchDocTypes(setDocTypes);
     }, []);
 
+    // Function to handle tag change
+    const handleTagChange = (newValue, setTags) => {
+        if (newValue.length > 10) {
+            toast.warn("You can only add up to 10 tags.", {
+                position: "top-center"
+            });
+            return;
+        }
+        setTags(newValue);
+    };
+
     return (
         <div className="upload-document-container">
             <ToastContainer />
             <header className="upload-document-header">
                 <h1>Add URL</h1>
             </header>
-            <form className="upload-document-form" onSubmit={(e)=>handleUrlSubmit(e, infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish)}>
+            <form className="upload-document-form" onSubmit={(e) => handleUrlSubmit(e, infoHead, url, tags, docType, description, publish, setInfoHead, setUrl, setTags, setDocType, setDescription, setPublish, availableTags)}>
                 <div className="form-group">
                     <label>Information Head</label>
                     <input
@@ -55,7 +66,7 @@ const AddUrl = () => {
                     <CreatableSelect
                         isMulti
                         value={tags}
-                        onChange={(newValue) => handleTagChange(newValue, availableTags, setAvailableTags, tags, setTags)}
+                        onChange={(newValue) => handleTagChange(newValue, setTags)}
                         options={availableTags}
                         placeholder="Select or create tags"
                         required

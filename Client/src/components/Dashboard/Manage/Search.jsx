@@ -3,6 +3,8 @@ import Select from 'react-select';
 import { fetchUploadTags, saveSearchedTag } from '../ApiHandler/tagsFunctions';
 import { fetchAllArtifacts } from '../ApiHandler/artifactsFunctions';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Search = () => {
     const [availableTags, setAvailableTags] = useState([]);
     const [tags, setTags] = useState([]);
@@ -85,7 +87,8 @@ const Search = () => {
                 ) : (
                     filteredArtifacts.map(doc => (
                         <div key={doc.id} className="document-item">
-                            <a href={doc.doc_path} target='_blank' rel='noreferrer'><h3>{doc.doc_format === 'url' ? <i className='bx bx-link'></i> : <i className='bx bx-download'></i>} {doc.doc_nm} </h3></a>
+                            {doc.doc_format === 'url' ? <a href={doc.doc_path} target='_blank' rel='noreferrer'><h3><i className='bx bx-link'></i>{doc.doc_nm}</h3></a> : <a href={`${API_URL}/uploads/${doc.doc_nm}`} target='_blank' rel='noreferrer'><h3><i className='bx bx-download'></i> {doc.doc_nm}</h3></a>}
+                            {/* <a href={doc.doc_path} target='_blank' rel='noreferrer'><h3>{doc.doc_format === 'url' ? <i className='bx bx-link'></i> : <i className='bx bx-download'></i>} {doc.doc_nm} </h3></a> */}
                             <p className="description">{doc.doc_description}</p>
                             <div className="document-type">
                                 <p><span className="highlight">By </span>: {doc.owner_author_id}</p>

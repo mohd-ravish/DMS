@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditSessionData from './EditSessionData';
 import { fetchAllSessions, fetchMySessions } from '../ApiHandler/sessionFunctions';
-import { exportToSchoolCSV, exportToSchoolExcel, exportToPDF, handlePrint } from '../../utils/Utils';
+import { exportToSessionCSV, exportToSessionExcel, exportToPDF, handlePrint } from '../../utils/Utils';
 import usePagination from '../../hooks/usePagination';
 
 const ViewSessions = () => {
@@ -12,15 +12,15 @@ const ViewSessions = () => {
     const [editSection, setEditSection] = useState(false);
     const [sessionsSection, setSessionsSection] = useState(true);
     const [editFormData, setEditFormData] = useState([]);
-    const [showUserSessions, setShowUserSessions] = useState(false);
+    const [showAllSessions, setShowAllSessions] = useState(false);
 
     useEffect(() => {
-        if (showUserSessions) {
-            fetchMySessions(setSessions); // Fetch only user sessions
-        } else {
+        if (showAllSessions) {
             fetchAllSessions(setSessions); // Fetch all sessions
+        } else {
+            fetchMySessions(setSessions); // Fetch only user sessions
         }
-    }, [showUserSessions]);
+    }, [showAllSessions]);
 
     const filteredSessions = sessions.filter(session =>
         session.session_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -51,7 +51,7 @@ const ViewSessions = () => {
     }
 
     const handleToggleSwitch = () => {
-        setShowUserSessions(!showUserSessions);
+        setShowAllSessions(!showAllSessions);
     };
 
     const getSessionTitleClass = (session_status) => {
@@ -78,7 +78,7 @@ const ViewSessions = () => {
                 <div className="artifacts-container my-entries-section">
                     <ToastContainer />
                     <header className="artifacts-header">
-                        <h1>{showUserSessions ? 'My Sessions' : 'Sessions'}</h1>
+                        <h1>{showAllSessions ? 'All Sessions' : 'My Sessions'}</h1>
                     </header>
                     <div className="artifacts-table-container">
                         <div className='header-select-entries'>
@@ -92,21 +92,23 @@ const ViewSessions = () => {
                             </th>
                             <th colSpan="4">
                                 <div className="table-buttons">
-                                    <button onClick={() => exportToSchoolCSV(filteredSessions, 'DMS My Sessions.csv')}>CSV</button>
-                                    <button onClick={() => exportToSchoolExcel(filteredSessions, 'DMS My Sessions.xlsx')}>Excel</button>
+                                    <button onClick={() => exportToSessionCSV(filteredSessions, 'DMS Sessions.csv')}>CSV</button>
+                                    <button onClick={() => exportToSessionExcel(filteredSessions, 'DMS Sessions.xlsx')}>Excel</button>
                                     <button onClick={() => exportToPDF('.artifacts-table', 'DMS My sessions.pdf')}>PDF</button>
                                     <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
                             </th>
                             <th>
+                                <span className='toggle-switch-text'>My</span>
                                 <label className="switch">
                                     <input
                                         type="checkbox"
-                                        checked={showUserSessions}
+                                        checked={showAllSessions}
                                         onChange={handleToggleSwitch}
                                     />
                                     <span className="slider round"></span>
                                 </label>
+                                <span className='toggle-switch-text'>All</span>
                             </th>
                             <th className='user-search'>
                                 <label>Search</label>
@@ -127,7 +129,7 @@ const ViewSessions = () => {
                                         <th>Session Host</th>
                                         <th>Session Date</th>
                                         <th>Setup By</th>
-                                        {showUserSessions && <th>Action</th>}
+                                        {!showAllSessions && <th>Action</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -141,7 +143,7 @@ const ViewSessions = () => {
                                             <td>{item.session_host}</td>
                                             <td>{item.session_date}</td>
                                             <td>{item.session_setup_by_email}</td>
-                                            {showUserSessions && (
+                                            {!showAllSessions && (
                                                 <td><a href="# " className="edit-link" onClick={() => editSessionData(item)}>✏️ Track</a></td>
                                             )}
                                         </tr>

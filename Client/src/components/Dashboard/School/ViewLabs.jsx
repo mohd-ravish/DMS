@@ -12,15 +12,15 @@ const ViewLabs = () => {
   const [editSection, setEditSection] = useState(false);
   const [labsSection, setLabsSection] = useState(true);
   const [editFormData, setEditFormData] = useState([]);
-  const [showUserLabs, setShowUserLabs] = useState(false);
+  const [showAllLabs, setShowAllLabs] = useState(false);
 
   useEffect(() => {
-    if (showUserLabs) {
-      fetchMyLabs(setLabs); // Fetch only user labs
-    } else {
+    if (showAllLabs) {
       fetchAllLabs(setLabs); // Fetch all labs
+    } else {
+      fetchMyLabs(setLabs); // Fetch only user labs
     }
-  }, [showUserLabs]);
+  }, [showAllLabs]);
 
   const filteredLabs = labs.filter(labs =>
     labs.lab_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -51,7 +51,7 @@ const ViewLabs = () => {
   }
 
   const handleToggleSwitch = () => {
-    setShowUserLabs(!showUserLabs);
+    setShowAllLabs(!showAllLabs);
   };
 
   return (
@@ -68,7 +68,7 @@ const ViewLabs = () => {
         <div className="artifacts-container my-entries-section">
           <ToastContainer />
           <header className="artifacts-header">
-            <h1>{showUserLabs ? 'My Labs' : 'Labs'}</h1>
+            <h1>{showAllLabs ? 'All Labs' : 'My Labs'}</h1>
           </header>
           <div className="artifacts-table-container">
             <div className='header-select-entries'>
@@ -82,21 +82,23 @@ const ViewLabs = () => {
               </th>
               <th colSpan="4">
                 <div className="table-buttons">
-                  <button onClick={() => exportToLabCSV(filteredLabs, 'DMS My Labs.csv')}>CSV</button>
-                  <button onClick={() => exportToLabExcel(filteredLabs, 'DMS My Labs.xlsx')}>Excel</button>
+                  <button onClick={() => exportToLabCSV(filteredLabs, 'DMS Labs.csv')}>CSV</button>
+                  <button onClick={() => exportToLabExcel(filteredLabs, 'DMS Labs.xlsx')}>Excel</button>
                   <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Labs.pdf')}>PDF</button>
                   <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                 </div>
               </th>
               <th>
+                <span className='toggle-switch-text'>My</span>
                 <label className="switch">
                   <input
                     type="checkbox"
-                    checked={showUserLabs}
+                    checked={showAllLabs}
                     onChange={handleToggleSwitch}
                   />
                   <span className="slider round"></span>
                 </label>
+                <span className='toggle-switch-text'>All</span>
               </th>
               <th className='user-search'>
                 <label>Search</label>
@@ -117,7 +119,7 @@ const ViewLabs = () => {
                     <th>School</th>
                     <th>Added By</th>
                     <th>Added On</th>
-                    {showUserLabs && <th>Action</th>}
+                    {!showAllLabs && <th>Action</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -132,7 +134,7 @@ const ViewLabs = () => {
                       <td>{item.lab_school}</td>
                       <td>{item.lab_added_by_owner}</td>
                       <td className="date">{item.lab_added_on.split('T')[0]}</td>
-                      {showUserLabs && (
+                      {!showAllLabs && (
                         <td><a href="# " className="edit-link" onClick={() => editLabData(item)}>✏️ Edit</a></td>
                       )}
                     </tr>

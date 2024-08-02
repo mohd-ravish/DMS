@@ -26,7 +26,7 @@ const EditLabData = ({ editFormData, labs, setLabs, handleClose }) => {
             <header className="upload-document-header">
                 <h1>Edit Lab Data</h1>
             </header>
-            <form className="edit-document-form" onSubmit={(e) => handleEditLabData(e, editFormData.id, newLabData)}>
+            <form className="edit-document-form" onSubmit={(e) => e.preventDefault()}>
                 <div className="form-group">
                     <label>Lab ID</label>
                     <span className="document-id">{newLabData.lab_id}</span>
@@ -68,7 +68,7 @@ const EditLabData = ({ editFormData, labs, setLabs, handleClose }) => {
                 <div className="form-actions">
                     <div>
                         <button type="button" className="cancel-btn" onClick={handleClose}>Cancel</button>
-                        <button type="submit" className="update-btn">Update</button>
+                        <button type="button" className="update-btn" onClick={(e) => handleEditLabData(e, editFormData.id, newLabData)}>Update</button>
                     </div>
                     <button
                         type="button"

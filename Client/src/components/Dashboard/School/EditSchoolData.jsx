@@ -20,7 +20,7 @@ const EditSchoolData = ({ editFormData, schools, setSchools, handleClose }) => {
             <header className="upload-document-header">
                 <h1>Edit School Data</h1>
             </header>
-            <form className="edit-document-form" onSubmit={(e) => handleEditSchoolData(e, editFormData.id, newSchoolData)}>
+            <form className="edit-document-form" onSubmit={(e) => e.preventDefault()}>
                 <div className="form-group">
                     <label>School ID</label>
                     <span className="document-id">{newSchoolData.school_id}</span>
@@ -100,7 +100,7 @@ const EditSchoolData = ({ editFormData, schools, setSchools, handleClose }) => {
                 <div className="form-actions">
                     <div>
                         <button type="button" className="cancel-btn" onClick={handleClose}>Cancel</button>
-                        <button type="submit" className="update-btn">Update</button>
+                        <button type="button" className="update-btn" onClick={(e) => handleEditSchoolData(e, editFormData.id, newSchoolData)}>Update</button>
                     </div>
                     <button
                         type="button"

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
 import { Oval } from 'react-loader-spinner'
-import { fetchUploadTags, handleTagChange } from '../ApiHandler/tagsFunctions';
+import { fetchUploadTags } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
 import { handleDocumentSubmit } from '../ApiHandler/uploadFunctions';
 import { fetchSettings, fetchAllocatedUsedSpace } from '../ApiHandler/settingsFunctions'
@@ -27,6 +27,17 @@ const UploadDocument = () => {
         fetchDocTypes(setDocTypes);
     }, []);
 
+    // Function to handle tag change
+    const handleTagChange = (newValue, setTags) => {
+        if (newValue.length > 10) {
+            toast.warn("You can only add up to 10 tags.", {
+                position: "top-center"
+            });
+            return;
+        }
+        setTags(newValue);
+    };
+
     // Function to convert the limit from KB to MB
     const kbToMb = (kb) => {
         return Math.ceil(kb / 1024);
@@ -39,7 +50,7 @@ const UploadDocument = () => {
                 <h1>Upload Document</h1>
                 {loading ? <Oval height="22" width="22" color="blue" ariaLabel="loading" /> : ''}
             </header>
-            <form className="upload-document-form" onSubmit={(e) => handleDocumentSubmit(e, limit, remainingSpace, setLoading, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish)}>
+            <form className="upload-document-form" onSubmit={(e) => handleDocumentSubmit(e, limit, remainingSpace, setLoading, file, tags, docType, description, publish, setFile, setTags, setDocType, setDescription, setPublish, availableTags)}>
                 <div className="form-group">
                     <label>Upload File</label>
                     <input type="file" onChange={(e) => { setFile(e.target.files[0]) }} required />
@@ -50,7 +61,7 @@ const UploadDocument = () => {
                     <CreatableSelect
                         isMulti
                         value={tags}
-                        onChange={(newValue) => handleTagChange(newValue, availableTags, setAvailableTags, tags, setTags)}
+                        onChange={(newValue) => handleTagChange(newValue, setTags)}
                         options={availableTags}
                         placeholder="Select or create tags"
                         required

@@ -42,37 +42,6 @@ export const fetchUploadTags = async (setAvailableTags) => {
     }
 };
 
-// Function to handle tag change/add new tags
-export const handleTagChange = async (newValue, availableTags, setAvailableTags, tags, setTags) => {
-    if (newValue.length > 10) {
-        toast.warn("You can only add up to 10 tags.", {
-            position: "top-center"
-        });
-        return;
-    }
-    const newTags = newValue.filter(option => option.__isNew__);
-    if (newTags.length > 0) {
-        try {
-            const response = await Axios.post(`${API_URL}/tags/createTag`, { tag_nm: newTags[0].label }, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            });
-            if (response.data.status === "success") {
-                const newTagId = response.data.data.id;
-                setAvailableTags([...availableTags, { value: newTagId, label: newTags[0].label }]);
-                setTags([...tags, { value: newTagId, label: newTags[0].label }]);
-            } else {
-                console.log("Failed to create tag");
-            }
-        } catch (error) {
-            console.log("An error occurred while creating tag");
-        }
-    } else {
-        setTags(newValue);
-    }
-};
-
 // Function to update tags
 export const handleTagUpdate = async (editingTagId, editedTagValue, setAvailableTags, availableTags, setEditingTagId) => {
     if (!editedTagValue || editedTagValue.trim() === "") {

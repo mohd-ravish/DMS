@@ -20,7 +20,7 @@ const EditEquipmentData = ({ editFormData, equipments, setEquipments, handleClos
             <header className="upload-document-header">
                 <h1>Edit Equipment Data</h1>
             </header>
-            <form className="edit-document-form" onSubmit={(e) => handleEditEquipmentData(e, editFormData.id, newEquipmentData)}>
+            <form className="edit-document-form" onSubmit={(e) => e.preventDefault()}>
                 <div className="form-group">
                     <label>Equipment ID</label>
                     <span className="document-id">{newEquipmentData.equipment_id}</span>
@@ -63,7 +63,7 @@ const EditEquipmentData = ({ editFormData, equipments, setEquipments, handleClos
                 <div className="form-actions">
                     <div>
                         <button type="button" className="cancel-btn" onClick={handleClose}>Cancel</button>
-                        <button type="submit" className="update-btn">Update</button>
+                        <button type="button" className="update-btn" onClick={(e) => handleEditEquipmentData(e, editFormData.id, newEquipmentData)}>Update</button>
                     </div>
                     <button
                         type="button"

@@ -3,7 +3,7 @@ import docLogo from '../../assets/logo.png';
 import { useNavigate } from "react-router-dom";
 import { logout } from './ApiHandler/authFunctions';
 
-const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, controlAccess, isSidebarOpen }) => {
+const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, controlAccess, isSidebarOpen, setIsSidebarOpen}) => {
     const [isLibraryOpen, setIsLibraryOpen] = useState(false); // To open Manage section
     const [isSchoolOpen, setIsSchoolOpen] = useState(false); // To open School section
     const [isGodModeOpen, setIsGodModeOpen] = useState(false); // To open God Mode section
@@ -12,6 +12,9 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
     // Function to manage sidebar css
     const handleSlideBarClick = (item) => {
         setActive(item);
+        if (window.innerWidth <= 768) { // Close sidebar on mobile after click
+            setIsSidebarOpen(false);
+        }
     };
 
     const toggleLibrary = () => {
@@ -49,8 +52,8 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
                 </li>
                 <li className={active === 'library' ? 'active' : ''}>
                     <a href="# " onClick={() => { handleSlideBarClick('library'); toggleLibrary(); }}>
-                        {/* <i class='bx bx-library'></i> */}
-                        <i className='bx bx-brush-alt'></i>
+                        <i class='bx bx-library'></i>
+                        {/* <i className='bx bx-brush-alt'></i> */}
                         <span className="text">Library</span>
                         <i className={`bx ${isLibraryOpen ? 'bx-chevron-up' : 'bx-chevron-down'}`} style={{ marginLeft: 'auto' }}></i>
                     </a>

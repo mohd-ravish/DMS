@@ -165,7 +165,6 @@ export const handleControlAccessUpdate = async (userId, setControlAccessUsers) =
     }
 };
 
-
 // Function to get user activity logs
 export const handleUserActivitySubmit = async (userId, period, setUserActivity, setActivitySection) => {
     if (!userId || userId.trim() === "") {

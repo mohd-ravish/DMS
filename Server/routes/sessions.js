@@ -3,7 +3,7 @@ const verifyUser = require('../middlewares/auth');
 const db = require('../config/db');
 const path = require('path');
 const fs = require('fs');
-const { upload, updateUpload } = require('../middlewares/localStorageUpload');
+const { upload, updateUpload } = require('../middlewares/studentListUpload');
 
 const router = express.Router();
 
@@ -71,16 +71,16 @@ router.get('/getAllSessions', verifyUser, (req, res) => {
 // Route to update session data
 router.put('/updateSessionData/:id', verifyUser, (req, res) => {
     const { id } = req.params;
-    const { sessionStatus } = req.body;
+    const { session_title, session_host, session_date, session_time, school_id, lab_id, session_status } = req.body;
     const sessionUpdatedBy = req.id;
     const sessionUpdatedOn = new Date();
     const query = `
         UPDATE sessions
-        SET session_status = ?, session_updated_by = ?, session_updated_on = ?
+        SET session_title = ?, session_host = ?, session_date = ?, session_time = ?, school_id = ?, lab_id = ?, session_status = ?, session_updated_by = ?, session_updated_on = ?
         WHERE id = ?
     `;
     try {
-        db.query(query, [sessionStatus, sessionUpdatedBy, sessionUpdatedOn, id], (err, result) => {
+        db.query(query, [session_title, session_host, session_date, session_time, school_id, lab_id, session_status, sessionUpdatedBy, sessionUpdatedOn, id], (err, result) => {
             if (err) {
                 console.error(err);
                 return res.json({ status: 'fail', message: err.message });
@@ -138,15 +138,24 @@ router.post('/saveStudentsList/:sessionFolderName', (req, res) => {
         }
 
         const { sessionFolderName } = req.params;
+        const { presentCount } = req.body;
         const filePath = path.join(__dirname, '../public/sessions', sessionFolderName, 'attendees.xlsx');
 
         fs.rename(req.file.path, filePath, (err) => {
             if (err) {
                 return res.status(500).send('Failed to update the file');
             }
-            res.send('File updated successfully.');
+            // Update the session table with the attendees count
+            const query = 'UPDATE sessions SET attendees_count = ? WHERE session_folder_name = ?';
+            db.query(query, [presentCount, sessionFolderName], (err, result) => {
+                if (err) {
+                    return res.status(500).send('Failed to update session table');
+                }
+                res.send('File updated successfully.');
+            });
         });
     });
 });
+
 
 module.exports = router;

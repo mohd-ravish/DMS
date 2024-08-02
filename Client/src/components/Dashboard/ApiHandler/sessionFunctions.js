@@ -4,10 +4,25 @@ import * as XLSX from 'xlsx';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+// Function to setup session
 export const handleSessionSetup = async (e, sessionData, attendeesFile, setSessionData, setAttendeesFile) => {
     e.preventDefault();
-    const formData = new FormData();
+    
+    // Check if the file is an Excel file
+    const validFileTypes = [
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+        'application/vnd.ms-excel' // .xls
+    ];
+    
+    if (!attendeesFile || !validFileTypes.includes(attendeesFile.type)) {
+        toast.error("Please upload a valid Excel file (.xls or .xlsx)", {
+            position: "top-center"
+        });
+        return;
+    }
 
+    const formData = new FormData();
+    
     for (const key in sessionData) {
         formData.append(key, sessionData[key]);
     }
@@ -82,10 +97,10 @@ export const fetchAllSessions = async (setSessions) => {
 };
 
 // Function to update session data
-export const handleEditSessionData = async (e, sessionId, sessionStatus) => {
+export const handleEditSessionData = async (e, sessionId, newSessionData, handleClose) => {
     e.preventDefault();
     try {
-        const response = await Axios.put(`${API_URL}/sessions/updateSessionData/${sessionId}`, { sessionStatus }, {
+        const response = await Axios.put(`${API_URL}/sessions/updateSessionData/${sessionId}`, newSessionData, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -94,6 +109,7 @@ export const handleEditSessionData = async (e, sessionId, sessionStatus) => {
             toast.success(response.data.message, {
                 position: "top-center"
             });
+            handleClose();
         } else {
             toast.error("Failed to update session data", {
                 position: "top-center"
@@ -151,6 +167,9 @@ export const fetchStudentList = async (sessionFolderName, setStudents) => {
 // Function to save the student list 
 export const handleSaveStudentList = async (sessionFolderName, students, handleStudentListClose) => {
     try {
+        // Count the number of attendees who are present
+        const presentCount = students.filter(student => student.Attendence === 'P').length;
+
         // Update the XLS file with the new attendance data
         const workbook = XLSX.utils.book_new();
         const worksheet = XLSX.utils.json_to_sheet(students);
@@ -159,6 +178,7 @@ export const handleSaveStudentList = async (sessionFolderName, students, handleS
         const blob = new Blob([wbout], { type: 'application/octet-stream' });
         const formData = new FormData();
         formData.append('file', blob, 'attendees.xlsx');
+        formData.append('presentCount', presentCount);
 
         // Send the updated file to the server
         await Axios.post(`${API_URL}/sessions/saveStudentsList/${sessionFolderName}`, formData, {

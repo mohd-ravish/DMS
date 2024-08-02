@@ -55,7 +55,7 @@ function Dashboard() {
     const [auth, setAuth] = useState(false); // To check if user is authentic or not
     const [message, setMessage] = useState(""); // To store message from API
     const [controlAccess, setControlAccess] = useState("");
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true); // To hide and show sidebar
+    const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768); // To hide and show sidebar
 
     // To toggle(hide and show) sidebar
     const toggleSidebar = () => {
@@ -95,6 +95,7 @@ function Dashboard() {
                         handleClick={handleClick}
                         role={role}
                         controlAccess={controlAccess}
+                        setIsSidebarOpen={setIsSidebarOpen}
                         isSidebarOpen={isSidebarOpen}
                     />
                     <section id="content">

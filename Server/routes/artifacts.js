@@ -1,8 +1,7 @@
 const express = require('express');
 const verifyUser = require('../middlewares/auth');
 const db = require('../config/db');
-const storage = require('../config/firebase');
-const { ref, deleteObject } = require('firebase/storage');
+const fs = require('fs');
 
 const router = express.Router();
 
@@ -108,62 +107,45 @@ router.delete('/deleteArtifact/:id', verifyUser, (req, res) => {
         if (err) {
             return res.status(500).json({ status: 'fail', message: err.message });
         }
-        if (results.length === 0) {
-            return res.status(404).json({ status: 'fail', message: 'Document not found' });
-        }
-
         const docName = results[0].doc_nm;
         const docFormat = results[0].doc_format;
         const docSize = results[0].file_size;
 
         // Perform deletion based on artifact type (document or URL)
         if (docFormat !== 'url') {
-            // Delete document from Firebase Storage
-            const storageRef = ref(storage, `uploads/${docName}`);
-            deleteObject(storageRef)
-                .then(() => {
-                    // Update total_used_space in system_settings
-                    const updateQuery = `
-                        UPDATE system_settings 
-                        SET value = value - ?
-                        WHERE variable_name = 'total_used_space'
-                    `;
-                    db.query(updateQuery, [docSize], (err, result) => {
-                        if (err) {
-                            console.error('Error updating total_used_space:', err);
-                            return res.status(500).json({ status: 'fail', message: 'Error updating total_used_space' });
-                        }
-                    });
-
-                    // Delete artifact from documents table
-                    const deleteQuery = "DELETE FROM documents WHERE id = ?";
-                    db.query(deleteQuery, [id], (err, result) => {
-                        if (err) {
-                            return res.status(500).json({ status: 'fail', message: err.message });
-                        }
-                        db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} deleted a document [ID: ${id}]`, current_date], (err, result) => {
-                            if (err) throw err;
-                        });
-                        return res.status(200).json({ status: 'success', message: 'Document deleted successfully' });
-                    });
-                })
-                .catch((error) => {
-                    console.error('Error deleting file from Firebase Storage:', error);
-                    return res.status(500).json({ status: 'fail', message: 'Error deleting artifact file' });
-                });
-        } else {
-            // Delete artifact from documents table
-            const deleteQuery = "DELETE FROM documents WHERE id = ?";
-            db.query(deleteQuery, [id], (err, result) => {
+            // Delete document from local storage
+            const filePath = `D:/Git-Hub/Document-Management-System/Server/public/uploads/${docName}`;
+            fs.unlink(filePath, (err) => {
                 if (err) {
-                    return res.status(500).json({ status: 'fail', message: err.message });
+                    console.error('Error deleting file:', err);
+                    return res.status(500).json({ status: 'fail', message: 'Error deleting artifact file' });
                 }
-                db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} deleted a document [ID: ${id}]`, current_date], (err, result) => {
-                    if (err) throw err;
+
+                // Update total_used_space in system_settings
+                const updateQuery = `
+                    UPDATE system_settings 
+                    SET value = value - ?
+                    WHERE variable_name = 'total_used_space'
+                `;
+                db.query(updateQuery, [docSize], (err, result) => {
+                    if (err) {
+                        console.error('Error updating total_used_space:', err);
+                        return res.status(500).json({ status: 'fail', message: 'Error updating total_used_space' });
+                    }
                 });
-                return res.status(200).json({ status: 'success', message: 'Document deleted successfully' });
             });
         }
+        // Delete artifact from documents table
+        const deleteQuery = "DELETE FROM documents WHERE id = ?";
+        db.query(deleteQuery, [id], (err, result) => {
+            if (err) {
+                return res.status(500).json({ status: 'fail', message: err.message });
+            }
+            db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} deleted a document [ID: ${id}]`, current_date], (err, result) => {
+                if (err) throw err;
+            });
+            return res.status(200).json({ status: 'success', message: 'Document deleted successfully' });
+        });
     });
 });
 

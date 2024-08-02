@@ -1,46 +1,44 @@
 const express = require('express');
 const path = require('path');
 const verifyUser = require('../middlewares/auth');
-const { upload, handleFileUpload } = require('../middlewares/firebaseUpload');
+const upload = require('../middlewares/docsUpload');
 const db = require('../config/db');
 
 const router = express.Router();
 
 // Route to upload document 
-router.post('/uploadDocument', verifyUser, (req, res, next) => {
+router.post('/uploadDocument', verifyUser, (req, res) => {
     upload.single('file')(req, res, async (err) => {
         if (err) {
             return res.json({ status: 'fail', message: err.message });
         }
-        next();
-    });
-}, handleFileUpload, async (req, res) => {
-    const { tags, docType, description, publish } = req.body;
-    const filePath = req.fileDownloadURL;
-    const docFormat = path.extname(req.file.originalname).slice(1);
-    const ownerAuthorId = req.email;
-    const docName = req.file.filenameWithTimestamp;
-    const isPublished = publish === 'yes' ? 1 : 0;
-    const current_date = new Date();
-    const fileSize = Math.ceil(req.file.size / 1024); // In KB
+        const { tags, docType, description, publish } = req.body;
+        const filePath = req.file.path;
+        const docFormat = path.extname(req.file.originalname).slice(1);
+        const ownerAuthorId = req.email;
+        const docName = req.file.filename;
+        const isPublished = publish === 'yes' ? 1 : 0;
+        const current_date = new Date();
+        const fileSize = Math.ceil(req.file.size / 1024); // In KB
 
-    const query = "INSERT INTO documents (doc_nm, owner_author_id, doc_path, doc_type, doc_format, assoc_tags, doc_description, doc_status, is_published, date_uploaded, uploaded_by, file_size) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    try {
-        db.query(query, [docName, ownerAuthorId, filePath, docType, docFormat, tags, description, 'active', isPublished, current_date, req.email, fileSize], async (err, result) => {
-            if (err) {
-                console.log(err);
-                return res.status(500).json({ status: 'fail', message: err.message });
-            }
-            db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} uploaded new document [${docName}]`, current_date], (err, result) => {
-                if (err) throw err;
+        const query = "INSERT INTO documents (doc_nm, owner_author_id, doc_path, doc_type, doc_format, assoc_tags, doc_description, doc_status, is_published, date_uploaded, uploaded_by, file_size) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            db.query(query, [docName, ownerAuthorId, filePath, docType, docFormat, tags, description, 'active', isPublished, current_date, req.email, fileSize], async (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return res.json({ status: 'fail', message: err.message });
+                }
+                db.query("INSERT INTO logs (user_id, activity, log_date) VALUES (?, ?, ?)", [req.id, `User: ${req.email} uploaded new document [${docName}]`, current_date], (err, result) => {
+                    if (err) throw err;
+                });
+                await db.promise().query("UPDATE system_settings SET value = value + ? WHERE variable_name = 'total_used_space'", [fileSize]);
+                return res.json({ status: 'success', message: 'Document uploaded successfully' });
             });
-            await db.promise().query("UPDATE system_settings SET value = value + ? WHERE variable_name = 'total_used_space'", [fileSize]);
-            return res.json({ status: 'success', message: 'Document uploaded successfully' });
-        });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json("Internal Server Error");
-    }
+        } catch (err) {
+            console.error(err);
+            return res.json("Internal Server Error");
+        }
+    });
 });
 
 

@@ -98,6 +98,28 @@ export const exportToEquipmentCSV = (data, filename) => {
     document.body.removeChild(link);
 };
 
+export const exportToSessionCSV = (data, filename) => {
+    const csvData = data.map(item => ({
+        ID: item.session_id,
+        SessionTitle: item.session_title,
+        SessionHost: item.session_host,
+        SessionTime: item.session_time,
+        SessionSchoolName: item.school_name,
+        SessionLabName: item.lab_name,
+        SessionSetupBy: item.session_setup_by_email,
+        SessionSetupOn: item.session_setup_on.split('T')[0],
+        SessionStatus: item.session_status,
+    }));
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
 export const exportToUserActivityCSV = (data, filename) => {
     const csvData = data.map(item => ({
         ID: item.log_id,
@@ -178,6 +200,23 @@ export const exportToEquipmentExcel = (data, filename) => {
         EquipmentType: item.equipment_type,
         AddedBy: item.equipment_added_by_owner,
         AddedOn: item.equipment_added_on.split('T')[0],
+    })));
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Data');
+    writeFile(wb, filename);
+};
+
+export const exportToSessionExcel = (data, filename) => {
+    const ws = utils.json_to_sheet(data.map(item => ({
+        ID: item.session_id,
+        SessionTitle: item.session_title,
+        SessionHost: item.session_host,
+        SessionTime: item.session_time,
+        SessionSchoolName: item.school_name,
+        SessionLabName: item.lab_name,
+        SessionSetupBy: item.session_setup_by_email,
+        SessionSetupOn: item.session_setup_on.split('T')[0],
+        SessionStatus: item.session_status,
     })));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Data');

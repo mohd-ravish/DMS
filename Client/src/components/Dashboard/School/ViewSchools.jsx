@@ -12,15 +12,15 @@ const ViewSchools = () => {
     const [editSection, setEditSection] = useState(false);
     const [schoolsSection, setSchoolsSection] = useState(true);
     const [editFormData, setEditFormData] = useState([]);
-    const [showUserSchools, setShowUserSchools] = useState(false);
+    const [showAllSchools, setShowAllSchools] = useState(false);
 
     useEffect(() => {
-        if (showUserSchools) {
-            fetchMySchools(setSchools); // Fetch only user schools
-        } else {
+        if (showAllSchools) {
             fetchAllSchools(setSchools); // Fetch all schools
+        } else {
+            fetchMySchools(setSchools); // Fetch only user schools
         }
-    }, [showUserSchools]);
+    }, [showAllSchools]);
 
     const filteredSchools = schools.filter(school =>
         school.school_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -51,7 +51,7 @@ const ViewSchools = () => {
     }
 
     const handleToggleSwitch = () => {
-        setShowUserSchools(!showUserSchools);
+        setShowAllSchools(!showAllSchools);
     };
 
     return (
@@ -68,7 +68,7 @@ const ViewSchools = () => {
                 <div className="artifacts-container my-entries-section">
                     <ToastContainer />
                     <header className="artifacts-header">
-                        <h1>{showUserSchools ? 'My Schools' : 'Schools'}</h1>
+                        <h1>{showAllSchools ? 'All Schools' : 'My Schools'}</h1>
                     </header>
                     <div className="artifacts-table-container">
                         <div className='header-select-entries'>
@@ -82,21 +82,23 @@ const ViewSchools = () => {
                             </th>
                             <th colSpan="4">
                                 <div className="table-buttons">
-                                    <button onClick={() => exportToSchoolCSV(filteredSchools, 'DMS My Schools.csv')}>CSV</button>
-                                    <button onClick={() => exportToSchoolExcel(filteredSchools, 'DMS My Schools.xlsx')}>Excel</button>
+                                    <button onClick={() => exportToSchoolCSV(filteredSchools, 'DMS Schools.csv')}>CSV</button>
+                                    <button onClick={() => exportToSchoolExcel(filteredSchools, 'DMS Schools.xlsx')}>Excel</button>
                                     <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Schools.pdf')}>PDF</button>
                                     <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
                             </th>
                             <th>
+                                <span className='toggle-switch-text'>My</span>
                                 <label className="switch">
                                     <input
                                         type="checkbox"
-                                        checked={showUserSchools}
+                                        checked={showAllSchools}
                                         onChange={handleToggleSwitch}
                                     />
                                     <span className="slider round"></span>
                                 </label>
+                                <span className='toggle-switch-text'>All</span>
                             </th>
                             <th className='user-search'>
                                 <label>Search</label>
@@ -117,7 +119,7 @@ const ViewSchools = () => {
                                         <th>School Email ID</th>
                                         <th>Added By</th>
                                         <th>Added On</th>
-                                        {showUserSchools && <th>Action</th>}
+                                        {!showAllSchools && <th>Action</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -131,7 +133,7 @@ const ViewSchools = () => {
                                             <td>{item.school_email_id}</td>
                                             <td>{item.on_boarded_by_owner}</td>
                                             <td className="date">{item.on_boarded_on.split('T')[0]}</td>
-                                            {showUserSchools && (
+                                            {!showAllSchools && (
                                                 <td><a href="# " className="edit-link" onClick={() => editSchoolData(item)}>✏️ Edit</a></td>
                                             )}
                                         </tr>

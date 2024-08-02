@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreatableSelect from 'react-select/creatable';
-import { fetchUploadTags, handleTagChange } from '../ApiHandler/tagsFunctions';
+import { fetchUploadTags } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
 import { handleEditArtifact } from '../ApiHandler/uploadFunctions';
 import { handleDeleteArtifact } from '../ApiHandler/artifactsFunctions';
@@ -20,7 +20,9 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
     useEffect(() => {
         fetchUploadTags(setAvailableTags);
         fetchDocTypes(setDocTypes);
-        // Initializing already used/current tags in the selectbar
+    }, []);
+
+    useEffect(() => {
         if (availableTags.length > 0) {
             const initialTags = editFormData.assoc_tags.split(',').map(tagId => {
                 const tag = availableTags.find(tag => tag.value === parseInt(tagId));
@@ -29,6 +31,17 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
             setTags(initialTags);
         }
     }, [availableTags, editFormData.assoc_tags]);
+
+    // Function to handle tag change
+    const handleTagChange = (newValue, setTags) => {
+        if (newValue.length > 10) {
+            toast.warn("You can only add up to 10 tags.", {
+                position: "top-center"
+            });
+            return;
+        }
+        setTags(newValue);
+    };
 
     const getStatusClass = () => {
         if (editFormData.doc_status === 'archived') {
@@ -65,7 +78,7 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
             <header className="upload-document-header">
                 <h1>Edit Metadata</h1>
             </header>
-            <form className="edit-document-form" onSubmit={(e) => handleEditArtifact(e, editFormData.id, tags, docType, description, publish, status)}>
+            <form className="edit-document-form" onSubmit={(e)=>{e.preventDefault()}}>
                 <div className="form-group">
                     <label>Document ID</label>
                     <span className="document-id">{editFormData.id}</span>
@@ -88,7 +101,7 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
                     <CreatableSelect
                         isMulti
                         value={tags}
-                        onChange={(newValue) => handleTagChange(newValue, availableTags, setAvailableTags, tags, setTags)}
+                        onChange={(newValue) => handleTagChange(newValue, setTags)}
                         options={availableTags}
                         placeholder="Select or create tags"
                         className="document-tags-select"
@@ -161,7 +174,7 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
                 <div className="form-actions">
                     <div>
                         <button type="button" className="cancel-btn" onClick={handleClose}>Cancel</button>
-                        <button type="submit" className="update-btn">Update</button>
+                        <button type="button" className="update-btn" onClick={(e) => handleEditArtifact(e, editFormData.id, tags, setTags, docType, description, publish, status, availableTags)}>Update</button>
                     </div>
                     <button
                         type="button"

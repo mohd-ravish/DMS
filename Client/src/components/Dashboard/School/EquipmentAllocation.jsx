@@ -60,21 +60,21 @@ const EquipmentAllocation = () => {
         <div className="upload-document-container">
             <ToastContainer />
             <header className="upload-document-header">
-                <h1>Equipment Allocation and Tracking</h1>
+                <h1>Equipment Allocation</h1>
             </header>
             <form className="upload-document-form" onSubmit={(e) => handleAllocateEquipment(e, equipmentData, setEquipmentData)}>
+                <div className="form-group">
+                    <label>Equipment Name</label>
+                    <select name="equipmentId" value={equipmentData.equipmentId} onChange={handleChange} required>
+                        <option value="">Select</option>
+                        {equipments.map((equipment) => (
+                            <option key={equipment.id} value={equipment.id}>
+                                {equipment.equipment_name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 <div className='in-row-input'>
-                    <div className="form-group">
-                        <label>Equipment Name</label>
-                        <select name="equipmentId" value={equipmentData.equipmentId} onChange={handleChange} required>
-                            <option value="">Select</option>
-                            {equipments.map((equipment) => (
-                                <option key={equipment.id} value={equipment.id}>
-                                    {equipment.equipment_name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
                     <div className="form-group">
                         <label>Available Quantity</label>
                         <input
@@ -84,39 +84,41 @@ const EquipmentAllocation = () => {
                             readOnly
                         />
                     </div>
+                    <div className="form-group">
+                        <label>Quantity to Allocate</label>
+                        <input
+                            type="number"
+                            name="allocatedQuantity"
+                            value={equipmentData.allocatedQuantity}
+                            onChange={handleChange}
+                            placeholder="Enter Quantity to Allocate"
+                            required
+                        />
+                    </div>
                 </div>
-                <div className="form-group">
-                    <label>Quantity to Allocate</label>
-                    <input
-                        type="number"
-                        name="allocatedQuantity"
-                        value={equipmentData.allocatedQuantity}
-                        onChange={handleChange}
-                        placeholder="Enter Quantity to Allocate"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>School Name</label>
-                    <select name="schoolId" value={equipmentData.schoolId} onChange={handleChange} required>
-                        <option value="">Select</option>
-                        {schools.map((school) => (
-                            <option key={school.id} value={school.id}>
-                                {school.school_name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label>Lab Name</label>
-                    <select name="labId" value={equipmentData.labId} onChange={handleChange} required>
-                        <option value="">Select</option>
-                        {labs.map((lab) => (
-                            <option key={lab.id} value={lab.id}>
-                                {lab.lab_name}
-                            </option>
-                        ))}
-                    </select>
+                <div className='in-row-input'>
+                    <div className="form-group">
+                        <label>School Name</label>
+                        <select name="schoolId" value={equipmentData.schoolId} onChange={handleChange} required>
+                            <option value="">Select</option>
+                            {schools.map((school) => (
+                                <option key={school.id} value={school.id}>
+                                    {school.school_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Lab Name</label>
+                        <select name="labId" value={equipmentData.labId} onChange={handleChange} required>
+                            <option value="">Select</option>
+                            {labs.map((lab) => (
+                                <option key={lab.id} value={lab.id}>
+                                    {lab.lab_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
                 <div className="form-group">
                     <button type="submit">Submit</button>

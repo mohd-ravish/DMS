@@ -12,15 +12,15 @@ const ViewEquipments = () => {
   const [editSection, setEditSection] = useState(false);
   const [equipmentsSection, setEquipmentsSection] = useState(true);
   const [editFormData, setEditFormData] = useState([]);
-  const [showUserEquipments, setShowUserEquipments] = useState(false);
+  const [showAllEquipments, setShowAllEquipments] = useState(false);
 
   useEffect(() => {
-    if (showUserEquipments) {
-      fetchMyEquipments(setEquipments); // Fetch only user equipments
-    } else {
+    if (showAllEquipments) {
       fetchAllEquipments(setEquipments); // Fetch all equipments
+    } else {
+      fetchMyEquipments(setEquipments); // Fetch only user equipments
     }
-  }, [showUserEquipments]);
+  }, [showAllEquipments]);
 
   const filteredEquipments = equipments.filter(equipment =>
     equipment.equipment_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -51,7 +51,7 @@ const ViewEquipments = () => {
   };
 
   const handleToggleSwitch = () => {
-    setShowUserEquipments(!showUserEquipments);
+    setShowAllEquipments(!showAllEquipments);
   };
 
   return (
@@ -68,7 +68,7 @@ const ViewEquipments = () => {
         <div className="artifacts-container my-entries-section">
           <ToastContainer />
           <header className="artifacts-header">
-            <h1>{showUserEquipments ? 'My Equipments' : 'Equipments'}</h1>
+            <h1>{showAllEquipments ? 'All Equipments' : 'My Equipments'}</h1>
           </header>
           <div className="artifacts-table-container">
             <div className='header-select-entries'>
@@ -78,25 +78,27 @@ const ViewEquipments = () => {
                   <option value="25">25</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
-                </select> entries
+                </select>entries
               </th>
               <th colSpan="4">
                 <div className="table-buttons">
-                  <button onClick={() => exportToEquipmentCSV(filteredEquipments, 'DMS My Equipments.csv')}>CSV</button>
-                  <button onClick={() => exportToEquipmentExcel(filteredEquipments, 'DMS My Equipments.xlsx')}>Excel</button>
+                  <button onClick={() => exportToEquipmentCSV(filteredEquipments, 'DMS Equipments.csv')}>CSV</button>
+                  <button onClick={() => exportToEquipmentExcel(filteredEquipments, 'DMS Equipments.xlsx')}>Excel</button>
                   <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Equipments.pdf')}>PDF</button>
                   <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                 </div>
               </th>
               <th>
+                <span className='toggle-switch-text'>My</span>
                 <label className="switch">
                   <input
                     type="checkbox"
-                    checked={showUserEquipments}
+                    checked={showAllEquipments}
                     onChange={handleToggleSwitch}
                   />
                   <span className="slider round"></span>
                 </label>
+                <span className='toggle-switch-text'>All</span>
               </th>
               <th className='user-search'>
                 <label>Search</label>
@@ -118,7 +120,7 @@ const ViewEquipments = () => {
                     <th>Equipment Quantity</th>
                     <th>Added By</th>
                     <th>Added On</th>
-                    {showUserEquipments && <th>Action</th>}
+                    {!showAllEquipments && <th>Action</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -133,7 +135,7 @@ const ViewEquipments = () => {
                       <td>{item.equipment_quantity}</td>
                       <td>{item.equipment_added_by_owner}</td>
                       <td className="date">{item.equipment_added_on.split('T')[0]}</td>
-                      {showUserEquipments && (
+                      {!showAllEquipments && (
                         <td><a href="# " className="edit-link" onClick={() => editEquipmentData(item)}>✏️ Edit</a></td>
                       )}
                     </tr>
