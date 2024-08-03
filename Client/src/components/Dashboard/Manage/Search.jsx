@@ -41,7 +41,7 @@ const Search = () => {
         }
         const selectedTagValues = tags.map(tag => tag.value);
         const filtered = allArtifacts.filter(artifact => {
-            if (artifact.doc_status !== 'active') {
+            if (artifact.is_published !== 1) {
                 return false;
             }
             const artifactTags = artifact.assoc_tags.split(',').map(tag => parseInt(tag.trim(), 10));

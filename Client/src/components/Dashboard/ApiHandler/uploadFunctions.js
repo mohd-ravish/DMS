@@ -164,7 +164,7 @@ export const handleUrlSubmit = async (e, infoHead, url, tags, docType, descripti
 };
 
 // Function to update document/url metadata
-export const handleEditArtifact = async (e, docId, tags, setTags, docType, description, publish, status, availableTags) => {
+export const handleEditArtifact = async (e, docId, tags, setTags, docType, description, publish, availableTags) => {
     e.preventDefault();
     // Extract new tags
     const newTags = tags.filter(tag => tag.__isNew__);
@@ -201,8 +201,7 @@ export const handleEditArtifact = async (e, docId, tags, setTags, docType, descr
         tags: tags.map(tag => tag.value),
         docType: docType,
         description: description,
-        publish: publish,
-        status: status
+        publish: publish
     };
 
     // Upload document

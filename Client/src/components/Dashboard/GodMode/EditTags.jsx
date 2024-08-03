@@ -56,7 +56,7 @@ const EditTags = () => {
                         <label>Search</label>
                         <input
                             type="text"
-                            placeholder="Type Tag Name or Email..."
+                            placeholder="Search here..."
                             className="user-search-bar"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}

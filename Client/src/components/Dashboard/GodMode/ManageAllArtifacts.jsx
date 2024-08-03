@@ -35,13 +35,11 @@ const ManageAllArtifacts = () => {
         totalPages
     } = usePagination(filteredArtifacts, 10);
 
-    const getDocNameClass = (doc_status, is_published) => {
-        if (doc_status === 'active' && is_published) {
+    const getDocNameClass = (is_published) => {
+        if (is_published) {
             return 'active';
-        } else if (doc_status === 'active' && !is_published) {
+        } else if (!is_published) {
             return 'inactive';
-        } else if (doc_status === 'archived') {
-            return 'archived';
         } else {
             return '';
         }
@@ -116,7 +114,7 @@ const ManageAllArtifacts = () => {
                                 <tbody>
                                     {currentEntries.map((item, index) => (
                                         <tr key={index}>
-                                            <td className={getDocNameClass(item.doc_status, item.is_published)}>
+                                            <td className={getDocNameClass(item.is_published)}>
                                                 <div className="tooltip">
                                                     <p>{item.doc_nm} {item.doc_format === 'url' ? '🔗' : '📄'}</p>
                                                     <span className="tooltiptext">{item.doc_description}</span>
@@ -153,7 +151,7 @@ const ManageAllArtifacts = () => {
                         <ul>
                             <li><i class='bx bx-paper-plane'></i> All documents/urls uploaded by you will be listed here in descending order, i.e., latest first.</li>
                             <li><i class='bx bx-paper-plane'></i> All Active and published documents will be eligible for end-user searches.</li>
-                            <li><i class='bx bx-paper-plane'></i> Color Legend: <span className="active">Active and Search Ready</span>, <span className="inactive">Active but Not published</span>, and <span className="archived">Archived i.e. Neither Active Nor Search Ready</span></li>
+                            <li><i className='bx bx-paper-plane'></i> Color Legend: <span className="active">Published and Search Ready</span>, <span className="inactive">Not published and Not Search Ready</span></li>
                             <li><i class='bx bx-paper-plane'></i> To read the description, hover your cursor on the document name.</li>
                             <li><i class='bx bx-paper-plane'></i> Symbol 🔗 after the document name shows that it's a URL and 📄 shows that it's an uploaded document.</li>
                         </ul>

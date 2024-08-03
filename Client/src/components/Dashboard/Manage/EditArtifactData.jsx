@@ -14,7 +14,6 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
     const [docType, setDocType] = useState(editFormData.doc_type);
     const [description, setDescription] = useState(editFormData.doc_description);
     const [publish, setPublish] = useState(editFormData.is_published);
-    const [status, setStatus] = useState(editFormData.doc_status);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -44,23 +43,19 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
     };
 
     const getStatusClass = () => {
-        if (editFormData.doc_status === 'archived') {
-            return 'status-archived';
-        } else if (editFormData.doc_status === 'active' && editFormData.is_published === 1) {
+        if (editFormData.is_published === 1) {
             return 'status-active-published';
-        } else if (editFormData.doc_status === 'active' && editFormData.is_published === 0) {
+        } else if (editFormData.is_published === 0) {
             return 'status-active-not-published';
         }
         return '';
     };
 
     const getStatusText = () => {
-        if (editFormData.doc_status === 'archived') {
-            return 'Archived not search ready';
-        } else if (editFormData.doc_status === 'active' && editFormData.is_published === 1) {
-            return 'Active and published';
-        } else if (editFormData.doc_status === 'active' && editFormData.is_published === 0) {
-            return 'Active but not published';
+        if (editFormData.is_published === 1) {
+            return 'Published';
+        } else if (editFormData.is_published === 0) {
+            return 'Not Published';
         }
         return '';
     };
@@ -78,7 +73,7 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
             <header className="upload-document-header">
                 <h1>Edit Metadata</h1>
             </header>
-            <form className="edit-document-form" onSubmit={(e)=>{e.preventDefault()}}>
+            <form className="edit-document-form" onSubmit={(e) => { e.preventDefault() }}>
                 <div className="form-group">
                     <label>Document ID</label>
                     <span className="document-id">{editFormData.id}</span>
@@ -150,31 +145,10 @@ const EditMetaData = ({ editFormData, artifacts, setArtifacts, handleClose }) =>
                         </label>
                     </div>
                 </div>
-                <div className="form-group">
-                    <label>Document State</label>
-                    <div className="radio-group">
-                        <label>
-                            <input
-                                type="radio"
-                                value="active"
-                                checked={status === 'active'}
-                                onChange={() => setStatus('active')}
-                            /> Active
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                value="archived"
-                                checked={status === 'archived'}
-                                onChange={() => setStatus('archived')}
-                            /> Archive
-                        </label>
-                    </div>
-                </div>
                 <div className="form-actions">
                     <div>
                         <button type="button" className="cancel-btn" onClick={handleClose}>Cancel</button>
-                        <button type="button" className="update-btn" onClick={(e) => handleEditArtifact(e, editFormData.id, tags, setTags, docType, description, publish, status, availableTags)}>Update</button>
+                        <button type="button" className="update-btn" onClick={(e) => handleEditArtifact(e, editFormData.id, tags, setTags, docType, description, publish, availableTags)}>Update</button>
                     </div>
                     <button
                         type="button"
