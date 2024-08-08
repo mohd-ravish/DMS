@@ -6,7 +6,7 @@ import { Oval } from 'react-loader-spinner'
 import { fetchUploadTags } from '../ApiHandler/tagsFunctions';
 import { fetchDocTypes } from '../ApiHandler/artifactsFunctions';
 import { handleDocumentSubmit } from '../ApiHandler/uploadFunctions';
-import { fetchSettings, fetchAllocatedUsedSpace } from '../ApiHandler/settingsFunctions'
+import { fetchFileUploadLimit, fetchAllocatedUsedSpace } from '../ApiHandler/settingsFunctions'
 
 const UploadDocument = () => {
     const [limit, setLimit] = useState("");
@@ -21,7 +21,7 @@ const UploadDocument = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetchSettings(setLimit, null, null, null)
+        fetchFileUploadLimit(setLimit, null, null, null)
         fetchAllocatedUsedSpace(null, null, setRemainingSpace, null, null);
         fetchUploadTags(setAvailableTags);
         fetchDocTypes(setDocTypes);

@@ -10,8 +10,7 @@ const storage = multer.diskStorage({
         const folderName = `${timeString}`;
 
         req.folderName = folderName; // Store the folder name in the request object
-
-        const dest = path.join(__dirname, '../public/sessions', folderName);
+        const dest = path.join(process.env.SESSION_UPLOADS_PATH, folderName);
 
         // Ensure the directory exists
         fs.mkdirSync(dest, { recursive: true });
@@ -27,7 +26,7 @@ const storage = multer.diskStorage({
 const updateStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         const { sessionFolderName } = req.params;
-        const dest = path.join(__dirname, '../public/sessions', sessionFolderName);
+        const dest = path.join(process.env.SESSION_UPLOADS_PATH, sessionFolderName);
 
         // Ensure the directory exists
         fs.mkdirSync(dest, { recursive: true });

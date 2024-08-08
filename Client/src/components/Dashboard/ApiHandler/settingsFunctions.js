@@ -4,9 +4,9 @@ import { toast } from 'react-toastify';
 const API_URL = process.env.REACT_APP_API_URL;
 
 // Function to fetch current system settings
-export const fetchSettings = async (setLimit, setUpdatedBy, setLastUpdated, setAllowedToChange) => {
+export const fetchFileUploadLimit = async (setLimit, setUpdatedBy, setLastUpdated, setAllowedToChange) => {
     try {
-        const response = await Axios.get(`${API_URL}/settings/fetchSystemSettings`, {
+        const response = await Axios.get(`${API_URL}/settings/fetchFileUploadLimit`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -25,7 +25,7 @@ export const fetchSettings = async (setLimit, setUpdatedBy, setLastUpdated, setA
 };
 
 // Function to update system settings
-export const submitNewSystemSettings = async (newLimit) => {
+export const updateFileUploadLimit = async (newLimit) => {
     if (!newLimit || newLimit.trim() === "") {
         toast.error("The file upload limit is required", {
             position: "top-center"
@@ -33,7 +33,7 @@ export const submitNewSystemSettings = async (newLimit) => {
         return;
     }
     try {
-        const response = await Axios.post(`${API_URL}/settings/updateSystemSettings`, { newLimit }, {
+        const response = await Axios.post(`${API_URL}/settings/updateFileUploadLimit`, { newLimit }, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -43,12 +43,13 @@ export const submitNewSystemSettings = async (newLimit) => {
                 position: "top-center"
             });
         } else {
-            toast.error("Failed to update system settings", {
+            toast.error("Failed to update file upload limit!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while updating system settings", {
+        console.log(error);
+        toast.error("An error occurred while updating file upload limit!", {
             position: "top-center"
         });
     }
@@ -72,17 +73,16 @@ export const fetchAllocatedUsedSpace = async (setTotalAllocatedSpace, setUsedSpa
             if (setSpaceLastUpdated) setSpaceLastUpdated(total_allocated_space.last_updated_on);
             if (setSpaceUpdatedBy) setSpaceUpdatedBy(total_allocated_space.updated_by);
         } else {
-            console.error('Error fetching system settings:', response.data.message);
+            console.log(response.data.message);
         }
     } catch (error) {
-        console.error('Error fetching system settings:', error);
+        console.log(error);
     }
 };
 
-
 // Function to update Allocated Space
-export const submitNewAllocatedSpace = async (newAllocateSpace) => {
-    if (!newAllocateSpace || newAllocateSpace.trim() === "") {
+export const updateAllocatedSpace = async (newAllocateSpace) => {
+    if (!newAllocateSpace) {
         toast.error("The new alloacte space is required", {
             position: "top-center"
         });
@@ -99,12 +99,13 @@ export const submitNewAllocatedSpace = async (newAllocateSpace) => {
                 position: "top-center"
             });
         } else {
-            toast.error("Failed to update system settings", {
+            toast.error("Failed to update allocated space!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while updating system settings", {
+        console.log(error);
+        toast.error("An error occurred while updating alloacted space!", {
             position: "top-center"
         });
     }
@@ -144,11 +145,14 @@ export const updateDocFormatControl = async (formatName, controlId, setDocFormat
                 position: "top-center"
             });
         } else {
-            toast.error(response.data.message, {
+            toast.error("Failed to update doc fomrat!", {
                 position: "top-center"
             });
         }
     } catch (error) {
         console.log(error);
+        toast.error("An error occurred while updating doc format!", {
+            position: "top-center"
+        });
     }
 };

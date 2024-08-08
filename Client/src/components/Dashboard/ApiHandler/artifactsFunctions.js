@@ -6,7 +6,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 // Function to fetch document types
 export const fetchDocTypes = async (setDocTypes) => {
     try {
-        const response = await Axios.get(`${API_URL}/artifacts/documentTypes`, {
+        const response = await Axios.get(`${API_URL}/artifacts/fetchDocTypes`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -27,7 +27,7 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
         return;
     }
     try {
-        const response = await Axios.put(`${API_URL}/artifacts/updateDocTypes/${editingDocTypeId}`, {
+        const response = await Axios.put(`${API_URL}/artifacts/updateDocType/${editingDocTypeId}`, {
             docTypeName: editedDocTypeValue
         }, {
             headers: {
@@ -46,12 +46,15 @@ export const handleDocTypeUpdate = async (editingDocTypeId, editedDocTypeValue, 
             }));
             setEditingDocTypeId("");
         } else {
-            toast.error("Failed to update Doc type", {
+            toast.error("Failed to update Doc type!", {
                 position: "top-center"
             });
         }
     } catch (error) {
         console.log(error);
+        toast.error("An error occurred while updating doc type!", {
+            position: "top-center"
+        });
     }
 };
 
@@ -75,17 +78,22 @@ export const handleAddNewDocType = async (e, newDocTypeName, setNewDocTypeName, 
                 position: "top-center"
             });
         } else {
-            console.log("Failed to add doc type");
+            toast.error("Failed to add doc type!", {
+                position: "top-center"
+            });
         }
     } catch (error) {
         console.log(error);
+        toast.error("An error occurred while adding new doc type!", {
+            position: "top-center"
+        });
     }
 };
 
 // Function to add new doc type
 export const handleDeleteDocType = async (docTypeId, availableDocTypes, setAvailableDocTypes) => {
     try {
-        const response = await Axios.delete(`${API_URL}/artifacts/deleteDoctype/${docTypeId}`, {
+        const response = await Axios.delete(`${API_URL}/artifacts/deleteDocType/${docTypeId}`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -96,17 +104,22 @@ export const handleDeleteDocType = async (docTypeId, availableDocTypes, setAvail
                 position: "top-center"
             });
         } else {
-            console.log("Failed to delete doc type");
+            toast.error("Failed to delete doc type!", {
+                position: "top-center"
+            });
         }
     } catch (error) {
         console.log(error);
+        toast.error("An error occurred while deleting the doc type!", {
+            position: "top-center"
+        });
     }
 };
 
 // Function to fetch user's artifacts
 export const fetchMyArtifacts = async (setArtifacts) => {
     try {
-        const response = await Axios.get(`${API_URL}/artifacts/myArtifacts`, {
+        const response = await Axios.get(`${API_URL}/artifacts/fetchMyArtifacts`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -114,7 +127,7 @@ export const fetchMyArtifacts = async (setArtifacts) => {
         if (response.data.status === "success") {
             setArtifacts(response.data.data);
         } else {
-            console.log(response);
+            console.log("Failed to fetch artifacts");
         }
     } catch (error) {
         console.log(error);
@@ -124,7 +137,7 @@ export const fetchMyArtifacts = async (setArtifacts) => {
 // Function to fetch all artifacts
 export const fetchAllArtifacts = async (setArtifacts) => {
     try {
-        const response = await Axios.get(`${API_URL}/artifacts/allArtifacts`, {
+        const response = await Axios.get(`${API_URL}/artifacts/fetchAllArtifacts`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -132,8 +145,7 @@ export const fetchAllArtifacts = async (setArtifacts) => {
         if (response.data.status === "success") {
             setArtifacts(response.data.data);
         } else {
-            console.log(response);
-
+            console.log("Failed to fetch artifacts");
         }
     } catch (error) {
         console.log(error);
@@ -156,11 +168,12 @@ export const handleDeleteArtifact = async (docId, artifacts, setArtifacts, setLo
                 position: "top-center"
             });
         } else {
-            toast.error("Document delete failed", {
+            toast.error("Failed to delete document!", {
                 position: "top-center"
             });
         }
     } catch (error) {
+        console.log(error);
         toast.error("An error occurred while deleting the document", {
             position: "top-center"
         });
@@ -172,7 +185,7 @@ export const handleDeleteArtifact = async (docId, artifacts, setArtifacts, setLo
 // Function to fetch top 10 contributers
 export const fetchTopContributors = async (setContributors) => {
     try {
-        const response = await Axios.get(`${API_URL}/artifacts/topContributors`);
+        const response = await Axios.get(`${API_URL}/artifacts/fetchTopContributors`);
         if (response.data.status === 'success') {
             setContributors(response.data.data);
         }
@@ -184,7 +197,7 @@ export const fetchTopContributors = async (setContributors) => {
 // Function to fetch artifacts count
 export const fetchArtifactsCounts = async (setTotalDocsCount, setTotalUrlsCount) => {
     try {
-        const response = await Axios.get(`${API_URL}/artifacts/countArtifacts`);
+        const response = await Axios.get(`${API_URL}/artifacts/fetchCountOfArtifacts`);
         if (response.data.status === 'success') {
             setTotalDocsCount(response.data.data.total_docs);
             setTotalUrlsCount(response.data.data.total_urls);

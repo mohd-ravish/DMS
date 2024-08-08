@@ -85,7 +85,7 @@ const EditSessionData = ({ editFormData, sessions, setSessions, handleClose }) =
                             <label>Session Title</label>
                             <input
                                 type="text"
-                                name="sessionTitle"
+                                name="session_title"
                                 value={newSessionData.session_title}
                                 onChange={handleChange}
                                 placeholder="Enter Session Title"
@@ -97,7 +97,7 @@ const EditSessionData = ({ editFormData, sessions, setSessions, handleClose }) =
                             <label>Session Host</label>
                             <input
                                 type="text"
-                                name="sessionHost"
+                                name="session_host"
                                 value={newSessionData.session_host}
                                 onChange={handleChange}
                                 placeholder="Enter session host name"
@@ -110,7 +110,7 @@ const EditSessionData = ({ editFormData, sessions, setSessions, handleClose }) =
                                 <label>Session Date</label>
                                 <input
                                     type="date"
-                                    name="sessionDate"
+                                    name="session_date"
                                     value={newSessionData.session_date}
                                     onChange={handleChange}
                                     placeholder="Enter Session Date"
@@ -122,7 +122,7 @@ const EditSessionData = ({ editFormData, sessions, setSessions, handleClose }) =
                                 <label>Session Time</label>
                                 <input
                                     type="text"
-                                    name="sessionTime"
+                                    name="session_time"
                                     value={newSessionData.session_time}
                                     onChange={handleChange}
                                     placeholder="Enter Session Time"

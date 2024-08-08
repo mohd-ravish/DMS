@@ -75,7 +75,6 @@ body {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-
 }
 
 .login-left {
@@ -155,6 +154,18 @@ body {
 
 .login-right p {
 	font-size: 14px;
+}
+
+
+@media screen and (max-width: 768px) {
+	.login-box {
+		flex-direction: column;
+	}
+
+	.login-left,
+	.login-right {
+		width: 100%;
+	}
 }
 
 /* LOGIN  */

@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetchSettings, submitNewSystemSettings, fetchAllocatedUsedSpace, submitNewAllocatedSpace, fetchDocFormats, updateDocFormatControl } from '../ApiHandler/settingsFunctions'
+import { fetchFileUploadLimit, updateFileUploadLimit, fetchAllocatedUsedSpace, updateAllocatedSpace, fetchDocFormats, updateDocFormatControl } from '../ApiHandler/settingsFunctions'
 
 const SystemSettings = () => {
     const [limit, setLimit] = useState("");  // File upload size limit
@@ -18,7 +18,7 @@ const SystemSettings = () => {
 
     useEffect(() => {
         fetchDocFormats(setDocFormats);
-        fetchSettings(setLimit, setUpdatedBy, setLastUpdated, setAllowedToChange)
+        fetchFileUploadLimit(setLimit, setUpdatedBy, setLastUpdated, setAllowedToChange)
         setNewLimit(limit);
     }, [limit]);
 
@@ -76,7 +76,7 @@ const SystemSettings = () => {
                                     <td><p>The limit is in Kb, calculate the equivalent value in MB. 1 MB = 1024 KB</p></td>
                                     <td className="date">{lastUpdated.split('T')[0]}</td>
                                     <td><p>{updatedBy}</p></td>
-                                    <td>{allowedToChange === 'Y' && <button onClick={() => submitNewSystemSettings(newLimit)}>Update</button>}</td>
+                                    <td>{allowedToChange === 'Y' && <button onClick={() => updateFileUploadLimit(newLimit)}>Update</button>}</td>
                                 </tr>
                                 <tr>
                                     <td>Total Space Alloacted</td>
@@ -90,7 +90,7 @@ const SystemSettings = () => {
                                     <td><p>This is the total alloacted space to the application instance in GB</p></td>
                                     <td className="date">{spaceLastUpdated.split('T')[0]}</td>
                                     <td><p>{spaceUpdatedBy}</p></td>
-                                    <td><button onClick={() => submitNewAllocatedSpace(newAllocateSpace)}>Update</button></td>
+                                    <td><button onClick={() => updateAllocatedSpace(newAllocateSpace)}>Update</button></td>
                                 </tr>
                             </tbody>
                         </table>

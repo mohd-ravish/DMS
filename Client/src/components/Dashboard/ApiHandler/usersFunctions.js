@@ -16,13 +16,13 @@ export const fetchToken = async (setCurrentUserId) => {
 // Function to fetch user info 
 export const fetchUsers = async (setUsers) => {
     try {
-        const response = await Axios.get(`${API_URL}/users/getUsers`, {
+        const response = await Axios.get(`${API_URL}/users/fetchUsers`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
         });
         if (response.data.status === "success") {
-            setUsers(response.data.data);  // Set User Data
+            setUsers(response.data.data);
         } else {
             console.log(response);
         }
@@ -32,7 +32,7 @@ export const fetchUsers = async (setUsers) => {
 };
 
 // Function to change user role
-export const handleChangeRole = async (userId, currentRoleId, currentUserId, setUsers, users) => {
+export const handleChangeUserRole = async (userId, currentRoleId, currentUserId, setUsers, users) => {
     if (userId === currentUserId) { // If logged in user tries to change its role exit the function
         toast.error("Ask another admin to change your role", {
             position: "top-center"
@@ -42,7 +42,7 @@ export const handleChangeRole = async (userId, currentRoleId, currentUserId, set
 
     const newRoleId = currentRoleId === 1 ? 2 : 1;
     try {
-        const response = await Axios.put(`${API_URL}/users/changeRole`, {
+        const response = await Axios.put(`${API_URL}/users/changeUserRole`, {
             userId,
             newRoleId
         }, {
@@ -59,12 +59,12 @@ export const handleChangeRole = async (userId, currentRoleId, currentUserId, set
                 position: "top-center"
             });
         } else {
-            toast.error(response.data.message, {
+            toast.error("Failed to change user role!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("Failed to change role", {
+        toast.error("An error occurred while changing user role!", {
             position: "top-center"
         });
     }
@@ -91,12 +91,12 @@ export const handleDeleteUser = async (userId, currentUserId, setUsers, users) =
                 position: "top-center"
             });
         } else {
-            toast.error(response.data.message, {
+            toast.error("Failed to delete user!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("Failed to delete user", {
+        toast.error("An error occurred while deleting the user!", {
             position: "top-center"
         });
     }
@@ -105,7 +105,7 @@ export const handleDeleteUser = async (userId, currentUserId, setUsers, users) =
 // Function to get control access info
 export const getControlAcessInfo = async (setControlAccess) => {
     try {
-        const response = await Axios.get(`${API_URL}/users/hasAccess`, {
+        const response = await Axios.get(`${API_URL}/users/getControlAccessInfo`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             }
@@ -115,15 +115,15 @@ export const getControlAcessInfo = async (setControlAccess) => {
         } else {
             console.log(response.data.message);
         }
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
     }
 };
 
 // Function to get control access users
 export const getControlAccessUsers = async (setControlAccessUsers) => {
     try {
-        const response = await Axios.get(`${API_URL}/users/controlAccessUsers`, {
+        const response = await Axios.get(`${API_URL}/users/fetchControlAccessUsers`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             }
@@ -133,15 +133,15 @@ export const getControlAccessUsers = async (setControlAccessUsers) => {
         } else {
             console.log(response.data.message);
         }
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
     }
 };
 
 // Function to update user access
 export const handleControlAccessUpdate = async (userId, setControlAccessUsers) => {
     try {
-        const response = await Axios.put(`${API_URL}/users/updateUserAccess/${userId}`, {}, {
+        const response = await Axios.put(`${API_URL}/users/updateUserControlAccess/${userId}`, {}, {
             headers: {
                 Authorization: localStorage.getItem("token")
             },
@@ -154,12 +154,13 @@ export const handleControlAccessUpdate = async (userId, setControlAccessUsers) =
                 position: "top-center"
             });
         } else {
-            toast.error(response.data.message, {
+            toast.error("Failed to update user access!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("Failed to update user access", {
+        console.log(error);
+        toast.error("An error occurred while updating the user access!", {
             position: "top-center"
         });
     }
@@ -171,7 +172,7 @@ export const handleUserActivitySubmit = async (userId, period, setUserActivity, 
         return;
     }
     try {
-        const response = await Axios.post(`${API_URL}/users/userActivity`, { userId, period }, {
+        const response = await Axios.post(`${API_URL}/users/fetchUserActivity`, { userId, period }, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -180,9 +181,14 @@ export const handleUserActivitySubmit = async (userId, period, setUserActivity, 
             setUserActivity(response.data.data);
             setActivitySection(true);
         } else {
-            console.log(response.data.message);
+            toast.error("Failed to get user activity logs!", {
+                position: "top-center"
+            });
         }
     } catch (error) {
         console.log(error);
+        toast.error("An error occurred while getting user activity logs!", {
+            position: "top-center"
+        });
     }
 };

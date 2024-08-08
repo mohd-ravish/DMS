@@ -1,7 +1,13 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# server
 
 # dependencies
-/node_modules
-uploads/
-sessions/
 .env
+/node_modules
+
+# Ignore everything in uploads and sessions folders
+/public/uploads/*
+/public/sessions/*
+
+# Except the folders themselves
+!/public/uploads
+!/public/sessions

@@ -84,7 +84,7 @@ const ViewSchools = () => {
                                 <div className="table-buttons">
                                     <button onClick={() => exportToSchoolCSV(filteredSchools, 'DMS Schools.csv')}>CSV</button>
                                     <button onClick={() => exportToSchoolExcel(filteredSchools, 'DMS Schools.xlsx')}>Excel</button>
-                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Schools.pdf')}>PDF</button>
+                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS Schools.pdf')}>PDF</button>
                                     <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
                             </th>

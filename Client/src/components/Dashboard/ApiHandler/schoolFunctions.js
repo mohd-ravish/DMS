@@ -26,12 +26,13 @@ export const handleAddSchool = async (e, formData, setFormData) => {
                 contactNo: ""
             });
         } else {
-            toast.error("School add failed", {
+            toast.error("Failed to add school!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while adding the school", {
+        console.log(error);
+        toast.error("An error occurred while adding the school!", {
             position: "top-center"
         });
     }
@@ -40,7 +41,7 @@ export const handleAddSchool = async (e, formData, setFormData) => {
 // Function to fetch user's schools
 export const fetchMySchools = async (setSchools) => {
     try {
-        const response = await Axios.get(`${API_URL}/schools/getMySchools`, {
+        const response = await Axios.get(`${API_URL}/schools/fetchMySchools`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -58,7 +59,7 @@ export const fetchMySchools = async (setSchools) => {
 // Function to fetch all schools
 export const fetchAllSchools = async (setSchools) => {
     try {
-        const response = await Axios.get(`${API_URL}/schools/getAllSchools`, {
+        const response = await Axios.get(`${API_URL}/schools/fetchAllSchools`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -87,12 +88,13 @@ export const handleEditSchoolData = async (e, schoolId, newSchoolData) => {
                 position: "top-center"
             });
         } else {
-            toast.error("Failed to update school data", {
+            toast.error("Failed to update school data!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while updating school data", {
+        console.log(error);
+        toast.error("An error occurred while updating school data!", {
             position: "top-center"
         });
     }
@@ -113,12 +115,13 @@ export const handleDeleteSchool = async (schoolId, mySchools, setMySchools, hand
                 position: "top-center"
             });
         } else {
-            toast.error("School delete failed", {
+            toast.error("Failed to delete school!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while deleting the school", {
+        console.log(error);
+        toast.error("An error occurred while deleting the school!", {
             position: "top-center"
         });
     }

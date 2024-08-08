@@ -8,13 +8,13 @@ export const handleDocumentSubmit = async (e, limit, remainingSpace, setLoading,
     e.preventDefault();
     const fileSize = file.size / 1024; // In KB
     if (fileSize > limit) {
-        toast.error("File size exceeds the allowed limit", {
+        toast.error("File size exceeds the allowed limit!", {
             position: "top-center"
         });
         return;
     }
     if (fileSize > remainingSpace) {
-        toast.error("Not enough space available", {
+        toast.error("Not enough space available!", {
             position: "top-center"
         });
         return;
@@ -47,7 +47,7 @@ export const handleDocumentSubmit = async (e, limit, remainingSpace, setLoading,
         }
         setTags(updatedTags); // Update state with correct tag IDs
     } catch (error) {
-        console.log("An error occurred while creating tag");
+        console.log(error);
         setLoading(false);
         return;
     }
@@ -78,12 +78,13 @@ export const handleDocumentSubmit = async (e, limit, remainingSpace, setLoading,
             setDescription("");
             setPublish("no");
         } else {
-            toast.error(response.data.message, {
+            toast.error("Failed to upload document!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while uploading the document", {
+        console.log(error);
+        toast.error("An error occurred while uploading the document!", {
             position: "top-center"
         });
     } finally {
@@ -96,7 +97,7 @@ export const handleUrlSubmit = async (e, infoHead, url, tags, docType, descripti
     e.preventDefault();
     // Extract new tags
     const newTags = tags.filter(tag => tag.__isNew__);
-    
+
     // Create new tags in the database and update tags array
     try {
         const updatedTags = [...tags];
@@ -120,7 +121,7 @@ export const handleUrlSubmit = async (e, infoHead, url, tags, docType, descripti
         }
         setTags(updatedTags); // Update state with correct tag IDs
     } catch (error) {
-        console.log("An error occurred while creating tag");
+        console.log(error);
         return;
     }
 
@@ -152,12 +153,12 @@ export const handleUrlSubmit = async (e, infoHead, url, tags, docType, descripti
             setDescription("");
             setPublish("no");
         } else {
-            toast.error("URL add failed", {
+            toast.error("Failed to submit URL!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while adding the URL", {
+        toast.error("An error occurred while submitting the URL!", {
             position: "top-center"
         });
     }
@@ -192,7 +193,7 @@ export const handleEditArtifact = async (e, docId, tags, setTags, docType, descr
         }
         setTags(updatedTags); // Update state with correct tag IDs
     } catch (error) {
-        console.log("An error occurred while creating tag");
+        console.log(error);
         return;
     }
 
@@ -206,7 +207,7 @@ export const handleEditArtifact = async (e, docId, tags, setTags, docType, descr
 
     // Upload document
     try {
-        const response = await Axios.put(`${API_URL}/upload/updateDocument/${docId}`, editData, {
+        const response = await Axios.put(`${API_URL}/upload/updateDocumentMetadata/${docId}`, editData, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -216,12 +217,13 @@ export const handleEditArtifact = async (e, docId, tags, setTags, docType, descr
                 position: "top-center"
             });
         } else {
-            toast.error("Failed to update metadata", {
+            toast.error("Failed to update metadata!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while updating metadata", {
+        console.log(error);
+        toast.error("An error occurred while updating metadata!", {
             position: "top-center"
         });
     }

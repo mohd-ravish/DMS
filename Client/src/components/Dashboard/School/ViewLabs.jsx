@@ -84,7 +84,7 @@ const ViewLabs = () => {
                 <div className="table-buttons">
                   <button onClick={() => exportToLabCSV(filteredLabs, 'DMS Labs.csv')}>CSV</button>
                   <button onClick={() => exportToLabExcel(filteredLabs, 'DMS Labs.xlsx')}>Excel</button>
-                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS My Labs.pdf')}>PDF</button>
+                  <button onClick={() => exportToPDF('.artifacts-table', 'DMS Labs.pdf')}>PDF</button>
                   <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                 </div>
               </th>

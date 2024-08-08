@@ -1,8 +1,9 @@
-const multer = require('multer')
+const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const db = require('../config/db');
 
+// Function to fetch allowed formats
 const fetchAllowedFormats = async () => {
     const [results] = await db.promise().query("SELECT value FROM system_settings WHERE variable_name = 'doc_formats'");
     if (results.length === 0) {
@@ -19,10 +20,10 @@ const fetchAllowedFormats = async () => {
 // Set up Multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "./public/uploads");
+        cb(null, process.env.DOCS_UPLOADS_PATH);
     },
     filename: function (req, file, cb) {
-        const filePath = path.join(__dirname, '..', 'public', 'uploads', file.originalname);
+        const filePath = path.join(process.env.DOCS_UPLOADS_PATH, file.originalname);
         if (fs.existsSync(filePath)) {  // If a file with the same name is already present in the directory then append it with the current time
             const now = new Date();
             const timeString = now.toTimeString().split(' ')[0].replace(/:/g, '');  // Get HHMMSS format

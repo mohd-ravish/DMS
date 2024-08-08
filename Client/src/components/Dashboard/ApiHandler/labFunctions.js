@@ -22,12 +22,12 @@ export const handleAddLab = async (e, labData, setLabData) => {
                 schoolId: "",
             });
         } else {
-            toast.error("Lab add failed", {
+            toast.error("Failed to add Lab!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while adding the lab", {
+        toast.error("An error occurred while adding the lab!", {
             position: "top-center"
         });
     }
@@ -36,7 +36,7 @@ export const handleAddLab = async (e, labData, setLabData) => {
 // Function to fetch all labs
 export const fetchMyLabs = async (setLabs) => {
     try {
-        const response = await Axios.get(`${API_URL}/labs/getMyLabs`, {
+        const response = await Axios.get(`${API_URL}/labs/fetchMyLabs`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -54,7 +54,7 @@ export const fetchMyLabs = async (setLabs) => {
 // Function to fetch all labs
 export const fetchAllLabs = async (setLabs) => {
     try {
-        const response = await Axios.get(`${API_URL}/labs/getAllLabs`, {
+        const response = await Axios.get(`${API_URL}/labs/fetchAllLabs`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -72,7 +72,7 @@ export const fetchAllLabs = async (setLabs) => {
 // Function to fetch labs for a specific school
 export const fetchLabsForSchool = async (schoolId, setLabs) => {
     try {
-        const response = await Axios.get(`${API_URL}/labs/getLabsForSchool/${schoolId}`, {
+        const response = await Axios.get(`${API_URL}/labs/fetchLabsForSchool/${schoolId}`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -83,7 +83,7 @@ export const fetchLabsForSchool = async (schoolId, setLabs) => {
             console.error("Failed to fetch labs");
         }
     } catch (error) {
-        console.error("An error occurred while fetching labs:", error);
+        console.error("An error occurred while fetching labs!", error);
     }
 };
 
@@ -101,12 +101,13 @@ export const handleEditLabData = async (e, labId, newLabData) => {
                 position: "top-center"
             });
         } else {
-            toast.error("Failed to update lab data", {
+            toast.error("Failed to update lab data!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while updating lab data", {
+        console.log(error);
+        toast.error("An error occurred while updating lab data!", {
             position: "top-center"
         });
     }
@@ -127,12 +128,13 @@ export const handleDeleteLab = async (labId, myLabs, setMyLabs, handleClose) => 
                 position: "top-center"
             });
         } else {
-            toast.error("Lab delete failed", {
+            toast.error("Failed to delete lab!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while deleting the lab", {
+        console.log(error);
+        toast.error("An error occurred while deleting the lab!", {
             position: "top-center"
         });
     }

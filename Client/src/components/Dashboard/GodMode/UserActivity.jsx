@@ -72,7 +72,7 @@ const SystemSettings = () => {
                                 <div className="table-buttons">
                                     <button onClick={() => exportToUserActivityCSV(filteredUserActivity, 'DMS User Activity.csv')}>CSV</button>
                                     <button onClick={() => exportToUserActivityExcel(filteredUserActivity, 'DMS User Activity.xlsx')}>Excel</button>
-                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS All Artifacts.pdf')}>PDF</button>
+                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS User Activity.pdf')}>PDF</button>
                                     <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
                             </th>

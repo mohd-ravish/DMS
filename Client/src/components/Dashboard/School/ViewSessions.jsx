@@ -94,7 +94,7 @@ const ViewSessions = () => {
                                 <div className="table-buttons">
                                     <button onClick={() => exportToSessionCSV(filteredSessions, 'DMS Sessions.csv')}>CSV</button>
                                     <button onClick={() => exportToSessionExcel(filteredSessions, 'DMS Sessions.xlsx')}>Excel</button>
-                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS My sessions.pdf')}>PDF</button>
+                                    <button onClick={() => exportToPDF('.artifacts-table', 'DMS sessions.pdf')}>PDF</button>
                                     <button onClick={() => handlePrint('.artifacts-table-container')}>Print</button>
                                 </div>
                             </th>

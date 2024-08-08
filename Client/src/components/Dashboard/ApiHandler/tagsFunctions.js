@@ -6,7 +6,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 // Function to fetch tags for editing
 export const fetchTags = async (setAvailableTags) => {
     try {
-        const response = await Axios.get(`${API_URL}/tags/allTags`, {
+        const response = await Axios.get(`${API_URL}/tags/fetchAllTags`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -14,7 +14,7 @@ export const fetchTags = async (setAvailableTags) => {
         if (response.data.status === "success") {
             setAvailableTags(response.data.data);
         } else {
-            console.log("Failed to fetch tags");
+            console.log(response.data.message);
         }
     } catch (error) {
         console.log(error);
@@ -24,7 +24,7 @@ export const fetchTags = async (setAvailableTags) => {
 // Function to fetch tags for document/Url upload
 export const fetchUploadTags = async (setAvailableTags) => {
     try {
-        const response = await Axios.get(`${API_URL}/tags/allTags`, {
+        const response = await Axios.get(`${API_URL}/tags/fetchAllTags`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -35,7 +35,7 @@ export const fetchUploadTags = async (setAvailableTags) => {
                 label: tag.tag_nm,
             })));
         } else {
-            console.log("Failed to fetch tags");
+            console.log(response.data.message);
         }
     } catch (error) {
         console.log(error);
@@ -48,7 +48,7 @@ export const handleTagUpdate = async (editingTagId, editedTagValue, setAvailable
         return;
     }
     try {
-        const response = await Axios.put(`${API_URL}/tags/updateTags/${editingTagId}`, {
+        const response = await Axios.put(`${API_URL}/tags/updateTag/${editingTagId}`, {
             tagName: editedTagValue
         }, {
             headers: {
@@ -68,12 +68,15 @@ export const handleTagUpdate = async (editingTagId, editedTagValue, setAvailable
             }));
             setEditingTagId("");
         } else {
-            toast.error("Failed to update Tag", {
+            toast.error("Failed to update Tag!", {
                 position: "top-center"
             });
         }
     } catch (error) {
         console.log(error);
+        toast.error("An error occurred while updating tag!", {
+            position: "top-center"
+        });
     }
 };
 
@@ -88,35 +91,34 @@ export const saveSearchedTag = async (tagId, tagName) => {
         if (response.data.status === "success") {
             return response.data;
         } else {
-            console.log("Failed to save searched tag")
+            console.log(response.data.message);
         }
     } catch (error) {
-        console.error("Error saving searched tag:", error);
-        return { status: 'fail', message: error.message };
+        console.log(error);
     }
 };
 
 // Function to get top 10 searched tags
 export const fetchTopSearchedTags = async (setSearchedTags) => {
     try {
-        const response = await Axios.get(`${API_URL}/tags/topSearchedTags`);
+        const response = await Axios.get(`${API_URL}/tags/getTopSearchedTags`);
         if (response.data.status === 'success') {
             setSearchedTags(response.data.data);
         }
     } catch (error) {
-        console.error('Error fetching top searched tags:', error);
+        console.log(error);
     }
 };
 
 // Function to get total searches and total searches in the current month
 export const fetchSearchesCounts = async (setTotalSearches, setCurrentMonthSearches) => {
     try {
-        const response = await Axios.get(`${API_URL}/tags/countSearches`);
+        const response = await Axios.get(`${API_URL}/tags/getCountSearches`);
         if (response.data.status === 'success') {
             setTotalSearches(response.data.data.total_searches);
             setCurrentMonthSearches(response.data.data.current_month_searches);
         }
     } catch (error) {
-        console.error('Error fetching searches counts:', error);
+        console.log(error);
     }
 };

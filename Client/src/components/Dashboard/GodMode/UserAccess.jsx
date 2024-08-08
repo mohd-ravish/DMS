@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetchToken, fetchUsers, handleChangeRole, handleDeleteUser } from '../ApiHandler/usersFunctions';
+import { fetchToken, fetchUsers, handleChangeUserRole, handleDeleteUser } from '../ApiHandler/usersFunctions';
 import { exportToUserCSV, exportToUserExcel, exportToPDF, handlePrint } from '../../utils/Utils';
 import usePagination from '../../hooks/usePagination';
 
@@ -105,7 +105,7 @@ const UserAccess = () => {
                                         >
                                             <i className='bx bx-trash'></i> Delete
                                         </button>
-                                        <button className="change-role-btn" onClick={() => handleChangeRole(user.id, user.role_id, currentUserId, setUsers, users)}>
+                                        <button className="change-role-btn" onClick={() => handleChangeUserRole(user.id, user.role_id, currentUserId, setUsers, users)}>
                                             {user.role_id === 1 ? (
                                                 <i className='bx bx-down-arrow-circle' ></i>
                                             ) : (

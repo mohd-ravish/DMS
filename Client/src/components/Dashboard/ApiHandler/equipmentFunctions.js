@@ -22,12 +22,13 @@ export const handleAddEquipment = async (e, equipmentData, setEquipmentData) => 
                 equipmentQuantity: "",
             });
         } else {
-            toast.error("Equipment add failed", {
+            toast.error("Failed to add equipment!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while adding the equipment", {
+        console.log(error);
+        toast.error("An error occurred while adding the equipment!", {
             position: "top-center"
         });
     }
@@ -36,7 +37,7 @@ export const handleAddEquipment = async (e, equipmentData, setEquipmentData) => 
 // Function to fetch user's equipments
 export const fetchMyEquipments = async (setEquipments) => {
     try {
-        const response = await Axios.get(`${API_URL}/equipments/getMyEquipments`, {
+        const response = await Axios.get(`${API_URL}/equipments/fetchMyEquipments`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -54,7 +55,7 @@ export const fetchMyEquipments = async (setEquipments) => {
 // Function to fetch equipments
 export const fetchAllEquipments = async (setEquipments) => {
     try {
-        const response = await Axios.get(`${API_URL}/equipments/getAllEquipments`, {
+        const response = await Axios.get(`${API_URL}/equipments/fetchAllEquipments`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -89,12 +90,13 @@ export const handleAllocateEquipment = async (e, equipmentData, setEquipmentData
                 allocatedQuantity: "",
             });
         } else {
-            toast.error("Equipment allocation failed", {
+            toast.error("Failed to allocate equipment!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while allocating the equipment", {
+        console.log(error);
+        toast.error("An error occurred while allocating the equipment!", {
             position: "top-center"
         });
     }
@@ -119,6 +121,7 @@ export const handleEditEquipmentData = async (e, equipmentId, newEquipmentData) 
             });
         }
     } catch (error) {
+        console.log(error);
         toast.error("An error occurred while updating equipment data", {
             position: "top-center"
         });
@@ -145,6 +148,7 @@ export const handleDeleteEquipment = async (equipmentId, myEquipments, setMyEqui
             });
         }
     } catch (error) {
+        console.log(error);
         toast.error("An error occurred while deleting the equipment", {
             position: "top-center"
         });

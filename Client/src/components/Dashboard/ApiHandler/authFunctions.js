@@ -7,31 +7,27 @@ const API_URL = process.env.REACT_APP_API_URL;
 export const handleLoginSubmit = async (e, userLoginData, setUserLoginData, navigate) => {
     e.preventDefault();
     if (Object.values(userLoginData).every(value => value.length > 0)) {
-        await Axios.post(`${API_URL}/auth/login`, userLoginData)
-            .then(res => {
-                if (res.data === "User not found") {
-                    toast.error("User not found!", {
-                        position: "top-center"
-                    })
-                    setUserLoginData({
-                        email: "",
-                        password: "",
-                    })
-                }
-                else if (res.data === "Incorrect password") {
-                    toast.error("Incorrect password!", {
-                        position: "top-center"
-                    })
-                    setUserLoginData({
-                        email: "",
-                        password: "",
-                    })
+        try {
+            const response = await Axios.post(`${API_URL}/auth/login`, userLoginData);
 
-                } else {
-                    localStorage.setItem("token", res.data.token);
-                    navigate("/dashboard");
-                }
-            })
+            if (response.data.token) {
+                localStorage.setItem("token", response.data.token);
+                navigate("/dashboard");
+            } else {
+                toast.error("Invalid login details!", {
+                    position: "top-center"
+                });
+                setUserLoginData({
+                    email: "",
+                    password: "",
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("An unexpected error occurred. Please try again later!", {
+                position: "top-center"
+            });
+        }
     }
 }
 
@@ -54,13 +50,13 @@ export const verifyUser = async (setAuth, setUsername, setRole, setMessage) => {
             setAuth(false);
             setMessage(res.data.message);
         }
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
     }
 };
 
 // Function to logout
-export const logout = async (navigate) => {
+export const handleLogout = async (navigate) => {
     const token = localStorage.getItem("token");
     if (token) {
         await Axios.post(`${API_URL}/auth/logout`, {}, {

@@ -29,7 +29,7 @@ export const handleSessionSetup = async (e, sessionData, attendeesFile, setSessi
     formData.append('file', attendeesFile);
 
     try {
-        const response = await Axios.post(`${API_URL}/sessions/sessionSetup`, formData, {
+        const response = await Axios.post(`${API_URL}/sessions/setupSession`, formData, {
             headers: {
                 Authorization: localStorage.getItem("token"),
                 'Content-Type': 'multipart/form-data',
@@ -49,12 +49,13 @@ export const handleSessionSetup = async (e, sessionData, attendeesFile, setSessi
             });
             setAttendeesFile(null);
         } else {
-            toast.error("Session setup failed", {
+            toast.error("Failed to setup session!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while setting up the session", {
+        console.log(error);
+        toast.error("An error occurred while setting up the session!", {
             position: "top-center"
         });
     }
@@ -63,7 +64,7 @@ export const handleSessionSetup = async (e, sessionData, attendeesFile, setSessi
 // Function to fetch user's sessions
 export const fetchMySessions = async (setSessions) => {
     try {
-        const response = await Axios.get(`${API_URL}/sessions/getMySessions`, {
+        const response = await Axios.get(`${API_URL}/sessions/fetchMySessions`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -81,7 +82,7 @@ export const fetchMySessions = async (setSessions) => {
 // Function to fetch all sessions
 export const fetchAllSessions = async (setSessions) => {
     try {
-        const response = await Axios.get(`${API_URL}/sessions/getAllSessions`, {
+        const response = await Axios.get(`${API_URL}/sessions/fetchAllSessions`, {
             headers: {
                 Authorization: localStorage.getItem("token"),
             },
@@ -111,12 +112,13 @@ export const handleEditSessionData = async (e, sessionId, newSessionData, handle
             });
             handleClose();
         } else {
-            toast.error("Failed to update session data", {
+            toast.error("Failed to update session data!", {
                 position: "top-center"
             });
         }
     } catch (error) {
-        toast.error("An error occurred while updating session data", {
+        console.log(error);
+        toast.error("An error occurred while updating session data!", {
             position: "top-center"
         });
     }
@@ -137,11 +139,12 @@ export const handleDeleteSession = async (sessionId, sessions, setSessions, hand
                 position: "top-center"
             });
         } else {
-            toast.error("Session delete failed", {
+            toast.error("Failed to delete session!", {
                 position: "top-center"
             });
         }
     } catch (error) {
+        console.log(error);
         toast.error("An error occurred while deleting the session", {
             position: "top-center"
         });
@@ -160,7 +163,8 @@ export const fetchStudentList = async (sessionFolderName, setStudents) => {
         const data = XLSX.utils.sheet_to_json(worksheet);
         setStudents(data);
     } catch (error) {
-        toast.error("Failed to load student list.");
+        console.log(error);
+        toast.error("Failed to load student list!");
     }
 };
 
@@ -192,6 +196,7 @@ export const handleSaveStudentList = async (sessionFolderName, students, handleS
             position: "top-center"
         });
     } catch (error) {
-        toast.error("Failed to update student attendance.");
+        console.log(error);
+        toast.error("Failed to update student attendance!");
     }
 };

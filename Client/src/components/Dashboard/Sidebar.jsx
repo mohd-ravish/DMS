@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import docLogo from '../../assets/logo.png';
 import { useNavigate } from "react-router-dom";
-import { logout } from './ApiHandler/authFunctions';
+import { handleLogout } from './ApiHandler/authFunctions';
 
 const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, controlAccess, isSidebarOpen, setIsSidebarOpen}) => {
     const [isLibraryOpen, setIsLibraryOpen] = useState(false); // To open Manage section
@@ -195,7 +195,7 @@ const Sidebar = ({ handleDashboardAgain, handleDashboard, handleClick, role, con
                     </>
                 )}
                 <li>
-                    <a href="# " className="logout" onClick={() => { logout(navigate) }}>
+                    <a href="# " className="logout" onClick={() => { handleLogout(navigate) }}>
                         <i className='bx bx-log-out-circle'></i>
                         <span className="text">Logout</span>
                     </a>
